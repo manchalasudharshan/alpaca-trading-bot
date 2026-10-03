@@ -113,18 +113,74 @@ annualize Sharpe are all in `config.BACKTEST_PARAMS`.
 
 ## How it works
 
-### Strategy 1 — Mean Reversion (SPY, QQQ)
-15-minute candles. 20-period SMA ± (1.5σ for SPY, 1.8σ for QQQ) entry
-bands; exits when price reverts back through the mean.
+The bot trades 5 instruments, each with a strategy chosen for how that
+market actually behaves — the parameters below are read from `config.py`,
+so if you retune them (see [Backtesting](#backtesting)) this section's
+numbers will drift from the file; the file is always the source of truth.
 
-### Strategy 2 — Momentum Breakout (BTC/USD)
-1-hour candles. Enters long/short on a close beyond the prior 20-period
-high/low with volume ≥ 1.5× the 20-period average volume. Uses a 2×ATR
-trailing stop that ratchets every bar.
+### S&P 500 (SPY) — Mean Reversion, 15-minute candles
+Indices tend to overextend in one direction over a few hours and then
+snap back. The bot fades those small reversions: when price moves more
+than **2.2 standard deviations** from the 20-period moving average on the
+15-minute chart, it takes the opposite side, expecting a revert to the
+mean, and exits when price crosses back through the mean.
 
-### Strategy 3 — Trend Following (GLD, USO)
-4-hour candles. 50/200 EMA golden/death cross entries, 3×ATR trailing
-stop.
+> Originally spec'd at 1.5σ. A 6-month backtest (see `results/` and the
+> [Backtesting](#backtesting) section) showed that threshold overtrading
+> noise — 398 trades, a 33% win rate, and a deeply negative Sharpe ratio —
+> so it was widened to select for more extreme, higher-conviction
+> dislocations. Widening alone didn't fully fix it: see the note below.
+
+### Nasdaq (QQQ) — Mean Reversion, 15-minute candles
+Same approach as SPY. Nasdaq tends to be more volatile, so the entry
+threshold is wider: **2.3 standard deviations** (originally 1.8σ, widened
+for the same reason as SPY — see below).
+
+> **Open issue, not yet resolved by parameter tuning:** over the specific
+> 6-month window backtested, SPY and QQQ both drifted steadily downward
+> rather than chopping sideways — a trending regime that fights mean
+> reversion by design. Widening the entry bands reduced trade frequency
+> but did not raise the win rate (it stayed ~30%), and QQQ's total return
+> actually got worse at the wider threshold. That's the signature of a
+> regime mismatch, not a threshold problem: no entry-band width fixes a
+> strategy that's structurally fading a persistent trend. Two real fixes,
+> neither implemented yet: (1) add a trend filter that disables
+> mean-reversion entries against the prevailing longer-term direction, or
+> (2) accept that mean reversion needs range-bound conditions and
+> re-evaluate over a different historical window before trusting it live.
+
+### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
+Crypto trends harder than indices, so instead of fading the move the bot
+rides it. When price closes above the prior **30-period** high on the
+1-hour chart with volume ≥ **2.0×** the 30-period average, it goes long;
+a close below the prior 30-period low with the same volume confirmation
+exits the long or opens a short. A **2.5×ATR** trailing stop ratchets in
+the position's favor every bar.
+
+> Originally spec'd at a 20-period lookback, 1.5× volume multiple, and
+> 2.0×ATR stop. The backtest showed a healthy win/loss ratio but only a
+> 19.8% win rate — too many weak breakouts reversing immediately, not a
+> bad edge. Tightening the volume filter, lengthening the lookback, and
+> giving the trailing stop more room flipped this from a losing strategy
+> (Sharpe -0.54, -14.7% return) to a profitable one (Sharpe +0.50, +9.1%
+> return) over the same window.
+
+### Gold (GLD) — Trend Following, 4-hour candles
+Commodities move in cleaner waves, and intraday whipsaws just add noise,
+so this uses a slower signal: a 50/200 EMA crossover on the 4-hour chart.
+When the 50 EMA crosses above the 200, it goes long; when it crosses
+below, it exits or goes short. A 3×ATR trailing stop ratchets every bar.
+
+### Oil (USO) — Trend Following, 4-hour candles
+Same approach and parameters as gold. Commodities tend to respond well to
+longer-timeframe trend following — moves are more sustained and less
+choppy than indices.
+
+> GLD and USO parameters are unchanged from the original spec — both were
+> profitable in the 6-month backtest, though on very few trades (2 and 1
+> respectively), since 50/200 EMA crosses on 4h candles are rare. That low
+> sample size means "profitable" here is a weak signal either way; a
+> longer backtest window would be needed before reading much into it.
 
 ### Risk management (`bot/risk_manager.py`)
 - **Sizing**: `qty = (account_equity × 1%) / ATR`, so a 1-ATR adverse move
