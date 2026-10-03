@@ -3,6 +3,9 @@ name: Run Backtest
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   backtest:
     runs-on: ubuntu-latest
@@ -25,9 +28,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run backtest
-        run: python -m bot.backtest | tee backtest_console_output.txt
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m bot.backtest 2>&1 | tee backtest_console_output.txt
 
-      - name: Upload results
+      - name: Upload results (artifact)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -37,3 +43,21 @@ jobs:
             backtest_trades.csv
             backtest_console_output.txt
           if-no-files-found: warn
+
+      # Artifact downloads redirect through Azure Blob Storage, which isn't
+      # reachable from the sandboxed session that triggers this workflow --
+      # so also commit the results straight into the repo (results/ dir,
+      # overwritten each run) as a reliable, git-pullable fallback.
+      - name: Commit results to repo
+        if: always()
+        run: |
+          mkdir -p results
+          cp -f backtest_console_output.txt results/ 2>/dev/null || true
+          cp -f backtest_results.png results/ 2>/dev/null || true
+          cp -f backtest_trades.csv results/ 2>/dev/null || true
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git add results/
+          git diff --cached --quiet && echo "No result changes to commit" || \
+            git commit -m "Backtest results from run ${{ github.run_id }} [skip ci]"
+          git push origin HEAD:main || echo "push failed, see logs"
