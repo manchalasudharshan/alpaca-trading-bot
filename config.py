@@ -89,21 +89,24 @@ MEAN_REVERSION_PARAMS = {
     # 33.2% win rate, Sharpe -7.06; QQQ: 305 trades, 36.4% win rate, Sharpe
     # -0.43). Wider bands select for more extreme, higher-conviction
     # dislocations and should cut trade frequency substantially.
-    # Widened again (2.2->2.5, 2.3->2.5) after the trend-filtered run still
-    # showed SPY Sharpe -2.71 / MaxDD -29.22% and QQQ Sharpe -0.79 / MaxDD
-    # -16.03% -- both still fail the Sharpe<0-or-MaxDD>15% bar. Fewer,
-    # higher-conviction entries only.
+    # Reverted to 2.2/2.3 -- widening further to 2.5 (with a 150-bar trend
+    # filter) made SPY *worse* (Sharpe -2.71->-3.02, MaxDD -29.22%->-30.66%,
+    # win rate 34.1%->27.6%) and did not fix QQQ either. That's the second
+    # straight piece of evidence that SPY/QQQ's problem is NOT band width:
+    # tightening the trade selection in either direction (more trades at
+    # 2.2/2.3, fewer at 2.5) still fails the Sharpe/MaxDD bar on this
+    # 6-month window. See the README "known limitations" note -- these two
+    # should stay out of live trading until re-validated on a different
+    # (less persistently trending) window, not tuned further on this one.
     "entry_std_dev": {
-        "SPY": 2.5,
-        "QQQ": 2.5,
+        "SPY": 2.2,
+        "QQQ": 2.3,
     },
-    # Regime filter added after the widened-band backtest still showed SPY
-    # Sharpe -4.89 / QQQ Sharpe -1.78 with ~30% win rates unchanged -- a
-    # structural sign of fighting a persistent trend, not a band-width
-    # problem (see bot/strategies/mean_reversion.py docstring). Lengthened
-    # 100->150 bars for a stronger regime read after 100 bars still let too
-    # many counter-trend entries through. Longs only above it, shorts only
-    # below it. Set to None to disable and restore pure unfiltered mean
+    # Regime filter: a longer SMA gates mean-reversion entries to only fire
+    # *with* the prevailing direction (longs above it, shorts below it).
+    # 150 bars (vs. the original 100) is kept since it was tested alongside
+    # the wider bands above and is the more conservative of the two values
+    # tried; set to None to disable and restore pure unfiltered mean
     # reversion.
     "trend_filter_period": 150,
     # Exit when price crosses back through the mean -- no separate param
@@ -125,10 +128,11 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # is tightened further to admit only the most convincing breakouts.
     "volume_multiple": 2.2,
     "atr_period": 14,
-    # Tightened again (2.5->2.2->1.8) -- the 2.2x round only cut MaxDD from
-    # 23.36% to 20.03%, still over the 15% ceiling. Locks in gains sooner
-    # still, at further cost to how much room winning trades get to run.
-    "trailing_stop_atr_multiple": 1.8,
+    # Tightened again (2.5->2.2->1.8->1.5) -- the 1.8x round got BTC to
+    # Sharpe +1.05 (its best yet) but MaxDD -15.82%, just barely over the
+    # 15% ceiling. One more turn of the screw to try to close that last gap
+    # without giving up the now-positive Sharpe.
+    "trailing_stop_atr_multiple": 1.5,
 }
 
 # ---------------------------------------------------------------------------
