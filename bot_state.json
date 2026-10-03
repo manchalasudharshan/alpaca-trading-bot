@@ -8,7 +8,7 @@
   "last_seen_bar": {
     "SPY": null,
     "QQQ": null,
-    "BTC/USD": "2026-09-25T01:15:00+00:00",
+    "BTC/USD": "2026-09-25T01:20:00+00:00",
     "GLD": null,
     "USO": null
   },
@@ -16,5 +16,5 @@
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-10-03T12:35:05.885333+00:00"
+  "saved_at": "2026-10-03T12:40:06.351085+00:00"
 }
