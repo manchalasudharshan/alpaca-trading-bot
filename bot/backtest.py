@@ -167,6 +167,35 @@ def simulate_instrument(inst: "config.Instrument", bars: pd.DataFrame,
         window = bars.iloc[: i + 1]
         ts = window.index[-1]
         last_close = float(window["close"].iloc[-1])
+        last_low = float(window["low"].iloc[-1])
+        last_high = float(window["high"].iloc[-1])
+
+        # --- Universal hard-stop check, independent of strategy logic ---
+        # Mean reversion's own exit rule only fires when price reverts to
+        # the mean, which may never happen -- the risk manager's 1-ATR hard
+        # stop (position.stop_price, set at entry) must be enforced as a
+        # hard ceiling on loss regardless of what the strategy's signal
+        # says. This is checked first, every bar, before the strategy is
+        # even asked for a signal, so no strategy module can silently skip
+        # it the way mean_reversion's did before this check existed.
+        if position is not None:
+            hard_stop_hit = ((position.side == "long" and last_low <= position.stop_price) or
+                              (position.side == "short" and last_high >= position.stop_price))
+            if hard_stop_hit:
+                exit_price = _apply_slippage(position.stop_price, position.side, True, slippage_pct)
+                pnl = ((exit_price - position.entry_price) if position.side == "long"
+                       else (position.entry_price - exit_price)) * position.qty
+                equity += pnl
+                trades.append(BacktestTrade(
+                    symbol=inst.symbol, strategy=inst.strategy, side=position.side, qty=position.qty,
+                    entry_time=position.entry_time, entry_price=position.entry_price,
+                    exit_time=ts, exit_price=exit_price, pnl=pnl,
+                    exit_reason=f"hard stop hit: bar breached {position.stop_price:.4f}",
+                ))
+                position = None
+                curve_index.append(ts)
+                curve_values.append(equity)
+                continue
 
         currently_long = position is not None and position.side == "long"
         currently_short = position is not None and position.side == "short"
@@ -294,9 +323,35 @@ def simulate_combined_portfolio(bars_by_symbol: Dict[str, pd.DataFrame],
         bars = bars_by_symbol[symbol]
         window = bars.iloc[: i + 1]
         last_close = float(window["close"].iloc[-1])
+        last_low = float(window["low"].iloc[-1])
+        last_high = float(window["high"].iloc[-1])
         last_price[symbol] = last_close
 
         position = positions.get(symbol)
+
+        # Universal hard-stop check -- see the matching comment in
+        # simulate_instrument(). Must run before the strategy is asked for
+        # a signal so a strategy with no stop-aware exit logic (mean
+        # reversion) can never hold a loss past the risk-managed cap.
+        if position is not None:
+            hard_stop_hit = ((position.side == "long" and last_low <= position.stop_price) or
+                              (position.side == "short" and last_high >= position.stop_price))
+            if hard_stop_hit:
+                exit_price = _apply_slippage(position.stop_price, position.side, True, slippage_pct)
+                pnl = ((exit_price - position.entry_price) if position.side == "long"
+                       else (position.entry_price - exit_price)) * position.qty
+                cash_equity += pnl
+                trades.append(BacktestTrade(
+                    symbol=symbol, strategy=inst.strategy, side=position.side, qty=position.qty,
+                    entry_time=position.entry_time, entry_price=position.entry_price,
+                    exit_time=ts, exit_price=exit_price, pnl=pnl,
+                    exit_reason=f"hard stop hit: bar breached {position.stop_price:.4f}",
+                ))
+                del positions[symbol]
+                curve_index.append(ts)
+                curve_values.append(total_equity())
+                continue
+
         currently_long = position is not None and position.side == "long"
         currently_short = position is not None and position.side == "short"
         trailing_stop = position.stop_price if position is not None else None

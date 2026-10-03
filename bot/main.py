@@ -30,7 +30,7 @@ import config
 from bot.broker import AlpacaBroker
 from bot.portfolio import Portfolio
 from bot.risk_manager import RiskManager
-from bot.strategies.base import SignalAction
+from bot.strategies.base import Signal, SignalAction
 from bot.strategies.mean_reversion import MeanReversionStrategy
 from bot.strategies.momentum_breakout import MomentumBreakoutStrategy
 from bot.strategies.trend_following import TrendFollowingStrategy
@@ -165,6 +165,35 @@ class TradingBot:
             return
 
         position = self.portfolio.get_position(inst.symbol)
+
+        # --- Universal hard-stop check, independent of strategy logic ---
+        # Mean reversion's own exit rule only fires when price reverts to
+        # the mean, which may never happen. The risk manager's 1-ATR hard
+        # stop set at entry (position.stop_price) must be enforced as a
+        # hard ceiling on loss regardless of what the strategy's signal
+        # says, so it's checked first, every new bar, before the strategy
+        # is even asked for a signal. (Momentum/trend already enforce an
+        # equal-or-tighter stop inside their own generate_signal, so this
+        # is a no-op double-check for them, not a behavior change.)
+        if position is not None:
+            last_low = float(bars["low"].iloc[-1])
+            last_high = float(bars["high"].iloc[-1])
+            hard_stop_hit = ((position.side == "long" and last_low <= position.stop_price) or
+                              (position.side == "short" and last_high >= position.stop_price))
+            if hard_stop_hit:
+                logger.warning(
+                    "Hard stop breached for %s: bar %s-%s crossed stop %.4f. Forcing exit.",
+                    inst.symbol, last_low, last_high, position.stop_price,
+                )
+                self.last_seen_bar[inst.symbol] = latest_bar_ts
+                stop_signal = Signal(
+                    symbol=inst.symbol, action=SignalAction.EXIT_LONG,  # action unused by _exit_position
+                    price=position.stop_price, atr=float("nan"),
+                    reason=f"hard stop hit: bar breached {position.stop_price:.4f}",
+                )
+                self._exit_position(inst, stop_signal)
+                return
+
         currently_long = position is not None and position.side == "long"
         currently_short = position is not None and position.side == "short"
         trailing_stop = position.stop_price if position is not None else None
