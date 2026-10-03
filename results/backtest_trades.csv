@@ -1,0 +1,889 @@
+symbol,strategy,side,qty,entry_time,entry_price,exit_time,exit_price,pnl,exit_reason
+SPY,mean_reversion,short,1188.5,2026-04-06 19:45:00+00:00,658.555558,2026-04-07 12:00:00+00:00,655.387530,3765.20,price 655.06 reverted to/below mean 657.71; exit short
+SPY,mean_reversion,long,1001.798,2026-04-07 13:30:00+00:00,655.362517,2026-04-07 16:00:00+00:00,654.972350,-390.87,price 655.30 reverted to/above mean 655.16; exit long
+SPY,mean_reversion,short,628.76,2026-04-07 19:45:00+00:00,658.900385,2026-04-08 18:30:00+00:00,674.357010,-9718.51,price 674.02 reverted to/below mean 674.73; exit short
+SPY,mean_reversion,long,687.486,2026-04-08 18:45:00+00:00,673.286475,2026-04-08 19:30:00+00:00,674.357653,736.42,price 674.70 reverted to/above mean 674.65; exit long
+SPY,mean_reversion,short,745.644,2026-04-09 15:30:00+00:00,677.121270,2026-04-10 15:45:00+00:00,679.799730,-1997.18,price 679.46 reverted to/below mean 680.50; exit short
+SPY,mean_reversion,long,903.727,2026-04-10 16:30:00+00:00,678.999330,2026-04-10 19:00:00+00:00,679.610025,551.90,price 679.95 reverted to/above mean 679.87; exit long
+SPY,mean_reversion,long,851.845,2026-04-13 12:00:00+00:00,674.777220,2026-04-13 13:45:00+00:00,679.330165,3878.40,price 679.67 reverted to/above mean 678.33; exit long
+SPY,mean_reversion,short,866.116,2026-04-13 16:45:00+00:00,681.958850,2026-04-16 14:15:00+00:00,699.499575,-15192.30,price 699.15 reverted to/below mean 699.59; exit short
+SPY,mean_reversion,short,923.639,2026-04-16 15:00:00+00:00,701.054297,2026-04-16 17:00:00+00:00,700.420035,585.83,price 700.07 reverted to/below mean 700.77; exit short
+SPY,mean_reversion,short,736.717,2026-04-17 12:15:00+00:00,704.877385,2026-04-17 18:00:00+00:00,709.804725,-3630.06,price 709.45 reverted to/below mean 710.07; exit short
+SPY,mean_reversion,long,740.238,2026-04-17 19:00:00+00:00,709.484565,2026-04-17 20:00:00+00:00,710.094775,451.70,price 710.45 reverted to/above mean 710.42; exit long
+SPY,mean_reversion,long,816.923,2026-04-20 12:00:00+00:00,707.213430,2026-04-20 13:45:00+00:00,709.345150,1741.45,price 709.70 reverted to/above mean 709.25; exit long
+SPY,mean_reversion,long,802.435,2026-04-20 14:45:00+00:00,707.453550,2026-04-20 17:00:00+00:00,707.690978,190.52,price 708.04 reverted to/above mean 707.90; exit long
+SPY,mean_reversion,short,1072.336,2026-04-20 19:45:00+00:00,708.435605,2026-04-21 14:45:00+00:00,707.933790,538.11,price 707.58 reverted to/below mean 709.50; exit short
+SPY,mean_reversion,long,754.558,2026-04-21 15:15:00+00:00,707.003325,2026-04-21 19:00:00+00:00,706.286680,-540.75,price 706.64 reverted to/above mean 706.59; exit long
+SPY,mean_reversion,long,526.283,2026-04-21 19:30:00+00:00,703.551600,2026-04-21 20:00:00+00:00,706.426610,1513.07,price 706.78 reverted to/above mean 705.88; exit long
+SPY,mean_reversion,short,481.658,2026-04-22 12:00:00+00:00,709.045300,2026-04-22 16:45:00+00:00,709.314480,-129.65,price 708.96 reverted to/below mean 709.28; exit short
+SPY,mean_reversion,short,960.429,2026-04-22 19:15:00+00:00,710.099773,2026-04-23 12:15:00+00:00,710.304975,-197.08,price 709.95 reverted to/below mean 710.03; exit short
+SPY,mean_reversion,short,929.095,2026-04-23 14:45:00+00:00,711.394125,2026-04-23 16:15:00+00:00,711.095370,277.57,price 710.74 reverted to/below mean 710.78; exit short
+SPY,mean_reversion,long,821.0,2026-04-23 17:00:00+00:00,708.073860,2026-04-24 12:00:00+00:00,711.584030,2881.85,price 711.94 reverted to/above mean 708.95; exit long
+SPY,mean_reversion,short,630.101,2026-04-24 15:30:00+00:00,712.883380,2026-04-27 12:15:00+00:00,713.696670,-512.45,price 713.34 reverted to/below mean 713.56; exit short
+SPY,mean_reversion,long,1018.976,2026-04-27 15:00:00+00:00,713.266455,2026-04-27 16:00:00+00:00,713.573035,312.40,price 713.93 reverted to/above mean 713.68; exit long
+SPY,mean_reversion,short,1249.605,2026-04-27 17:00:00+00:00,713.982830,2026-04-28 12:00:00+00:00,710.765205,4020.76,price 710.41 reverted to/below mean 714.43; exit short
+SPY,mean_reversion,long,1048.363,2026-04-28 12:15:00+00:00,710.284965,2026-04-28 17:30:00+00:00,710.384630,104.49,price 710.74 reverted to/above mean 710.66; exit long
+SPY,mean_reversion,short,1149.191,2026-04-28 18:45:00+00:00,711.169238,2026-04-29 13:30:00+00:00,710.425035,855.23,price 710.07 reverted to/below mean 711.02; exit short
+SPY,mean_reversion,long,1134.242,2026-04-29 15:00:00+00:00,710.595120,2026-04-29 17:45:00+00:00,710.244700,-397.46,price 710.60 reverted to/above mean 710.54; exit long
+SPY,mean_reversion,long,1033.167,2026-04-29 18:00:00+00:00,709.424535,2026-04-29 18:45:00+00:00,710.254695,857.69,price 710.61 reverted to/above mean 710.23; exit long
+SPY,mean_reversion,short,903.542,2026-04-29 19:45:00+00:00,711.234205,2026-04-30 13:45:00+00:00,711.565605,-299.43,price 711.21 reverted to/below mean 711.46; exit short
+SPY,mean_reversion,short,766.638,2026-04-30 17:30:00+00:00,716.091775,2026-05-01 16:30:00+00:00,722.070855,-4583.79,price 721.71 reverted to/below mean 722.14; exit short
+SPY,mean_reversion,long,930.13,2026-05-01 18:30:00+00:00,721.580610,2026-05-04 14:15:00+00:00,720.824408,-703.37,price 721.18 reverted to/above mean 721.13; exit long
+SPY,mean_reversion,long,828.779,2026-05-04 15:15:00+00:00,718.809225,2026-05-04 19:45:00+00:00,717.730955,-893.65,price 718.09 reverted to/above mean 717.81; exit long
+SPY,mean_reversion,short,738.356,2026-05-05 12:00:00+00:00,721.209215,2026-05-05 19:45:00+00:00,724.111875,-2143.20,price 723.75 reverted to/below mean 723.89; exit short
+SPY,mean_reversion,short,835.663,2026-05-06 12:00:00+00:00,728.855390,2026-05-07 15:45:00+00:00,734.367000,-4605.85,price 734.00 reverted to/below mean 734.57; exit short
+SPY,mean_reversion,long,895.436,2026-05-07 16:00:00+00:00,733.066350,2026-05-08 12:00:00+00:00,734.862385,1608.23,price 735.23 reverted to/above mean 731.83; exit long
+SPY,mean_reversion,short,665.744,2026-05-08 12:15:00+00:00,734.832400,2026-05-08 18:45:00+00:00,736.758195,-1282.09,price 736.39 reverted to/below mean 737.10; exit short
+SPY,mean_reversion,long,1083.495,2026-05-11 12:00:00+00:00,736.848240,2026-05-11 13:30:00+00:00,738.000815,1248.81,price 738.37 reverted to/above mean 737.15; exit long
+SPY,mean_reversion,short,1069.868,2026-05-11 13:45:00+00:00,738.280675,2026-05-11 18:45:00+00:00,738.909270,-672.51,price 738.54 reverted to/below mean 739.68; exit short
+SPY,mean_reversion,long,1002.802,2026-05-11 19:15:00+00:00,738.869250,2026-05-12 17:30:00+00:00,734.402615,-4479.15,price 734.77 reverted to/above mean 734.37; exit long
+SPY,mean_reversion,short,688.434,2026-05-12 18:15:00+00:00,735.821905,2026-05-14 20:15:00+00:00,747.873750,-8296.90,price 747.50 reverted to/below mean 748.04; exit short
+SPY,mean_reversion,long,504.409,2026-05-15 12:00:00+00:00,740.470050,2026-05-15 16:30:00+00:00,741.149240,342.59,price 741.52 reverted to/above mean 741.15; exit long
+SPY,mean_reversion,short,484.03,2026-05-15 17:15:00+00:00,742.148740,2026-05-15 18:30:00+00:00,741.690660,221.72,price 741.32 reverted to/below mean 741.34; exit short
+SPY,mean_reversion,long,541.449,2026-05-15 19:45:00+00:00,739.469550,2026-05-18 12:45:00+00:00,740.639495,633.47,price 741.01 reverted to/above mean 740.66; exit long
+SPY,mean_reversion,long,405.824,2026-05-18 15:00:00+00:00,737.638635,2026-05-18 19:30:00+00:00,737.391120,-100.45,price 737.76 reverted to/above mean 736.13; exit long
+SPY,mean_reversion,short,378.89,2026-05-18 19:45:00+00:00,738.030800,2026-05-19 12:00:00+00:00,736.047840,751.32,price 735.68 reverted to/below mean 736.18; exit short
+SPY,mean_reversion,long,461.067,2026-05-19 13:30:00+00:00,733.946790,2026-05-19 16:15:00+00:00,734.122755,81.13,price 734.49 reverted to/above mean 734.46; exit long
+SPY,mean_reversion,short,444.435,2026-05-19 17:00:00+00:00,736.521555,2026-05-19 18:45:00+00:00,734.837235,748.57,price 734.47 reverted to/below mean 734.67; exit short
+SPY,mean_reversion,short,436.406,2026-05-20 14:30:00+00:00,737.875878,2026-05-21 12:00:00+00:00,739.809720,-843.94,price 739.44 reverted to/below mean 740.15; exit short
+SPY,mean_reversion,long,641.333,2026-05-21 12:15:00+00:00,738.989310,2026-05-21 16:00:00+00:00,739.010310,13.47,price 739.38 reverted to/above mean 739.32; exit long
+SPY,mean_reversion,short,554.16,2026-05-21 17:00:00+00:00,740.079775,2026-05-22 18:00:00+00:00,747.503565,-4113.97,price 747.13 reverted to/below mean 747.21; exit short
+SPY,mean_reversion,long,685.323,2026-05-22 19:15:00+00:00,745.952790,2026-05-26 12:15:00+00:00,750.644490,3215.33,price 751.02 reverted to/above mean 747.27; exit long
+SPY,mean_reversion,short,535.879,2026-05-26 13:30:00+00:00,750.279673,2026-05-26 16:45:00+00:00,749.384505,479.70,price 749.01 reverted to/below mean 749.18; exit short
+SPY,mean_reversion,short,838.722,2026-05-26 19:30:00+00:00,750.144740,2026-05-27 13:30:00+00:00,749.884755,218.06,price 749.51 reverted to/below mean 749.85; exit short
+SPY,mean_reversion,short,657.497,2026-05-27 18:15:00+00:00,750.344640,2026-05-28 12:15:00+00:00,749.174400,769.43,price 748.80 reverted to/below mean 750.09; exit short
+SPY,mean_reversion,short,594.667,2026-05-28 14:00:00+00:00,752.613505,2026-05-29 14:30:00+00:00,755.552587,-1747.78,price 755.17 reverted to/below mean 755.36; exit short
+SPY,mean_reversion,long,742.426,2026-05-29 17:45:00+00:00,755.667645,2026-05-29 19:15:00+00:00,756.456583,585.73,price 756.84 reverted to/above mean 756.44; exit long
+SPY,mean_reversion,short,769.341,2026-06-01 12:00:00+00:00,757.581020,2026-06-01 13:00:00+00:00,755.907765,1287.30,price 755.53 reverted to/below mean 756.49; exit short
+SPY,mean_reversion,short,761.962,2026-06-01 16:45:00+00:00,757.571025,2026-06-02 12:00:00+00:00,757.128375,337.28,price 756.75 reverted to/below mean 758.39; exit short
+SPY,mean_reversion,short,1235.729,2026-06-02 20:00:00+00:00,759.620000,2026-06-03 12:15:00+00:00,758.919270,865.91,price 758.54 reverted to/below mean 759.32; exit short
+SPY,mean_reversion,long,1115.163,2026-06-03 12:30:00+00:00,758.308965,2026-06-03 18:15:00+00:00,755.582020,-3040.99,price 755.96 reverted to/above mean 755.55; exit long
+SPY,mean_reversion,long,776.99,2026-06-03 19:45:00+00:00,754.557090,2026-06-04 14:15:00+00:00,753.603010,-741.31,price 753.98 reverted to/above mean 753.90; exit long
+SPY,mean_reversion,short,691.764,2026-06-04 16:00:00+00:00,755.861880,2026-06-04 20:00:00+00:00,756.808215,-654.64,price 756.43 reverted to/below mean 756.99; exit short
+SPY,mean_reversion,long,891.769,2026-06-05 12:00:00+00:00,754.006815,2026-06-08 12:00:00+00:00,742.438595,-10316.18,price 742.81 reverted to/above mean 740.04; exit long
+SPY,mean_reversion,long,312.455,2026-06-08 17:30:00+00:00,740.800215,2026-06-09 12:15:00+00:00,741.898865,343.28,price 742.27 reverted to/above mean 741.38; exit long
+SPY,mean_reversion,short,375.958,2026-06-09 13:30:00+00:00,744.977325,2026-06-09 14:00:00+00:00,741.905767,1154.78,price 741.53 reverted to/below mean 741.57; exit short
+SPY,mean_reversion,long,301.305,2026-06-09 14:30:00+00:00,739.009320,2026-06-09 18:15:00+00:00,734.742445,-1285.63,price 735.11 reverted to/above mean 733.94; exit long
+SPY,mean_reversion,long,195.187,2026-06-10 15:00:00+00:00,731.045340,2026-06-11 12:15:00+00:00,728.545545,-487.93,price 728.91 reverted to/above mean 728.59; exit long
+SPY,mean_reversion,short,215.787,2026-06-11 16:00:00+00:00,729.520058,2026-06-11 16:45:00+00:00,726.903270,564.67,price 726.54 reverted to/below mean 727.62; exit short
+SPY,mean_reversion,short,196.265,2026-06-11 17:15:00+00:00,732.098768,2026-06-12 13:30:00+00:00,736.257945,-816.30,price 735.89 reverted to/below mean 735.99; exit short
+SPY,mean_reversion,short,205.097,2026-06-12 14:45:00+00:00,742.038795,2026-06-12 15:45:00+00:00,739.279455,565.93,price 738.91 reverted to/below mean 739.36; exit short
+SPY,mean_reversion,short,232.426,2026-06-15 12:00:00+00:00,751.214205,2026-06-15 18:15:00+00:00,755.087355,-900.22,price 754.71 reverted to/below mean 754.95; exit short
+SPY,mean_reversion,long,599.227,2026-06-16 13:00:00+00:00,754.577100,2026-06-17 14:15:00+00:00,751.314155,-1955.24,price 751.69 reverted to/above mean 751.41; exit long
+SPY,mean_reversion,long,493.791,2026-06-17 14:30:00+00:00,750.565095,2026-06-17 16:15:00+00:00,750.404610,-79.25,price 750.78 reverted to/above mean 750.70; exit long
+SPY,mean_reversion,long,521.677,2026-06-17 17:00:00+00:00,749.739682,2026-06-17 17:45:00+00:00,750.494565,393.80,price 750.87 reverted to/above mean 750.39; exit long
+SPY,mean_reversion,long,356.987,2026-06-17 18:00:00+00:00,747.033330,2026-06-17 18:30:00+00:00,749.565030,903.78,price 749.94 reverted to/above mean 749.82; exit long
+SPY,mean_reversion,long,267.769,2026-06-17 18:45:00+00:00,746.342985,2026-06-18 13:15:00+00:00,746.416605,19.71,price 746.79 reverted to/above mean 746.22; exit long
+SPY,mean_reversion,short,337.686,2026-06-18 17:00:00+00:00,747.206210,2026-06-18 19:00:00+00:00,745.892760,443.53,price 745.52 reverted to/below mean 746.41; exit short
+SPY,mean_reversion,short,461.839,2026-06-18 20:15:00+00:00,748.085770,2026-06-22 14:15:00+00:00,746.933280,532.26,price 746.56 reverted to/below mean 747.24; exit short
+SPY,mean_reversion,long,380.218,2026-06-22 14:30:00+00:00,744.902265,2026-06-24 12:00:00+00:00,736.121755,-3338.51,price 736.49 reverted to/above mean 735.84; exit long
+SPY,mean_reversion,short,286.503,2026-06-24 14:45:00+00:00,739.230200,2026-06-24 16:30:00+00:00,736.688160,728.30,price 736.32 reverted to/below mean 736.68; exit short
+SPY,mean_reversion,long,293.108,2026-06-24 17:15:00+00:00,732.506070,2026-06-24 20:00:00+00:00,736.141745,1065.65,price 736.51 reverted to/above mean 734.65; exit long
+SPY,mean_reversion,short,347.888,2026-06-25 12:00:00+00:00,737.890870,2026-06-25 13:30:00+00:00,734.652142,1126.71,price 734.28 reverted to/below mean 734.73; exit short
+SPY,mean_reversion,long,287.347,2026-06-25 13:45:00+00:00,730.244940,2026-06-25 14:15:00+00:00,735.042295,1378.51,price 735.41 reverted to/above mean 734.91; exit long
+SPY,mean_reversion,short,298.937,2026-06-25 20:15:00+00:00,734.992320,2026-06-26 12:00:00+00:00,730.695165,1284.58,price 730.33 reverted to/below mean 733.41; exit short
+SPY,mean_reversion,long,301.733,2026-06-26 12:30:00+00:00,730.174905,2026-06-26 14:00:00+00:00,732.838398,803.66,price 733.21 reverted to/above mean 732.83; exit long
+SPY,mean_reversion,short,277.315,2026-06-26 15:30:00+00:00,735.831900,2026-06-26 18:15:00+00:00,733.241437,718.37,price 732.88 reverted to/below mean 733.53; exit short
+SPY,mean_reversion,long,355.027,2026-06-26 18:45:00+00:00,731.985810,2026-06-29 13:30:00+00:00,738.850390,2437.11,price 739.22 reverted to/above mean 733.51; exit long
+SPY,mean_reversion,short,202.369,2026-06-29 13:45:00+00:00,736.461585,2026-06-29 14:00:00+00:00,733.496565,600.03,price 733.13 reverted to/below mean 733.53; exit short
+SPY,mean_reversion,short,203.474,2026-06-29 14:45:00+00:00,737.431100,2026-07-01 12:15:00+00:00,745.672650,-1676.94,price 745.30 reverted to/below mean 746.50; exit short
+SPY,mean_reversion,long,670.58,2026-07-01 12:30:00+00:00,744.632130,2026-07-01 14:00:00+00:00,746.231698,1072.64,price 746.61 reverted to/above mean 746.36; exit long
+SPY,mean_reversion,short,522.415,2026-07-01 15:15:00+00:00,748.915355,2026-07-01 17:45:00+00:00,747.553590,711.41,price 747.18 reverted to/below mean 747.24; exit short
+SPY,mean_reversion,long,677.792,2026-07-01 19:45:00+00:00,746.037832,2026-07-02 12:30:00+00:00,748.995315,2004.56,price 749.37 reverted to/above mean 747.67; exit long
+SPY,mean_reversion,short,521.087,2026-07-02 13:30:00+00:00,749.425100,2026-07-02 14:30:00+00:00,747.218422,1149.87,price 746.85 reverted to/below mean 747.77; exit short
+SPY,mean_reversion,long,376.072,2026-07-02 15:15:00+00:00,745.262445,2026-07-02 19:45:00+00:00,744.487570,-291.41,price 744.86 reverted to/above mean 743.12; exit long
+SPY,mean_reversion,short,382.412,2026-07-06 13:30:00+00:00,748.265680,2026-07-07 13:30:00+00:00,750.425025,-825.76,price 750.05 reverted to/below mean 751.08; exit short
+SPY,mean_reversion,long,627.461,2026-07-07 13:45:00+00:00,749.149387,2026-07-07 16:45:00+00:00,748.585520,-353.80,price 748.96 reverted to/above mean 748.80; exit long
+SPY,mean_reversion,long,566.456,2026-07-08 12:00:00+00:00,743.761695,2026-07-08 16:30:00+00:00,743.598015,-92.72,price 743.97 reverted to/above mean 743.49; exit long
+SPY,mean_reversion,short,529.046,2026-07-09 12:15:00+00:00,747.126250,2026-07-10 14:45:00+00:00,751.605615,-2369.79,price 751.23 reverted to/below mean 751.64; exit short
+SPY,mean_reversion,short,511.386,2026-07-10 15:15:00+00:00,752.853385,2026-07-13 12:00:00+00:00,752.055840,407.85,price 751.68 reverted to/below mean 753.97; exit short
+SPY,mean_reversion,long,708.414,2026-07-13 12:15:00+00:00,752.596110,2026-07-14 12:30:00+00:00,751.534045,-752.38,price 751.91 reverted to/above mean 749.91; exit long
+SPY,mean_reversion,short,424.92,2026-07-14 13:45:00+00:00,750.994315,2026-07-15 15:45:00+00:00,753.046335,-871.94,price 752.67 reverted to/below mean 753.07; exit short
+SPY,mean_reversion,long,519.683,2026-07-15 16:00:00+00:00,751.595610,2026-07-15 17:30:00+00:00,752.938343,697.80,price 753.32 reverted to/above mean 752.94; exit long
+SPY,mean_reversion,long,500.772,2026-07-16 17:30:00+00:00,751.725675,2026-07-17 16:45:00+00:00,745.946840,-2893.88,price 746.32 reverted to/above mean 746.17; exit long
+SPY,mean_reversion,long,402.425,2026-07-17 18:30:00+00:00,743.631630,2026-07-20 12:00:00+00:00,746.056785,975.94,price 746.43 reverted to/above mean 745.05; exit long
+SPY,mean_reversion,short,368.152,2026-07-20 13:30:00+00:00,748.170727,2026-07-20 14:00:00+00:00,745.272450,1067.01,price 744.90 reverted to/below mean 745.12; exit short
+SPY,mean_reversion,long,428.547,2026-07-20 18:30:00+00:00,742.961295,2026-07-21 13:30:00+00:00,744.097765,487.03,price 744.47 reverted to/above mean 744.13; exit long
+SPY,mean_reversion,short,396.912,2026-07-21 14:15:00+00:00,746.471578,2026-07-21 19:45:00+00:00,748.529077,-816.65,price 748.15 reverted to/below mean 748.26; exit short
+SPY,mean_reversion,long,777.981,2026-07-22 12:00:00+00:00,746.162895,2026-07-22 13:45:00+00:00,748.360633,1709.80,price 748.74 reverted to/above mean 748.12; exit long
+SPY,mean_reversion,short,640.396,2026-07-22 15:15:00+00:00,749.035295,2026-07-22 17:45:00+00:00,748.889257,93.52,price 748.51 reverted to/below mean 748.53; exit short
+SPY,mean_reversion,long,913.881,2026-07-22 19:30:00+00:00,748.158892,2026-07-23 19:45:00+00:00,737.690970,-9566.44,price 738.06 reverted to/above mean 737.59; exit long
+SPY,mean_reversion,short,376.414,2026-07-24 12:30:00+00:00,740.289670,2026-07-24 13:45:00+00:00,737.993812,864.19,price 737.62 reverted to/below mean 738.04; exit short
+SPY,mean_reversion,short,304.613,2026-07-24 14:45:00+00:00,740.259685,2026-07-24 18:00:00+00:00,740.960295,-213.41,price 740.59 reverted to/below mean 740.96; exit short
+SPY,mean_reversion,long,378.359,2026-07-24 18:30:00+00:00,738.178905,2026-07-27 12:30:00+00:00,744.527550,2402.07,price 744.90 reverted to/above mean 740.56; exit long
+SPY,mean_reversion,long,294.56,2026-07-27 14:30:00+00:00,737.108370,2026-07-27 18:45:00+00:00,738.685472,464.55,price 739.05 reverted to/above mean 737.97; exit long
+SPY,mean_reversion,short,392.425,2026-07-27 19:15:00+00:00,739.265183,2026-07-28 13:30:00+00:00,737.403517,730.56,price 737.03 reverted to/below mean 738.18; exit short
+SPY,mean_reversion,short,356.145,2026-07-28 15:15:00+00:00,740.859385,2026-07-28 19:45:00+00:00,741.165397,-108.98,price 740.79 reverted to/below mean 741.27; exit short
+SPY,mean_reversion,long,581.907,2026-07-29 12:15:00+00:00,740.730180,2026-07-29 17:00:00+00:00,736.231700,-2617.70,price 736.60 reverted to/above mean 736.34; exit long
+SPY,mean_reversion,short,289.648,2026-07-29 18:30:00+00:00,740.349640,2026-07-29 19:15:00+00:00,735.532582,1395.25,price 735.16 reverted to/below mean 735.78; exit short
+SPY,mean_reversion,long,218.069,2026-07-29 19:30:00+00:00,731.545590,2026-07-30 12:00:00+00:00,734.652490,677.52,price 735.02 reverted to/above mean 734.81; exit long
+SPY,mean_reversion,short,407.414,2026-07-30 19:00:00+00:00,741.718955,2026-07-31 14:00:00+00:00,738.854242,1167.12,price 738.49 reverted to/below mean 741.23; exit short
+SPY,mean_reversion,short,313.334,2026-07-31 16:15:00+00:00,744.007810,2026-08-05 15:00:00+00:00,773.431522,-9219.45,price 773.04 reverted to/below mean 773.21; exit short
+SPY,mean_reversion,long,453.059,2026-08-05 19:45:00+00:00,770.174895,2026-08-06 14:00:00+00:00,771.144235,439.17,price 771.53 reverted to/above mean 771.22; exit long
+SPY,mean_reversion,long,410.493,2026-08-06 15:15:00+00:00,769.589602,2026-08-06 18:15:00+00:00,769.030292,-229.59,price 769.41 reverted to/above mean 769.23; exit long
+SPY,mean_reversion,short,453.805,2026-08-07 12:15:00+00:00,769.974820,2026-08-07 18:00:00+00:00,771.925770,-885.35,price 771.54 reverted to/below mean 772.22; exit short
+SPY,mean_reversion,short,492.014,2026-08-10 13:45:00+00:00,773.083265,2026-08-10 16:30:00+00:00,772.541077,266.76,price 772.15 reverted to/below mean 773.26; exit short
+SPY,mean_reversion,short,639.685,2026-08-11 12:15:00+00:00,773.672970,2026-08-11 15:00:00+00:00,773.116365,356.05,price 772.73 reverted to/below mean 773.17; exit short
+SPY,mean_reversion,long,594.113,2026-08-11 15:15:00+00:00,772.801207,2026-08-12 12:00:00+00:00,772.093760,-420.30,price 772.48 reverted to/above mean 770.98; exit long
+SPY,mean_reversion,short,604.427,2026-08-12 12:15:00+00:00,772.703455,2026-08-12 19:45:00+00:00,772.926270,-134.68,price 772.54 reverted to/below mean 772.73; exit short
+SPY,mean_reversion,short,672.79,2026-08-13 12:30:00+00:00,773.662975,2026-08-14 14:15:00+00:00,777.793702,-2779.11,price 777.40 reverted to/below mean 777.72; exit short
+SPY,mean_reversion,long,662.373,2026-08-14 14:45:00+00:00,777.148380,2026-08-14 19:30:00+00:00,775.771920,-911.73,price 776.16 reverted to/above mean 776.16; exit long
+SPY,mean_reversion,short,837.924,2026-08-17 12:15:00+00:00,776.331640,2026-08-17 13:30:00+00:00,775.977795,296.50,price 775.59 reverted to/below mean 776.09; exit short
+SPY,mean_reversion,long,759.211,2026-08-17 13:45:00+00:00,775.577595,2026-08-18 18:15:00+00:00,767.935840,-5801.70,price 768.32 reverted to/above mean 768.25; exit long
+SPY,mean_reversion,long,589.557,2026-08-18 19:00:00+00:00,768.003810,2026-08-19 12:30:00+00:00,769.125245,661.15,price 769.51 reverted to/above mean 768.11; exit long
+SPY,mean_reversion,short,528.036,2026-08-19 12:45:00+00:00,770.614500,2026-08-19 16:45:00+00:00,770.114865,263.83,price 769.73 reverted to/below mean 769.98; exit short
+SPY,mean_reversion,long,365.133,2026-08-20 12:00:00+00:00,765.472545,2026-08-21 12:00:00+00:00,765.497060,8.95,price 765.88 reverted to/above mean 764.50; exit long
+SPY,mean_reversion,short,370.797,2026-08-21 14:45:00+00:00,765.432093,2026-08-21 17:30:00+00:00,766.037827,-224.60,price 765.65 reverted to/below mean 765.68; exit short
+SPY,mean_reversion,long,522.512,2026-08-24 12:15:00+00:00,765.032325,2026-08-24 15:45:00+00:00,764.147735,-462.21,price 764.53 reverted to/above mean 764.49; exit long
+SPY,mean_reversion,short,456.226,2026-08-25 12:30:00+00:00,766.326645,2026-08-25 14:30:00+00:00,764.572095,800.47,price 764.19 reverted to/below mean 764.35; exit short
+SPY,mean_reversion,short,638.19,2026-08-25 20:00:00+00:00,765.467075,2026-08-26 12:30:00+00:00,765.232425,149.75,price 764.85 reverted to/below mean 765.37; exit short
+SPY,mean_reversion,short,526.888,2026-08-26 13:30:00+00:00,765.941838,2026-08-26 14:15:00+00:00,765.482550,241.99,price 765.10 reverted to/below mean 765.48; exit short
+SPY,mean_reversion,long,499.794,2026-08-26 16:15:00+00:00,765.202410,2026-08-26 17:15:00+00:00,765.287165,42.36,price 765.67 reverted to/above mean 765.57; exit long
+SPY,mean_reversion,short,576.221,2026-08-26 18:45:00+00:00,766.116750,2026-08-27 18:00:00+00:00,770.655135,-2615.11,price 770.27 reverted to/below mean 770.41; exit short
+SPY,mean_reversion,short,450.273,2026-08-28 13:30:00+00:00,772.223695,2026-08-28 14:00:00+00:00,770.605110,728.81,price 770.22 reverted to/below mean 771.00; exit short
+SPY,mean_reversion,short,305.85,2026-08-28 14:30:00+00:00,773.073270,2026-08-28 15:45:00+00:00,771.465540,491.72,price 771.08 reverted to/below mean 771.60; exit short
+SPY,mean_reversion,long,283.961,2026-08-28 17:15:00+00:00,769.214415,2026-08-31 17:30:00+00:00,765.826895,-961.92,price 766.21 reverted to/above mean 765.95; exit long
+SPY,mean_reversion,short,429.635,2026-08-31 18:00:00+00:00,766.336640,2026-08-31 18:30:00+00:00,765.727673,261.63,price 765.35 reverted to/below mean 765.84; exit short
+SPY,mean_reversion,short,448.086,2026-08-31 19:15:00+00:00,766.286665,2026-09-01 12:00:00+00:00,762.851235,1539.37,price 762.47 reverted to/below mean 765.87; exit short
+SPY,mean_reversion,long,351.039,2026-09-01 12:15:00+00:00,762.791205,2026-09-01 15:45:00+00:00,763.892862,386.72,price 764.27 reverted to/above mean 764.23; exit long
+SPY,mean_reversion,long,425.1,2026-09-01 18:15:00+00:00,761.590605,2026-09-01 20:15:00+00:00,761.768925,75.80,price 762.15 reverted to/above mean 761.95; exit long
+SPY,mean_reversion,short,476.793,2026-09-02 13:30:00+00:00,762.418600,2026-09-02 18:30:00+00:00,765.102360,-1279.60,price 764.72 reverted to/below mean 765.12; exit short
+SPY,mean_reversion,short,475.47,2026-09-03 12:30:00+00:00,766.076770,2026-09-03 20:00:00+00:00,773.501557,-3530.26,price 773.12 reverted to/below mean 773.13; exit short
+SPY,mean_reversion,long,489.663,2026-09-03 20:15:00+00:00,772.776195,2026-09-04 12:15:00+00:00,772.773420,-1.36,price 773.16 reverted to/above mean 773.11; exit long
+SPY,mean_reversion,long,412.175,2026-09-04 12:30:00+00:00,772.145880,2026-09-04 18:45:00+00:00,769.874870,-936.05,price 770.26 reverted to/above mean 770.20; exit long
+SPY,mean_reversion,long,480.082,2026-09-08 12:30:00+00:00,769.114365,2026-09-08 17:45:00+00:00,767.176220,-930.47,price 767.56 reverted to/above mean 767.55; exit long
+SPY,mean_reversion,long,373.772,2026-09-08 19:45:00+00:00,766.443030,2026-09-09 17:45:00+00:00,762.643487,-1420.16,price 763.02 reverted to/above mean 762.86; exit long
+SPY,mean_reversion,long,395.364,2026-09-10 12:00:00+00:00,761.790705,2026-09-11 12:00:00+00:00,761.858880,26.95,price 762.24 reverted to/above mean 758.53; exit long
+SPY,mean_reversion,short,276.482,2026-09-11 12:15:00+00:00,762.518550,2026-09-11 18:30:00+00:00,765.512565,-827.79,price 765.13 reverted to/below mean 765.42; exit short
+SPY,mean_reversion,long,377.863,2026-09-11 19:45:00+00:00,764.522070,2026-09-14 16:15:00+00:00,761.688965,-1070.53,price 762.07 reverted to/above mean 761.66; exit long
+SPY,mean_reversion,long,314.048,2026-09-15 13:30:00+00:00,760.324973,2026-09-15 18:00:00+00:00,757.416102,-913.52,price 757.79 reverted to/above mean 757.71; exit long
+SPY,mean_reversion,short,341.068,2026-09-16 12:15:00+00:00,759.679970,2026-09-16 17:30:00+00:00,759.709665,-10.13,price 759.33 reverted to/below mean 759.84; exit short
+SPY,mean_reversion,long,237.521,2026-09-16 18:30:00+00:00,759.389505,2026-09-17 12:00:00+00:00,761.638990,534.30,price 762.02 reverted to/above mean 757.90; exit long
+SPY,mean_reversion,long,317.44,2026-09-18 12:00:00+00:00,761.100360,2026-09-18 17:45:00+00:00,759.460080,-520.69,price 759.84 reverted to/above mean 759.68; exit long
+SPY,mean_reversion,short,380.847,2026-09-18 18:15:00+00:00,760.034792,2026-09-22 14:15:00+00:00,773.936775,-5294.53,price 773.55 reverted to/below mean 773.83; exit short
+SPY,mean_reversion,long,280.692,2026-09-22 15:30:00+00:00,773.231423,2026-09-22 16:45:00+00:00,773.233190,0.50,price 773.62 reverted to/above mean 773.59; exit long
+SPY,mean_reversion,short,360.147,2026-09-22 19:15:00+00:00,773.987813,2026-09-22 19:45:00+00:00,773.826720,58.02,price 773.44 reverted to/below mean 773.62; exit short
+SPY,mean_reversion,long,348.733,2026-09-23 12:00:00+00:00,773.006310,2026-09-24 16:15:00+00:00,766.731443,-2188.25,price 767.12 reverted to/above mean 765.48; exit long
+SPY,mean_reversion,short,144.314,2026-09-24 16:45:00+00:00,767.950833,2026-09-25 14:00:00+00:00,767.213415,106.42,price 766.83 reverted to/below mean 768.01; exit short
+SPY,mean_reversion,short,127.946,2026-09-25 16:00:00+00:00,771.124245,2026-09-28 12:00:00+00:00,768.974295,275.08,price 768.59 reverted to/below mean 770.72; exit short
+SPY,mean_reversion,long,174.586,2026-09-28 12:30:00+00:00,769.094355,2026-09-28 16:15:00+00:00,768.315650,-135.95,price 768.70 reverted to/above mean 767.89; exit long
+SPY,mean_reversion,long,193.233,2026-09-29 13:30:00+00:00,765.552585,2026-09-29 18:15:00+00:00,763.608005,-375.76,price 763.99 reverted to/above mean 763.79; exit long
+SPY,mean_reversion,short,211.243,2026-09-30 12:15:00+00:00,764.767425,2026-09-30 17:15:00+00:00,767.383500,-552.63,price 767.00 reverted to/below mean 767.58; exit short
+SPY,mean_reversion,long,187.258,2026-09-30 18:15:00+00:00,767.193405,2026-10-01 17:15:00+00:00,763.238190,-740.65,price 763.62 reverted to/above mean 762.05; exit long
+SPY,mean_reversion,short,122.708,2026-10-01 17:30:00+00:00,764.392613,2026-10-02 17:15:00+00:00,768.934275,-557.30,price 768.55 reverted to/below mean 769.46; exit short
+SPY,mean_reversion,short,174.207,2026-10-02 19:45:00+00:00,769.265175,2026-10-02 20:15:00+00:00,770.104860,-146.28,end_of_backtest_window
+QQQ,mean_reversion,long,1007.803,2026-04-07 12:00:00+00:00,584.602155,2026-04-07 16:15:00+00:00,584.162773,-442.81,price 584.46 reverted to/above mean 583.63; exit long
+QQQ,mean_reversion,short,582.994,2026-04-07 19:45:00+00:00,588.585560,2026-04-08 17:15:00+00:00,606.162930,-10247.50,price 605.86 reverted to/below mean 606.29; exit short
+QQQ,mean_reversion,long,622.928,2026-04-08 18:45:00+00:00,603.131415,2026-04-08 19:45:00+00:00,605.657020,1573.27,price 605.96 reverted to/above mean 605.38; exit long
+QQQ,mean_reversion,short,741.55,2026-04-09 15:30:00+00:00,606.766465,2026-04-10 15:45:00+00:00,610.870283,-3043.19,price 610.57 reverted to/below mean 611.41; exit short
+QQQ,mean_reversion,long,830.911,2026-04-10 16:30:00+00:00,610.044870,2026-04-10 19:00:00+00:00,610.979357,776.48,price 611.28 reverted to/above mean 611.08; exit long
+QQQ,mean_reversion,short,1245.33,2026-04-10 20:30:00+00:00,611.434130,2026-04-13 12:15:00+00:00,607.403550,5019.40,price 607.10 reverted to/below mean 610.59; exit short
+QQQ,mean_reversion,long,1018.654,2026-04-13 12:30:00+00:00,607.993845,2026-04-13 13:45:00+00:00,611.314190,3382.28,price 611.62 reverted to/above mean 610.21; exit long
+QQQ,mean_reversion,short,1005.643,2026-04-13 19:45:00+00:00,617.016338,2026-04-16 13:45:00+00:00,636.738210,-19833.16,price 636.42 reverted to/below mean 636.70; exit short
+QQQ,mean_reversion,short,698.799,2026-04-16 15:00:00+00:00,639.580050,2026-04-16 18:00:00+00:00,639.119400,321.90,price 638.80 reverted to/below mean 639.40; exit short
+QQQ,mean_reversion,short,668.342,2026-04-17 12:15:00+00:00,643.478100,2026-04-17 17:15:00+00:00,647.728702,-2840.86,price 647.40 reverted to/below mean 647.86; exit short
+QQQ,mean_reversion,long,662.149,2026-04-20 14:15:00+00:00,646.653165,2026-04-20 17:30:00+00:00,645.557060,-725.78,price 645.88 reverted to/above mean 645.80; exit long
+QQQ,mean_reversion,short,921.083,2026-04-20 20:30:00+00:00,647.865905,2026-04-21 14:45:00+00:00,646.913295,877.43,price 646.59 reverted to/below mean 647.69; exit short
+QQQ,mean_reversion,long,565.594,2026-04-21 16:30:00+00:00,645.622650,2026-04-21 19:00:00+00:00,646.286695,375.58,price 646.61 reverted to/above mean 646.21; exit long
+QQQ,mean_reversion,long,443.641,2026-04-21 19:30:00+00:00,643.031355,2026-04-21 20:00:00+00:00,646.966355,1745.73,price 647.29 reverted to/above mean 645.72; exit long
+QQQ,mean_reversion,short,430.865,2026-04-22 12:00:00+00:00,649.505085,2026-04-23 12:45:00+00:00,653.486580,-1715.49,price 653.16 reverted to/below mean 653.68; exit short
+QQQ,mean_reversion,short,658.613,2026-04-23 15:00:00+00:00,655.911880,2026-04-23 17:00:00+00:00,652.185930,2453.96,price 651.86 reverted to/below mean 654.56; exit short
+QQQ,mean_reversion,long,578.072,2026-04-23 17:15:00+00:00,650.274975,2026-04-23 20:30:00+00:00,651.943865,964.74,price 652.27 reverted to/above mean 652.03; exit long
+QQQ,mean_reversion,short,402.122,2026-04-24 12:00:00+00:00,659.859905,2026-04-27 13:00:00+00:00,663.761715,-1569.00,price 663.43 reverted to/below mean 663.56; exit short
+QQQ,mean_reversion,long,737.382,2026-04-27 14:15:00+00:00,662.636152,2026-04-27 16:30:00+00:00,662.783443,108.61,price 663.12 reverted to/above mean 663.00; exit long
+QQQ,mean_reversion,long,663.645,2026-04-28 12:00:00+00:00,655.777725,2026-04-28 17:30:00+00:00,656.091790,208.43,price 656.42 reverted to/above mean 656.22; exit long
+QQQ,mean_reversion,short,698.495,2026-04-28 19:00:00+00:00,658.200735,2026-04-29 16:15:00+00:00,658.784228,-407.57,price 658.46 reverted to/below mean 659.14; exit short
+QQQ,mean_reversion,short,590.019,2026-04-29 19:45:00+00:00,661.259205,2026-04-29 20:00:00+00:00,656.948310,2543.51,price 656.62 reverted to/below mean 659.36; exit short
+QQQ,mean_reversion,short,351.744,2026-04-30 12:15:00+00:00,665.986840,2026-04-30 13:45:00+00:00,659.784728,2181.56,price 659.46 reverted to/below mean 660.80; exit short
+QQQ,mean_reversion,short,484.587,2026-04-30 18:00:00+00:00,666.966350,2026-05-01 18:30:00+00:00,674.036850,-3426.27,price 673.70 reverted to/below mean 674.53; exit short
+QQQ,mean_reversion,long,779.591,2026-05-01 20:15:00+00:00,673.526595,2026-05-04 12:45:00+00:00,674.372645,659.57,price 674.71 reverted to/above mean 674.32; exit long
+QQQ,mean_reversion,short,787.11,2026-05-04 14:30:00+00:00,676.011825,2026-05-04 15:15:00+00:00,673.196430,2216.03,price 672.86 reverted to/below mean 674.52; exit short
+QQQ,mean_reversion,long,615.855,2026-05-04 15:30:00+00:00,672.836250,2026-05-04 19:15:00+00:00,672.488588,-214.11,price 672.83 reverted to/above mean 672.67; exit long
+QQQ,mean_reversion,short,584.495,2026-05-05 12:30:00+00:00,677.431115,2026-05-05 19:45:00+00:00,681.870765,-2594.95,price 681.53 reverted to/below mean 681.79; exit short
+QQQ,mean_reversion,short,888.515,2026-05-05 20:15:00+00:00,683.518070,2026-05-07 15:45:00+00:00,697.698675,-12599.68,price 697.35 reverted to/below mean 697.46; exit short
+QQQ,mean_reversion,long,411.593,2026-05-07 17:15:00+00:00,693.406530,2026-05-08 12:15:00+00:00,699.580035,2540.97,price 699.93 reverted to/above mean 695.23; exit long
+QQQ,mean_reversion,short,381.554,2026-05-08 12:30:00+00:00,701.678985,2026-05-11 14:15:00+00:00,710.144895,-3230.20,price 709.79 reverted to/below mean 710.48; exit short
+QQQ,mean_reversion,short,464.189,2026-05-11 15:15:00+00:00,712.843400,2026-05-11 18:45:00+00:00,712.686165,72.99,price 712.33 reverted to/below mean 713.09; exit short
+QQQ,mean_reversion,long,469.775,2026-05-12 12:15:00+00:00,706.813230,2026-05-12 18:15:00+00:00,702.398625,-2073.87,price 702.75 reverted to/above mean 701.95; exit long
+QQQ,mean_reversion,short,368.921,2026-05-12 19:30:00+00:00,705.716965,2026-05-14 12:45:00+00:00,715.077360,-3453.25,price 714.72 reverted to/below mean 715.27; exit short
+QQQ,mean_reversion,short,460.896,2026-05-14 13:30:00+00:00,717.885877,2026-05-14 17:15:00+00:00,719.139390,-577.74,price 718.78 reverted to/below mean 718.91; exit short
+QQQ,mean_reversion,long,352.314,2026-05-15 13:15:00+00:00,710.515080,2026-05-15 17:15:00+00:00,713.103270,911.86,price 713.46 reverted to/above mean 711.83; exit long
+QQQ,mean_reversion,short,350.145,2026-05-15 18:00:00+00:00,714.307667,2026-05-15 19:00:00+00:00,711.545595,967.13,price 711.19 reverted to/below mean 711.75; exit short
+QQQ,mean_reversion,long,358.034,2026-05-15 19:45:00+00:00,709.264455,2026-05-18 12:45:00+00:00,712.563540,1181.18,price 712.92 reverted to/above mean 710.86; exit long
+QQQ,mean_reversion,long,271.355,2026-05-18 15:15:00+00:00,702.741195,2026-05-18 19:30:00+00:00,704.187730,392.52,price 704.54 reverted to/above mean 702.65; exit long
+QQQ,mean_reversion,short,267.251,2026-05-18 19:45:00+00:00,705.337155,2026-05-19 12:15:00+00:00,700.380015,1324.80,price 700.03 reverted to/below mean 702.79; exit short
+QQQ,mean_reversion,long,254.651,2026-05-19 14:00:00+00:00,697.308480,2026-05-19 16:15:00+00:00,700.909370,916.97,price 701.26 reverted to/above mean 700.59; exit long
+QQQ,mean_reversion,short,282.068,2026-05-19 17:00:00+00:00,704.917365,2026-05-19 19:30:00+00:00,702.105877,793.03,price 701.75 reverted to/below mean 702.41; exit short
+QQQ,mean_reversion,short,316.18,2026-05-20 14:15:00+00:00,708.165740,2026-05-20 20:45:00+00:00,711.105375,-929.45,price 710.75 reverted to/below mean 711.09; exit short
+QQQ,mean_reversion,long,422.72,2026-05-21 14:15:00+00:00,708.574110,2026-05-21 16:00:00+00:00,710.024810,613.24,price 710.38 reverted to/above mean 710.15; exit long
+QQQ,mean_reversion,short,407.354,2026-05-21 17:00:00+00:00,711.673985,2026-05-22 18:15:00+00:00,720.420030,-3562.74,price 720.06 reverted to/below mean 720.11; exit short
+QQQ,mean_reversion,long,507.411,2026-05-22 19:00:00+00:00,718.939290,2026-05-26 12:15:00+00:00,725.117260,3134.77,price 725.48 reverted to/above mean 719.88; exit long
+QQQ,mean_reversion,short,409.029,2026-05-26 12:30:00+00:00,726.076780,2026-05-26 17:15:00+00:00,727.983810,-780.03,price 727.62 reverted to/below mean 727.82; exit short
+QQQ,mean_reversion,short,587.483,2026-05-26 19:30:00+00:00,730.144745,2026-05-27 13:30:00+00:00,728.348993,1054.97,price 727.99 reverted to/below mean 730.64; exit short
+QQQ,mean_reversion,short,390.461,2026-05-27 18:15:00+00:00,729.305165,2026-05-28 12:15:00+00:00,727.083360,867.53,price 726.72 reverted to/below mean 728.86; exit short
+QQQ,mean_reversion,short,366.944,2026-05-28 14:00:00+00:00,731.773930,2026-05-29 14:30:00+00:00,736.182908,-1617.85,price 735.82 reverted to/below mean 736.71; exit short
+QQQ,mean_reversion,short,441.128,2026-06-01 15:15:00+00:00,740.184723,2026-06-01 19:45:00+00:00,742.971300,-1229.24,price 742.60 reverted to/below mean 742.78; exit short
+QQQ,mean_reversion,short,640.087,2026-06-02 20:00:00+00:00,746.646490,2026-06-03 13:30:00+00:00,744.602115,1308.58,price 744.23 reverted to/below mean 745.61; exit short
+QQQ,mean_reversion,long,510.659,2026-06-03 13:45:00+00:00,743.011320,2026-06-03 14:00:00+00:00,745.337145,1187.70,price 745.71 reverted to/above mean 745.59; exit long
+QQQ,mean_reversion,long,431.322,2026-06-03 15:30:00+00:00,743.911770,2026-06-03 17:45:00+00:00,744.227700,136.27,price 744.60 reverted to/above mean 744.39; exit long
+QQQ,mean_reversion,long,458.578,2026-06-03 20:30:00+00:00,741.440535,2026-06-04 15:00:00+00:00,739.420105,-926.52,price 739.79 reverted to/above mean 739.63; exit long
+QQQ,mean_reversion,long,445.037,2026-06-05 12:00:00+00:00,732.546090,2026-06-08 12:00:00+00:00,714.462590,-8047.83,price 714.82 reverted to/above mean 710.21; exit long
+QQQ,mean_reversion,long,253.253,2026-06-08 19:00:00+00:00,715.777710,2026-06-09 12:15:00+00:00,721.049295,1335.04,price 721.41 reverted to/above mean 718.09; exit long
+QQQ,mean_reversion,short,276.418,2026-06-09 12:30:00+00:00,722.018810,2026-06-09 14:00:00+00:00,717.678660,1199.70,price 717.32 reverted to/below mean 718.91; exit short
+QQQ,mean_reversion,long,224.005,2026-06-09 14:30:00+00:00,712.646145,2026-06-09 18:45:00+00:00,706.366640,-1406.64,price 706.72 reverted to/above mean 702.82; exit long
+QQQ,mean_reversion,long,183.585,2026-06-10 19:45:00+00:00,694.046850,2026-06-11 12:00:00+00:00,702.438605,1540.60,price 702.79 reverted to/above mean 697.19; exit long
+QQQ,mean_reversion,short,155.99,2026-06-11 17:15:00+00:00,706.816415,2026-06-12 13:30:00+00:00,712.926285,-953.08,price 712.57 reverted to/below mean 714.86; exit short
+QQQ,mean_reversion,short,169.745,2026-06-12 14:45:00+00:00,720.679480,2026-06-12 15:45:00+00:00,716.648145,684.30,price 716.29 reverted to/below mean 717.79; exit short
+QQQ,mean_reversion,short,213.871,2026-06-15 12:15:00+00:00,736.081775,2026-06-15 19:15:00+00:00,743.206418,-1523.75,price 742.84 reverted to/below mean 743.28; exit short
+QQQ,mean_reversion,long,518.829,2026-06-16 12:30:00+00:00,742.971300,2026-06-17 12:15:00+00:00,733.633000,-4844.98,price 734.00 reverted to/above mean 732.77; exit long
+QQQ,mean_reversion,long,246.108,2026-06-17 18:00:00+00:00,729.654645,2026-06-17 18:30:00+00:00,734.627502,1223.86,price 735.00 reverted to/above mean 732.51; exit long
+QQQ,mean_reversion,long,184.343,2026-06-17 18:45:00+00:00,729.924780,2026-06-18 12:00:00+00:00,732.213710,421.95,price 732.58 reverted to/above mean 729.34; exit long
+QQQ,mean_reversion,short,401.965,2026-06-22 12:15:00+00:00,741.289170,2026-06-22 14:15:00+00:00,740.810220,192.52,price 740.44 reverted to/below mean 740.65; exit short
+QQQ,mean_reversion,long,285.386,2026-06-22 14:30:00+00:00,737.728680,2026-06-22 19:45:00+00:00,737.730950,0.65,price 738.10 reverted to/above mean 736.53; exit long
+QQQ,mean_reversion,long,203.102,2026-06-23 12:15:00+00:00,717.448545,2026-06-23 17:00:00+00:00,718.370635,187.28,price 718.73 reverted to/above mean 718.20; exit long
+QQQ,mean_reversion,long,254.143,2026-06-23 18:30:00+00:00,713.766705,2026-06-24 12:15:00+00:00,718.630505,1236.10,price 718.99 reverted to/above mean 716.78; exit long
+QQQ,mean_reversion,short,221.6,2026-06-24 14:45:00+00:00,719.170235,2026-06-24 15:30:00+00:00,716.137890,671.97,price 715.78 reverted to/below mean 715.82; exit short
+QQQ,mean_reversion,long,231.6,2026-06-24 16:45:00+00:00,713.126385,2026-06-24 20:00:00+00:00,718.130755,1159.01,price 718.49 reverted to/above mean 711.42; exit long
+QQQ,mean_reversion,short,184.898,2026-06-24 20:15:00+00:00,722.018810,2026-06-25 13:45:00+00:00,706.182915,2928.03,price 705.83 reverted to/below mean 714.87; exit short
+QQQ,mean_reversion,long,167.721,2026-06-26 12:45:00+00:00,706.042845,2026-06-26 15:15:00+00:00,712.073785,1011.52,price 712.43 reverted to/above mean 712.29; exit long
+QQQ,mean_reversion,long,245.872,2026-06-26 18:45:00+00:00,708.884265,2026-06-29 12:30:00+00:00,714.552545,1393.67,price 714.91 reverted to/above mean 710.18; exit long
+QQQ,mean_reversion,short,217.336,2026-06-29 13:30:00+00:00,717.101270,2026-06-29 14:00:00+00:00,707.233440,2144.63,price 706.88 reverted to/below mean 710.35; exit short
+QQQ,mean_reversion,short,426.017,2026-06-30 12:15:00+00:00,724.897370,2026-06-30 20:15:00+00:00,735.937785,-4703.40,price 735.57 reverted to/below mean 735.84; exit short
+QQQ,mean_reversion,long,441.714,2026-07-01 12:30:00+00:00,730.695165,2026-07-02 12:15:00+00:00,727.236200,-1527.87,price 727.60 reverted to/above mean 727.34; exit long
+QQQ,mean_reversion,long,236.059,2026-07-02 14:15:00+00:00,722.531085,2026-07-02 19:45:00+00:00,712.173735,-2444.95,price 712.53 reverted to/above mean 712.16; exit long
+QQQ,mean_reversion,short,187.718,2026-07-06 12:00:00+00:00,721.599020,2026-07-06 17:15:00+00:00,723.111375,-283.90,price 722.75 reverted to/below mean 723.52; exit short
+QQQ,mean_reversion,long,344.753,2026-07-07 12:00:00+00:00,716.778210,2026-07-07 16:15:00+00:00,712.493575,-1477.14,price 712.85 reverted to/above mean 712.45; exit long
+QQQ,mean_reversion,long,290.74,2026-07-08 12:15:00+00:00,703.441545,2026-07-08 13:45:00+00:00,708.855395,1574.02,price 709.21 reverted to/above mean 708.85; exit long
+QQQ,mean_reversion,long,255.869,2026-07-08 15:15:00+00:00,701.885767,2026-07-08 16:15:00+00:00,706.436605,1164.42,price 706.79 reverted to/above mean 705.80; exit long
+QQQ,mean_reversion,short,265.127,2026-07-08 17:15:00+00:00,710.364640,2026-07-09 20:45:00+00:00,723.361500,-3445.82,price 723.00 reverted to/below mean 723.08; exit short
+QQQ,mean_reversion,long,473.001,2026-07-10 12:00:00+00:00,720.630135,2026-07-10 13:45:00+00:00,722.558540,912.14,price 722.92 reverted to/above mean 722.78; exit long
+QQQ,mean_reversion,long,296.023,2026-07-10 14:45:00+00:00,720.650145,2026-07-10 15:15:00+00:00,723.682977,897.79,price 724.04 reverted to/above mean 722.35; exit long
+QQQ,mean_reversion,long,363.922,2026-07-13 12:15:00+00:00,717.768705,2026-07-14 12:15:00+00:00,716.341650,-519.34,price 716.70 reverted to/above mean 712.86; exit long
+QQQ,mean_reversion,short,282.328,2026-07-14 12:30:00+00:00,719.819910,2026-07-14 19:15:00+00:00,720.289965,-132.71,price 719.93 reverted to/below mean 720.46; exit short
+QQQ,mean_reversion,short,420.106,2026-07-15 12:00:00+00:00,721.658990,2026-07-15 13:45:00+00:00,720.750195,381.79,price 720.39 reverted to/below mean 721.07; exit short
+QQQ,mean_reversion,long,313.973,2026-07-15 14:15:00+00:00,718.579110,2026-07-15 17:45:00+00:00,716.801420,-558.15,price 717.16 reverted to/above mean 716.56; exit long
+QQQ,mean_reversion,long,285.123,2026-07-16 12:00:00+00:00,710.855250,2026-07-17 15:45:00+00:00,699.030310,-3371.56,price 699.38 reverted to/above mean 696.27; exit long
+QQQ,mean_reversion,short,243.04,2026-07-20 13:30:00+00:00,705.047300,2026-07-20 14:45:00+00:00,698.979315,1474.76,price 698.63 reverted to/below mean 698.77; exit short
+QQQ,mean_reversion,long,261.399,2026-07-20 18:30:00+00:00,698.208930,2026-07-21 12:00:00+00:00,704.467590,1636.01,price 704.82 reverted to/above mean 699.59; exit long
+QQQ,mean_reversion,short,275.599,2026-07-21 12:45:00+00:00,705.037305,2026-07-21 19:15:00+00:00,708.724185,-1016.10,price 708.37 reverted to/below mean 708.68; exit short
+QQQ,mean_reversion,long,387.091,2026-07-22 12:15:00+00:00,702.090870,2026-07-22 13:45:00+00:00,707.650998,2152.28,price 708.00 reverted to/above mean 707.49; exit long
+QQQ,mean_reversion,long,482.486,2026-07-22 19:45:00+00:00,705.542595,2026-07-23 19:45:00+00:00,691.634010,-6710.70,price 691.98 reverted to/above mean 691.33; exit long
+QQQ,mean_reversion,short,261.224,2026-07-23 20:30:00+00:00,695.082285,2026-07-24 12:45:00+00:00,692.476065,680.81,price 692.13 reverted to/below mean 692.16; exit short
+QQQ,mean_reversion,long,238.538,2026-07-24 13:45:00+00:00,685.512585,2026-07-24 15:45:00+00:00,690.994330,1307.60,price 691.34 reverted to/above mean 690.05; exit long
+QQQ,mean_reversion,long,254.896,2026-07-24 18:30:00+00:00,684.582120,2026-07-27 12:00:00+00:00,693.433110,2256.08,price 693.78 reverted to/above mean 687.41; exit long
+QQQ,mean_reversion,short,255.336,2026-07-27 12:45:00+00:00,693.732960,2026-07-27 13:45:00+00:00,686.498077,1847.33,price 686.15 reverted to/below mean 687.53; exit short
+QQQ,mean_reversion,long,211.409,2026-07-27 14:30:00+00:00,676.658160,2026-07-27 18:45:00+00:00,681.579040,1040.32,price 681.92 reverted to/above mean 679.55; exit long
+QQQ,mean_reversion,short,266.524,2026-07-27 19:00:00+00:00,681.898880,2026-07-28 12:00:00+00:00,676.758210,1370.11,price 676.42 reverted to/below mean 680.13; exit short
+QQQ,mean_reversion,long,283.637,2026-07-28 13:30:00+00:00,671.620642,2026-07-28 15:30:00+00:00,677.890885,1778.47,price 678.23 reverted to/above mean 676.64; exit long
+QQQ,mean_reversion,long,300.437,2026-07-29 13:45:00+00:00,671.285475,2026-07-29 17:00:00+00:00,670.814425,-141.52,price 671.15 reverted to/above mean 669.91; exit long
+QQQ,mean_reversion,short,222.754,2026-07-29 18:30:00+00:00,676.706478,2026-07-29 19:30:00+00:00,665.352510,2529.14,price 665.02 reverted to/below mean 669.57; exit short
+QQQ,mean_reversion,long,180.154,2026-07-29 20:00:00+00:00,660.420045,2026-07-30 12:00:00+00:00,671.404130,1978.83,price 671.74 reverted to/above mean 668.47; exit long
+QQQ,mean_reversion,short,317.848,2026-07-30 19:00:00+00:00,684.257700,2026-07-31 14:00:00+00:00,681.765712,792.07,price 681.42 reverted to/below mean 684.89; exit short
+QQQ,mean_reversion,short,315.693,2026-08-03 13:45:00+00:00,692.843405,2026-08-04 20:30:00+00:00,721.530585,-9056.34,price 721.17 reverted to/below mean 722.14; exit short
+QQQ,mean_reversion,short,341.464,2026-08-05 13:30:00+00:00,727.626005,2026-08-05 14:30:00+00:00,723.781710,1312.69,price 723.42 reverted to/below mean 724.09; exit short
+QQQ,mean_reversion,long,389.365,2026-08-05 19:45:00+00:00,717.458550,2026-08-06 14:45:00+00:00,718.215713,294.81,price 718.58 reverted to/above mean 717.66; exit long
+QQQ,mean_reversion,short,307.432,2026-08-07 12:30:00+00:00,722.068785,2026-08-07 18:00:00+00:00,720.500070,482.27,price 720.14 reverted to/below mean 720.77; exit short
+QQQ,mean_reversion,short,414.077,2026-08-10 12:00:00+00:00,723.468085,2026-08-10 14:45:00+00:00,722.130885,553.70,price 721.77 reverted to/below mean 722.09; exit short
+QQQ,mean_reversion,long,400.973,2026-08-10 16:30:00+00:00,721.190415,2026-08-10 19:00:00+00:00,721.703968,205.92,price 722.07 reverted to/above mean 722.06; exit long
+QQQ,mean_reversion,short,643.388,2026-08-11 12:15:00+00:00,722.698470,2026-08-11 13:30:00+00:00,720.860250,1182.69,price 720.50 reverted to/below mean 721.65; exit short
+QQQ,mean_reversion,long,513.922,2026-08-11 15:45:00+00:00,719.489565,2026-08-11 19:30:00+00:00,718.105768,-711.16,price 718.47 reverted to/above mean 718.38; exit long
+QQQ,mean_reversion,short,540.109,2026-08-12 12:00:00+00:00,722.928355,2026-08-12 15:45:00+00:00,723.606622,-366.34,price 723.25 reverted to/below mean 723.43; exit short
+QQQ,mean_reversion,long,639.002,2026-08-12 20:15:00+00:00,723.381510,2026-08-13 13:00:00+00:00,724.267685,566.27,price 724.63 reverted to/above mean 724.33; exit long
+QQQ,mean_reversion,short,582.488,2026-08-13 13:30:00+00:00,727.266185,2026-08-13 19:45:00+00:00,732.476055,-3034.69,price 732.11 reverted to/below mean 732.17; exit short
+QQQ,mean_reversion,short,715.48,2026-08-14 12:45:00+00:00,733.692970,2026-08-14 14:15:00+00:00,731.845740,1321.66,price 731.48 reverted to/below mean 732.86; exit short
+QQQ,mean_reversion,long,561.973,2026-08-14 14:45:00+00:00,731.055345,2026-08-14 19:15:00+00:00,729.520058,-862.79,price 729.88 reverted to/above mean 729.58; exit long
+QQQ,mean_reversion,short,740.818,2026-08-14 19:45:00+00:00,730.679477,2026-08-17 16:30:00+00:00,732.496065,-1345.76,price 732.13 reverted to/below mean 732.80; exit short
+QQQ,mean_reversion,long,578.171,2026-08-17 17:00:00+00:00,731.215425,2026-08-18 19:30:00+00:00,717.576032,-7885.90,price 717.93 reverted to/above mean 717.93; exit long
+QQQ,mean_reversion,short,505.95,2026-08-19 12:30:00+00:00,719.470085,2026-08-19 13:45:00+00:00,716.042842,1734.01,price 715.68 reverted to/below mean 718.07; exit short
+QQQ,mean_reversion,long,293.822,2026-08-19 14:00:00+00:00,713.091367,2026-08-19 14:45:00+00:00,718.070785,1463.06,price 718.43 reverted to/above mean 717.73; exit long
+QQQ,mean_reversion,long,385.577,2026-08-20 12:00:00+00:00,711.265455,2026-08-20 16:30:00+00:00,712.193725,357.92,price 712.55 reverted to/above mean 712.50; exit long
+QQQ,mean_reversion,long,362.3,2026-08-20 18:00:00+00:00,709.554600,2026-08-21 12:15:00+00:00,715.242200,2060.62,price 715.60 reverted to/above mean 711.05; exit long
+QQQ,mean_reversion,short,391.051,2026-08-21 12:45:00+00:00,715.831905,2026-08-21 13:30:00+00:00,711.990817,1502.06,price 711.63 reverted to/below mean 711.67; exit short
+QQQ,mean_reversion,long,547.37,2026-08-24 13:00:00+00:00,709.564605,2026-08-24 16:15:00+00:00,708.510568,-576.95,price 708.87 reverted to/above mean 708.54; exit long
+QQQ,mean_reversion,long,544.935,2026-08-24 20:15:00+00:00,706.543095,2026-08-25 12:30:00+00:00,711.574035,2741.54,price 711.93 reverted to/above mean 707.85; exit long
+QQQ,mean_reversion,short,465.564,2026-08-25 12:45:00+00:00,711.943850,2026-08-25 17:00:00+00:00,710.239942,793.28,price 709.88 reverted to/below mean 710.54; exit short
+QQQ,mean_reversion,short,643.844,2026-08-25 20:15:00+00:00,711.214215,2026-08-26 12:00:00+00:00,709.524585,1087.86,price 709.17 reverted to/below mean 710.14; exit short
+QQQ,mean_reversion,long,646.257,2026-08-26 12:30:00+00:00,708.634140,2026-08-26 13:30:00+00:00,710.864390,1441.31,price 711.22 reverted to/above mean 709.79; exit long
+QQQ,mean_reversion,short,535.124,2026-08-26 13:45:00+00:00,711.823910,2026-08-26 14:15:00+00:00,708.914280,1557.01,price 708.56 reverted to/below mean 709.93; exit short
+QQQ,mean_reversion,short,658.372,2026-08-26 18:45:00+00:00,711.534055,2026-08-27 18:00:00+00:00,718.639140,-4677.79,price 718.28 reverted to/below mean 718.61; exit short
+QQQ,mean_reversion,short,519.269,2026-08-27 19:45:00+00:00,720.839400,2026-08-28 14:00:00+00:00,717.938790,1506.20,price 717.58 reverted to/below mean 719.40; exit short
+QQQ,mean_reversion,short,369.745,2026-08-28 14:30:00+00:00,722.008815,2026-08-28 15:45:00+00:00,718.218930,1401.29,price 717.86 reverted to/below mean 720.43; exit short
+QQQ,mean_reversion,long,327.954,2026-08-28 16:15:00+00:00,716.698170,2026-08-28 20:30:00+00:00,716.391625,-100.53,price 716.75 reverted to/above mean 716.51; exit long
+QQQ,mean_reversion,long,530.587,2026-08-31 12:00:00+00:00,714.767205,2026-08-31 16:15:00+00:00,714.412615,-188.14,price 714.77 reverted to/above mean 714.66; exit long
+QQQ,mean_reversion,short,535.542,2026-08-31 16:45:00+00:00,714.902370,2026-08-31 17:15:00+00:00,714.587115,168.83,price 714.23 reverted to/below mean 714.49; exit short
+QQQ,mean_reversion,short,617.033,2026-08-31 19:30:00+00:00,715.701970,2026-09-01 12:00:00+00:00,709.224435,3996.85,price 708.87 reverted to/below mean 715.01; exit short
+QQQ,mean_reversion,long,485.028,2026-09-01 12:15:00+00:00,709.114380,2026-09-01 15:30:00+00:00,711.184230,1003.94,price 711.54 reverted to/above mean 710.66; exit long
+QQQ,mean_reversion,long,523.176,2026-09-01 18:30:00+00:00,705.352500,2026-09-02 12:15:00+00:00,707.705970,1231.28,price 708.06 reverted to/above mean 707.87; exit long
+QQQ,mean_reversion,long,671.249,2026-09-02 12:45:00+00:00,705.982815,2026-09-02 14:00:00+00:00,707.316165,895.01,price 707.67 reverted to/above mean 707.17; exit long
+QQQ,mean_reversion,short,533.183,2026-09-02 14:15:00+00:00,708.835405,2026-09-02 18:30:00+00:00,708.379012,243.34,price 708.02 reverted to/below mean 708.46; exit short
+QQQ,mean_reversion,short,838.932,2026-09-03 12:30:00+00:00,709.515065,2026-09-03 20:00:00+00:00,717.608625,-6789.95,price 717.25 reverted to/below mean 717.64; exit short
+QQQ,mean_reversion,short,649.867,2026-09-04 12:00:00+00:00,720.279680,2026-09-04 12:45:00+00:00,717.858750,1573.28,price 717.50 reverted to/below mean 717.78; exit short
+QQQ,mean_reversion,short,546.159,2026-09-04 13:30:00+00:00,719.520060,2026-09-04 14:30:00+00:00,718.409025,606.80,price 718.05 reverted to/below mean 718.60; exit short
+QQQ,mean_reversion,short,723.141,2026-09-08 12:45:00+00:00,720.669485,2026-09-08 13:30:00+00:00,717.018330,2640.30,price 716.66 reverted to/below mean 718.32; exit short
+QQQ,mean_reversion,long,682.145,2026-09-08 19:30:00+00:00,718.929285,2026-09-09 13:45:00+00:00,718.490575,-299.26,price 718.85 reverted to/above mean 718.32; exit long
+QQQ,mean_reversion,long,587.285,2026-09-10 12:15:00+00:00,710.915280,2026-09-10 16:45:00+00:00,710.559543,-208.92,price 710.91 reverted to/above mean 710.01; exit long
+QQQ,mean_reversion,short,517.455,2026-09-11 12:30:00+00:00,713.832905,2026-09-11 18:45:00+00:00,716.267955,-1260.03,price 715.91 reverted to/below mean 716.04; exit short
+QQQ,mean_reversion,long,697.322,2026-09-11 19:45:00+00:00,715.247445,2026-09-14 15:30:00+00:00,710.154745,-3551.25,price 710.51 reverted to/above mean 708.19; exit long
+QQQ,mean_reversion,long,564.299,2026-09-15 14:00:00+00:00,707.273460,2026-09-15 20:00:00+00:00,705.107270,-1222.38,price 705.46 reverted to/above mean 705.00; exit long
+QQQ,mean_reversion,short,666.695,2026-09-16 12:00:00+00:00,708.615515,2026-09-16 17:15:00+00:00,709.954800,-892.89,price 709.60 reverted to/below mean 709.71; exit short
+QQQ,mean_reversion,long,357.621,2026-09-16 18:45:00+00:00,704.567108,2026-09-17 12:00:00+00:00,713.613015,3235.01,price 713.97 reverted to/above mean 707.61; exit long
+QQQ,mean_reversion,short,293.5,2026-09-17 12:15:00+00:00,714.942350,2026-09-17 18:30:00+00:00,716.488065,-453.67,price 716.13 reverted to/below mean 716.22; exit short
+QQQ,mean_reversion,short,718.307,2026-09-17 19:30:00+00:00,716.951345,2026-09-17 20:00:00+00:00,716.828235,88.43,price 716.47 reverted to/below mean 716.55; exit short
+QQQ,mean_reversion,short,723.245,2026-09-18 12:30:00+00:00,717.830905,2026-09-18 14:00:00+00:00,716.958300,631.11,price 716.60 reverted to/below mean 717.05; exit short
+QQQ,mean_reversion,short,821.578,2026-09-18 18:30:00+00:00,717.840900,2026-09-23 12:15:00+00:00,745.592610,-22800.19,price 745.22 reverted to/below mean 746.18; exit short
+QQQ,mean_reversion,long,468.241,2026-09-23 13:30:00+00:00,745.312470,2026-09-23 18:15:00+00:00,740.634498,-2190.42,price 741.00 reverted to/above mean 740.81; exit long
+QQQ,mean_reversion,long,280.71,2026-09-24 12:15:00+00:00,734.877255,2026-09-24 16:15:00+00:00,739.190220,1210.69,price 739.56 reverted to/above mean 736.69; exit long
+QQQ,mean_reversion,short,217.625,2026-09-24 16:30:00+00:00,740.389620,2026-09-24 20:15:00+00:00,739.199415,259.02,price 738.83 reverted to/below mean 739.73; exit short
+QQQ,mean_reversion,short,238.19,2026-09-25 12:30:00+00:00,744.367630,2026-09-25 14:00:00+00:00,741.340485,721.04,price 740.97 reverted to/below mean 741.45; exit short
+QQQ,mean_reversion,long,283.954,2026-09-28 12:15:00+00:00,740.900265,2026-09-28 16:15:00+00:00,739.055287,-523.89,price 739.42 reverted to/above mean 738.49; exit long
+QQQ,mean_reversion,short,341.789,2026-09-29 20:30:00+00:00,738.960335,2026-09-30 17:15:00+00:00,742.691160,-1275.15,price 742.32 reverted to/below mean 742.89; exit short
+QQQ,mean_reversion,long,279.486,2026-09-30 19:45:00+00:00,739.879755,2026-10-01 12:15:00+00:00,743.428100,991.71,price 743.80 reverted to/above mean 743.04; exit long
+QQQ,mean_reversion,long,245.023,2026-10-01 14:00:00+00:00,739.304467,2026-10-01 17:15:00+00:00,742.238695,718.95,price 742.61 reverted to/above mean 739.90; exit long
+QQQ,mean_reversion,short,246.196,2026-10-02 12:00:00+00:00,746.006810,2026-10-02 16:30:00+00:00,749.494560,-858.67,price 749.12 reverted to/below mean 749.86; exit short
+BTC/USD,momentum_breakout,long,1.676495,2026-04-07 22:00:00+00:00,71537.666958,2026-04-08 14:00:00+00:00,70865.005772,-1127.71,trailing stop hit: bar low 70712.00 <= stop 71088.13
+BTC/USD,momentum_breakout,long,1.845661,2026-04-09 15:00:00+00:00,72197.112516,2026-04-09 23:00:00+00:00,71759.946078,-806.86,trailing stop hit: bar low 71610.07 <= stop 71625.33
+BTC/USD,momentum_breakout,long,1.972622,2026-04-10 20:00:00+00:00,73444.481389,2026-04-10 22:00:00+00:00,72864.549500,-1143.99,trailing stop hit: bar low 72810.85 <= stop 72910.65
+BTC/USD,momentum_breakout,long,2.8112,2026-04-11 18:00:00+00:00,73628.712458,2026-04-11 21:00:00+00:00,73421.942164,-581.27,trailing stop hit: bar low 73230.65 <= stop 73247.15
+BTC/USD,momentum_breakout,short,2.000561,2026-04-12 01:00:00+00:00,71640.565798,2026-04-13 13:00:00+00:00,71716.601881,-152.11,trailing stop hit: bar high 71827.23 >= stop 71424.19
+BTC/USD,momentum_breakout,long,2.192729,2026-04-13 14:00:00+00:00,72485.839808,2026-04-13 15:00:00+00:00,71863.505272,-1364.61,trailing stop hit: bar low 71701.30 <= stop 72010.95
+BTC/USD,momentum_breakout,long,1.757557,2026-04-13 19:00:00+00:00,73406.259787,2026-04-14 14:00:00+00:00,75024.759355,2844.61,trailing stop hit: bar low 74217.50 <= stop 74585.75
+BTC/USD,momentum_breakout,short,1.811207,2026-04-16 13:00:00+00:00,73742.816147,2026-04-16 15:00:00+00:00,74762.462050,-1846.79,trailing stop hit: bar high 74908.60 >= stop 74318.95
+BTC/USD,momentum_breakout,long,1.581611,2026-04-17 13:00:00+00:00,77425.678492,2026-04-18 08:00:00+00:00,76743.390609,-1079.11,trailing stop hit: bar low 76542.50 <= stop 76781.14
+BTC/USD,momentum_breakout,short,1.993929,2026-04-19 22:00:00+00:00,74038.762100,2026-04-20 01:00:00+00:00,74654.158425,-1227.06,trailing stop hit: bar high 74790.72 >= stop 74550.95
+BTC/USD,momentum_breakout,long,1.778266,2026-04-22 13:00:00+00:00,78950.275410,2026-04-22 23:00:00+00:00,78187.181852,-1356.98,trailing stop hit: bar low 78194.87 <= stop 78384.94
+BTC/USD,momentum_breakout,long,3.375512,2026-04-26 05:00:00+00:00,78037.169085,2026-04-27 05:00:00+00:00,77741.474818,-998.12,trailing stop hit: bar low 77617.68 <= stop 78390.23
+BTC/USD,momentum_breakout,short,2.269078,2026-04-28 11:00:00+00:00,76182.902494,2026-04-29 01:00:00+00:00,76600.431075,-947.40,trailing stop hit: bar high 76669.23 >= stop 76622.76
+BTC/USD,momentum_breakout,long,2.359736,2026-04-29 04:00:00+00:00,77302.543956,2026-04-29 13:00:00+00:00,76717.841890,-1379.74,trailing stop hit: bar low 76416.97 <= stop 76881.61
+BTC/USD,momentum_breakout,short,1.710238,2026-04-29 18:00:00+00:00,75429.986140,2026-04-29 21:00:00+00:00,75940.030039,-872.30,trailing stop hit: bar high 76061.26 >= stop 75987.14
+BTC/USD,momentum_breakout,long,2.279855,2026-05-01 12:00:00+00:00,77930.365710,2026-05-01 20:00:00+00:00,77839.772644,-206.54,trailing stop hit: bar low 77731.01 <= stop 77886.49
+BTC/USD,momentum_breakout,long,3.23509,2026-05-03 20:00:00+00:00,78942.652100,2026-05-03 23:00:00+00:00,78532.963875,-1325.38,trailing stop hit: bar low 78499.20 <= stop 78631.94
+BTC/USD,momentum_breakout,long,1.924955,2026-05-04 02:00:00+00:00,80202.951435,2026-05-04 06:00:00+00:00,79834.841610,-708.59,trailing stop hit: bar low 79475.82 <= stop 79713.88
+BTC/USD,momentum_breakout,long,1.867739,2026-05-06 08:00:00+00:00,81988.763895,2026-05-06 13:00:00+00:00,81616.136018,-695.97,trailing stop hit: bar low 81586.30 <= stop 81605.05
+BTC/USD,momentum_breakout,short,1.929805,2026-05-07 13:00:00+00:00,80441.409175,2026-05-08 11:00:00+00:00,80252.551222,364.46,trailing stop hit: bar high 80343.97 >= stop 80289.22
+BTC/USD,momentum_breakout,long,2.061071,2026-05-10 22:00:00+00:00,82062.969980,2026-05-11 00:00:00+00:00,81399.981149,-1366.47,trailing stop hit: bar low 81209.99 <= stop 81607.67
+BTC/USD,momentum_breakout,short,2.082412,2026-05-12 15:00:00+00:00,80254.952450,2026-05-12 18:00:00+00:00,80702.531100,-932.04,trailing stop hit: bar high 80741.21 >= stop 80698.58
+BTC/USD,momentum_breakout,short,2.028082,2026-05-13 13:00:00+00:00,79583.168510,2026-05-13 18:00:00+00:00,79621.841025,-78.43,trailing stop hit: bar high 79794.40 >= stop 79716.89
+BTC/USD,momentum_breakout,long,1.710054,2026-05-14 14:00:00+00:00,80994.074256,2026-05-15 02:00:00+00:00,81242.619369,425.03,trailing stop hit: bar low 80729.40 <= stop 80843.24
+BTC/USD,momentum_breakout,long,3.053939,2026-05-17 10:00:00+00:00,78482.251515,2026-05-17 13:00:00+00:00,78149.295805,-1016.83,trailing stop hit: bar low 78147.80 <= stop 78169.82
+BTC/USD,momentum_breakout,short,2.394643,2026-05-17 23:00:00+00:00,77365.612843,2026-05-18 12:00:00+00:00,77647.879537,-675.93,trailing stop hit: bar high 77780.30 >= stop 77407.49
+BTC/USD,momentum_breakout,short,2.413632,2026-05-22 14:00:00+00:00,76638.922869,2026-05-22 17:00:00+00:00,76694.034353,-133.02,trailing stop hit: bar high 77022.40 >= stop 77015.94
+BTC/USD,momentum_breakout,short,2.109787,2026-05-22 18:00:00+00:00,76413.524125,2026-05-23 14:00:00+00:00,75495.168720,1937.53,trailing stop hit: bar high 75605.15 >= stop 75342.66
+BTC/USD,momentum_breakout,long,1.918636,2026-05-23 20:00:00+00:00,77216.834122,2026-05-23 21:00:00+00:00,76682.499570,-1025.19,trailing stop hit: bar low 76432.60 <= stop 76742.79
+BTC/USD,momentum_breakout,short,1.600983,2026-05-26 17:00:00+00:00,75778.989551,2026-05-28 21:00:00+00:00,73745.554350,3255.50,trailing stop hit: bar high 73832.60 >= stop 73784.08
+BTC/USD,momentum_breakout,short,2.39671,2026-06-01 06:00:00+00:00,73006.026726,2026-06-03 05:00:00+00:00,67260.311849,13770.81,trailing stop hit: bar high 67323.96 >= stop 67187.53
+BTC/USD,momentum_breakout,short,1.56332,2026-06-03 20:00:00+00:00,64885.323109,2026-06-03 21:00:00+00:00,65698.342755,-1271.01,trailing stop hit: bar high 65766.32 >= stop 65554.56
+BTC/USD,momentum_breakout,short,1.408507,2026-06-03 23:00:00+00:00,64016.160908,2026-06-04 03:00:00+00:00,64308.053958,-411.13,trailing stop hit: bar high 64456.76 >= stop 63692.51
+BTC/USD,momentum_breakout,short,1.065936,2026-06-05 06:00:00+00:00,61844.964049,2026-06-05 07:00:00+00:00,63092.825647,-1330.14,trailing stop hit: bar high 63068.47 >= stop 62794.04
+BTC/USD,momentum_breakout,short,0.871794,2026-06-05 13:00:00+00:00,60645.793934,2026-06-05 21:00:00+00:00,61666.507845,-889.85,trailing stop hit: bar high 61973.06 >= stop 61783.47
+BTC/USD,momentum_breakout,long,1.690875,2026-06-07 04:00:00+00:00,61902.851458,2026-06-07 12:00:00+00:00,61855.091983,-80.76,trailing stop hit: bar low 61547.32 <= stop 61664.16
+BTC/USD,momentum_breakout,short,1.803767,2026-06-09 14:00:00+00:00,61480.213016,2026-06-09 19:00:00+00:00,62075.217097,-1073.25,trailing stop hit: bar high 62053.42 >= stop 62040.78
+BTC/USD,momentum_breakout,long,1.639175,2026-06-10 15:00:00+00:00,62613.451080,2026-06-10 16:00:00+00:00,62134.926995,-784.38,trailing stop hit: bar low 61867.11 <= stop 62005.69
+BTC/USD,momentum_breakout,long,2.017427,2026-06-11 10:00:00+00:00,63111.621541,2026-06-11 12:00:00+00:00,62922.622950,-381.29,trailing stop hit: bar low 62439.23 <= stop 62615.58
+BTC/USD,momentum_breakout,long,3.323172,2026-06-13 15:00:00+00:00,64292.968419,2026-06-13 16:00:00+00:00,63966.607697,-1084.55,trailing stop hit: bar low 63875.30 <= stop 63980.00
+BTC/USD,momentum_breakout,short,3.483497,2026-06-14 17:00:00+00:00,63675.311418,2026-06-14 20:00:00+00:00,64012.035022,-1172.98,trailing stop hit: bar high 64073.76 >= stop 63971.97
+BTC/USD,momentum_breakout,long,2.382454,2026-06-15 11:00:00+00:00,66259.128007,2026-06-15 19:00:00+00:00,66546.410150,684.44,trailing stop hit: bar low 66330.48 <= stop 66385.13
+BTC/USD,momentum_breakout,short,2.291058,2026-06-17 08:00:00+00:00,64842.542010,2026-06-17 13:00:00+00:00,65254.134262,-942.98,trailing stop hit: bar high 65330.70 >= stop 65275.47
+BTC/USD,momentum_breakout,short,1.485528,2026-06-17 19:00:00+00:00,64208.689595,2026-06-19 13:00:00+00:00,63187.012717,1517.73,trailing stop hit: bar high 63526.37 >= stop 63130.99
+BTC/USD,momentum_breakout,short,3.373078,2026-06-21 20:00:00+00:00,63739.955080,2026-06-22 00:00:00+00:00,63839.260679,-334.97,trailing stop hit: bar high 64023.96 >= stop 63881.36
+BTC/USD,momentum_breakout,long,2.327966,2026-06-22 01:00:00+00:00,64552.036888,2026-06-22 03:00:00+00:00,63859.417319,-1612.39,trailing stop hit: bar low 63825.74 <= stop 64124.61
+BTC/USD,momentum_breakout,long,2.221108,2026-06-22 12:00:00+00:00,65113.515487,2026-06-22 16:00:00+00:00,64608.406637,-1121.90,trailing stop hit: bar low 64431.89 <= stop 64674.05
+BTC/USD,momentum_breakout,short,2.090979,2026-06-23 06:00:00+00:00,62845.141710,2026-06-24 01:00:00+00:00,62885.877225,-85.18,trailing stop hit: bar high 63034.68 >= stop 63029.59
+BTC/USD,momentum_breakout,short,2.003547,2026-06-24 13:00:00+00:00,61201.225080,2026-06-24 20:00:00+00:00,60885.172372,633.23,trailing stop hit: bar high 61114.39 >= stop 60450.29
+BTC/USD,momentum_breakout,short,1.343548,2026-06-25 13:00:00+00:00,58171.549675,2026-06-25 14:00:00+00:00,59406.158235,-1658.76,trailing stop hit: bar high 60372.43 >= stop 58869.09
+BTC/USD,momentum_breakout,short,2.827232,2026-06-28 16:00:00+00:00,59575.383907,2026-06-28 23:00:00+00:00,59506.018140,196.11,trailing stop hit: bar high 59751.10 >= stop 59729.22
+BTC/USD,momentum_breakout,short,2.224066,2026-06-30 12:00:00+00:00,58284.693075,2026-06-30 14:00:00+00:00,58384.817820,-222.68,trailing stop hit: bar high 59171.20 >= stop 58711.07
+BTC/USD,momentum_breakout,long,1.762493,2026-07-02 13:00:00+00:00,61905.045054,2026-07-02 14:00:00+00:00,61600.794195,-536.24,trailing stop hit: bar low 61313.57 <= stop 61374.12
+BTC/USD,momentum_breakout,long,3.01391,2026-07-04 17:00:00+00:00,63264.512448,2026-07-04 23:00:00+00:00,63057.922766,-622.64,trailing stop hit: bar low 62875.90 <= stop 62942.29
+BTC/USD,momentum_breakout,long,2.726426,2026-07-05 22:00:00+00:00,63699.323245,2026-07-06 00:00:00+00:00,63667.845153,-85.82,trailing stop hit: bar low 63282.68 <= stop 63348.52
+BTC/USD,momentum_breakout,long,2.10619,2026-07-10 01:00:00+00:00,63744.046095,2026-07-10 18:00:00+00:00,63720.118003,-50.40,trailing stop hit: bar low 63680.98 <= stop 63698.67
+BTC/USD,momentum_breakout,short,2.585045,2026-07-13 13:00:00+00:00,62223.302785,2026-07-13 14:00:00+00:00,62761.129882,-1390.31,trailing stop hit: bar high 62735.28 >= stop 62590.31
+BTC/USD,momentum_breakout,short,2.268155,2026-07-13 17:00:00+00:00,61805.586747,2026-07-13 19:00:00+00:00,62240.671784,-986.84,trailing stop hit: bar high 62234.34 >= stop 62213.19
+BTC/USD,momentum_breakout,long,2.279015,2026-07-14 12:00:00+00:00,63934.951500,2026-07-16 00:00:00+00:00,64516.963881,1326.41,trailing stop hit: bar low 64453.60 <= stop 64586.96
+BTC/USD,momentum_breakout,short,2.339792,2026-07-17 05:00:00+00:00,62739.453581,2026-07-17 10:00:00+00:00,63145.672057,-950.47,trailing stop hit: bar high 63156.30 >= stop 63137.44
+BTC/USD,momentum_breakout,long,4.086183,2026-07-18 16:00:00+00:00,64299.493680,2026-07-19 11:00:00+00:00,64399.614085,409.11,trailing stop hit: bar low 64390.50 <= stop 64398.29
+BTC/USD,momentum_breakout,short,2.672563,2026-07-20 06:00:00+00:00,63818.497789,2026-07-20 07:00:00+00:00,64250.480185,-1154.50,trailing stop hit: bar high 64248.39 >= stop 64169.35
+BTC/USD,momentum_breakout,long,2.27096,2026-07-21 06:00:00+00:00,65913.923992,2026-07-21 17:00:00+00:00,66141.407753,516.61,trailing stop hit: bar low 66064.80 <= stop 66085.88
+BTC/USD,momentum_breakout,short,2.641564,2026-07-22 06:00:00+00:00,65859.362346,2026-07-22 12:00:00+00:00,65624.245725,621.08,trailing stop hit: bar high 66283.53 >= stop 66212.56
+BTC/USD,momentum_breakout,long,5.114676,2026-07-26 03:00:00+00:00,64537.545646,2026-07-26 05:00:00+00:00,64310.545642,-1161.03,trailing stop hit: bar low 64323.57 <= stop 64338.68
+BTC/USD,momentum_breakout,long,4.75503,2026-07-26 14:00:00+00:00,64689.041356,2026-07-27 01:00:00+00:00,65113.766830,2019.58,trailing stop hit: bar low 64834.72 <= stop 64944.55
+BTC/USD,momentum_breakout,short,2.188487,2026-07-27 23:00:00+00:00,63670.099025,2026-07-28 15:00:00+00:00,63891.658864,-484.88,trailing stop hit: bar high 63954.65 >= stop 63720.28
+BTC/USD,momentum_breakout,long,2.515152,2026-07-29 07:00:00+00:00,64500.709237,2026-07-29 13:00:00+00:00,64563.047328,156.79,trailing stop hit: bar low 64060.07 <= stop 64128.17
+BTC/USD,momentum_breakout,short,2.554324,2026-07-31 13:00:00+00:00,63151.463473,2026-08-02 00:00:00+00:00,62798.658637,901.18,trailing stop hit: bar high 62918.66 >= stop 62902.90
+BTC/USD,momentum_breakout,long,3.762459,2026-08-02 02:00:00+00:00,63429.407855,2026-08-02 08:00:00+00:00,63101.557438,-1233.52,trailing stop hit: bar low 63112.55 <= stop 63167.41
+BTC/USD,momentum_breakout,long,2.447259,2026-08-03 14:00:00+00:00,63929.383717,2026-08-03 21:00:00+00:00,63500.423905,-1049.78,trailing stop hit: bar low 63513.65 <= stop 63548.40
+BTC/USD,momentum_breakout,long,2.403024,2026-08-04 18:00:00+00:00,64287.923398,2026-08-05 01:00:00+00:00,64253.622617,-82.43,trailing stop hit: bar low 63887.38 <= stop 63904.71
+BTC/USD,momentum_breakout,long,3.186757,2026-08-07 12:00:00+00:00,65276.152766,2026-08-07 13:00:00+00:00,64931.701908,-1097.68,trailing stop hit: bar low 64939.46 <= stop 64979.05
+BTC/USD,momentum_breakout,long,5.757805,2026-08-09 13:00:00+00:00,65209.001206,2026-08-09 20:00:00+00:00,65059.683885,-859.74,trailing stop hit: bar low 65005.50 <= stop 65031.94
+BTC/USD,momentum_breakout,short,3.267579,2026-08-10 13:00:00+00:00,64473.037855,2026-08-10 14:00:00+00:00,64587.555639,-374.20,trailing stop hit: bar high 64843.95 >= stop 64757.24
+BTC/USD,momentum_breakout,short,2.920644,2026-08-10 15:00:00+00:00,64194.931478,2026-08-11 11:00:00+00:00,64355.821830,-469.90,trailing stop hit: bar high 64381.02 >= stop 64324.97
+BTC/USD,momentum_breakout,short,3.152782,2026-08-11 15:00:00+00:00,63520.624300,2026-08-12 01:00:00+00:00,63797.315216,-872.35,trailing stop hit: bar high 63834.60 >= stop 63810.85
+BTC/USD,momentum_breakout,short,2.604775,2026-08-13 16:00:00+00:00,63065.860296,2026-08-13 19:00:00+00:00,63385.017670,-831.33,trailing stop hit: bar high 63449.09 >= stop 63406.88
+BTC/USD,momentum_breakout,long,6.599722,2026-08-16 16:00:00+00:00,63204.808111,2026-08-16 17:00:00+00:00,63054.809324,-989.95,trailing stop hit: bar low 63039.44 <= stop 63052.34
+BTC/USD,momentum_breakout,long,3.915535,2026-08-17 06:00:00+00:00,63644.206200,2026-08-17 08:00:00+00:00,63279.544400,-1427.85,trailing stop hit: bar low 63270.70 <= stop 63411.18
+BTC/USD,momentum_breakout,long,2.948976,2026-08-17 18:00:00+00:00,64411.743777,2026-08-18 01:00:00+00:00,64116.985470,-869.24,trailing stop hit: bar low 64109.55 <= stop 64117.22
+BTC/USD,momentum_breakout,long,2.801204,2026-08-18 14:00:00+00:00,64693.255462,2026-08-19 01:00:00+00:00,64321.448687,-1041.51,trailing stop hit: bar low 64340.84 <= stop 64387.86
+BTC/USD,momentum_breakout,long,2.572255,2026-08-19 14:00:00+00:00,65933.175613,2026-08-21 09:00:00+00:00,77843.708675,30636.93,trailing stop hit: bar low 77249.46 <= stop 77391.54
+BTC/USD,momentum_breakout,long,2.168427,2026-08-23 13:00:00+00:00,77517.691476,2026-08-23 14:00:00+00:00,77142.809300,-812.90,trailing stop hit: bar low 76787.95 <= stop 76989.71
+BTC/USD,momentum_breakout,long,1.877086,2026-08-24 11:00:00+00:00,78474.958870,2026-08-24 13:00:00+00:00,78520.425647,85.35,trailing stop hit: bar low 77848.21 <= stop 77909.01
+BTC/USD,momentum_breakout,long,1.449233,2026-08-24 14:00:00+00:00,79530.003629,2026-08-24 17:00:00+00:00,78714.714454,-1181.54,trailing stop hit: bar low 78468.20 <= stop 78763.25
+BTC/USD,momentum_breakout,long,1.460061,2026-08-25 02:00:00+00:00,80671.320503,2026-08-25 07:00:00+00:00,79630.382891,-1519.83,trailing stop hit: bar low 79338.70 <= stop 79917.48
+BTC/USD,momentum_breakout,long,2.196194,2026-08-27 08:00:00+00:00,79794.227175,2026-08-27 11:00:00+00:00,79436.566847,-785.49,trailing stop hit: bar low 79188.89 <= stop 79286.91
+BTC/USD,momentum_breakout,short,1.754348,2026-08-28 15:00:00+00:00,78283.698570,2026-08-29 19:00:00+00:00,78238.099500,80.00,trailing stop hit: bar high 78330.46 >= stop 78259.95
+BTC/USD,momentum_breakout,long,4.154138,2026-08-30 12:00:00+00:00,78825.793200,2026-08-30 18:00:00+00:00,78980.435028,642.40,trailing stop hit: bar low 78760.35 <= stop 78762.76
+BTC/USD,momentum_breakout,short,2.38718,2026-08-30 23:00:00+00:00,77635.196483,2026-08-31 00:00:00+00:00,77960.385712,-776.29,trailing stop hit: bar high 78171.42 >= stop 78103.81
+BTC/USD,momentum_breakout,short,2.054071,2026-09-01 18:00:00+00:00,77086.149644,2026-09-02 03:00:00+00:00,77557.971106,-969.15,trailing stop hit: bar high 77751.77 >= stop 77620.41
+BTC/USD,momentum_breakout,long,2.216892,2026-09-03 13:00:00+00:00,78870.144364,2026-09-04 08:00:00+00:00,81101.533948,4946.75,trailing stop hit: bar low 80491.44 <= stop 80568.96
+BTC/USD,momentum_breakout,long,4.081981,2026-09-05 16:00:00+00:00,80090.740858,2026-09-05 19:00:00+00:00,79718.315903,-1520.23,trailing stop hit: bar low 79717.81 <= stop 79791.53
+BTC/USD,momentum_breakout,long,4.016585,2026-09-06 23:00:00+00:00,80383.666247,2026-09-07 00:00:00+00:00,80118.750585,-1064.06,trailing stop hit: bar low 80054.89 <= stop 80083.88
+BTC/USD,momentum_breakout,short,2.701607,2026-09-08 13:00:00+00:00,77895.523754,2026-09-08 14:00:00+00:00,78579.720225,-1848.43,trailing stop hit: bar high 78593.12 >= stop 78316.53
+BTC/USD,momentum_breakout,long,2.912194,2026-09-09 04:00:00+00:00,79206.132775,2026-09-09 09:00:00+00:00,78905.647440,-875.07,trailing stop hit: bar low 78886.96 <= stop 78957.65
+BTC/USD,momentum_breakout,long,2.417353,2026-09-14 16:00:00+00:00,78795.958290,2026-09-14 23:00:00+00:00,78138.286812,-1589.82,trailing stop hit: bar low 78116.25 <= stop 78392.71
+BTC/USD,momentum_breakout,short,2.092268,2026-09-15 14:00:00+00:00,75844.102478,2026-09-15 15:00:00+00:00,76503.732750,-1380.12,trailing stop hit: bar high 76556.37 >= stop 76354.73
+BTC/USD,momentum_breakout,long,1.867912,2026-09-18 13:00:00+00:00,80067.798892,2026-09-19 20:00:00+00:00,81090.052691,1909.48,trailing stop hit: bar low 81050.77 <= stop 81112.08
+BTC/USD,momentum_breakout,long,2.775991,2026-09-21 00:00:00+00:00,81644.376787,2026-09-21 01:00:00+00:00,80938.919296,-1958.34,trailing stop hit: bar low 80843.46 <= stop 81245.40
+BTC/USD,momentum_breakout,short,1.603553,2026-09-23 14:00:00+00:00,84484.515611,2026-09-24 14:00:00+00:00,83690.960568,1272.51,trailing stop hit: bar high 84908.69 >= stop 84394.56
+BTC/USD,momentum_breakout,short,3.286576,2026-09-27 22:00:00+00:00,84140.833538,2026-09-27 23:00:00+00:00,84500.178975,-1181.02,trailing stop hit: bar high 84519.28 >= stop 84483.37
+BTC/USD,momentum_breakout,short,2.645837,2026-09-28 02:00:00+00:00,83367.475410,2026-09-28 12:00:00+00:00,83586.497362,-579.50,trailing stop hit: bar high 83607.80 >= stop 83404.84
+BTC/USD,momentum_breakout,long,1.974694,2026-09-30 12:00:00+00:00,85301.248810,2026-09-30 13:00:00+00:00,84558.849425,-1466.01,trailing stop hit: bar low 84001.13 <= stop 84767.49
+BTC/USD,momentum_breakout,long,1.848865,2026-10-01 17:00:00+00:00,84914.582073,2026-10-02 14:00:00+00:00,85628.539313,1320.01,trailing stop hit: bar low 85383.39 <= stop 85809.27
+GLD,trend_following,long,214.393,2026-08-25 16:00:00+00:00,428.274030,2026-08-26 12:00:00+00:00,421.324233,-1489.99,trailing stop hit: bar low 420.38 <= stop 423.40
+GLD,trend_following,short,207.626,2026-09-23 12:00:00+00:00,392.363720,2026-10-02 16:00:00+00:00,380.385097,2487.07,end_of_backtest_window
+USO,trend_following,long,381.917,2026-08-31 12:00:00+00:00,133.016475,2026-09-21 12:00:00+00:00,148.325800,5846.89,trailing stop hit: bar low 147.43 <= stop 152.01
+SPY,mean_reversion,short,1188.5,2026-04-06 19:45:00+00:00,658.555558,2026-04-07 12:00:00+00:00,655.387530,3765.20,price 655.06 reverted to/below mean 657.71; exit short
+SPY,mean_reversion,long,1004.603,2026-04-07 13:30:00+00:00,655.362517,2026-04-07 16:00:00+00:00,654.972350,-391.96,price 655.30 reverted to/above mean 655.16; exit long
+QQQ,mean_reversion,long,1045.749,2026-04-07 12:00:00+00:00,584.602155,2026-04-07 16:15:00+00:00,584.162773,-459.48,price 584.46 reverted to/above mean 583.63; exit long
+BTC/USD,momentum_breakout,long,1.715379,2026-04-07 22:00:00+00:00,71537.666958,2026-04-08 14:00:00+00:00,70865.005772,-1153.87,trailing stop hit: bar low 70712.00 <= stop 71088.13
+QQQ,mean_reversion,short,601.442,2026-04-07 19:45:00+00:00,588.585560,2026-04-08 17:15:00+00:00,606.162930,-10571.77,price 605.86 reverted to/below mean 606.29; exit short
+SPY,mean_reversion,short,625.958,2026-04-07 19:45:00+00:00,658.900385,2026-04-08 18:30:00+00:00,674.357010,-9675.20,price 674.02 reverted to/below mean 674.73; exit short
+SPY,mean_reversion,long,598.35,2026-04-08 18:45:00+00:00,673.286475,2026-04-08 19:30:00+00:00,674.357653,640.94,price 674.70 reverted to/above mean 674.65; exit long
+QQQ,mean_reversion,long,567.142,2026-04-08 18:45:00+00:00,603.131415,2026-04-08 19:45:00+00:00,605.657020,1432.38,price 605.96 reverted to/above mean 605.38; exit long
+BTC/USD,momentum_breakout,long,1.560314,2026-04-09 15:00:00+00:00,72197.112516,2026-04-09 23:00:00+00:00,71759.946078,-682.12,trailing stop hit: bar low 71610.07 <= stop 71625.33
+SPY,mean_reversion,short,659.838,2026-04-09 15:30:00+00:00,677.121270,2026-04-10 15:45:00+00:00,679.799730,-1767.35,price 679.46 reverted to/below mean 680.50; exit short
+QQQ,mean_reversion,short,679.731,2026-04-09 15:30:00+00:00,606.766465,2026-04-10 15:45:00+00:00,610.870283,-2789.49,price 610.57 reverted to/below mean 611.41; exit short
+SPY,mean_reversion,long,766.324,2026-04-10 16:30:00+00:00,678.999330,2026-04-10 19:00:00+00:00,679.610025,467.99,price 679.95 reverted to/above mean 679.87; exit long
+QQQ,mean_reversion,long,738.658,2026-04-10 16:30:00+00:00,610.044870,2026-04-10 19:00:00+00:00,610.979357,690.27,price 611.28 reverted to/above mean 611.08; exit long
+BTC/USD,momentum_breakout,long,1.599283,2026-04-10 20:00:00+00:00,73444.481389,2026-04-10 22:00:00+00:00,72864.549500,-927.48,trailing stop hit: bar low 72810.85 <= stop 72910.65
+BTC/USD,momentum_breakout,long,2.272161,2026-04-11 18:00:00+00:00,73628.712458,2026-04-11 21:00:00+00:00,73421.942164,-469.82,trailing stop hit: bar low 73230.65 <= stop 73247.15
+QQQ,mean_reversion,short,1116.471,2026-04-10 20:30:00+00:00,611.434130,2026-04-13 12:15:00+00:00,607.403550,4500.03,price 607.10 reverted to/below mean 610.59; exit short
+BTC/USD,momentum_breakout,short,1.61696,2026-04-12 01:00:00+00:00,71640.565798,2026-04-13 13:00:00+00:00,71716.601881,-122.95,trailing stop hit: bar high 71827.23 >= stop 71424.19
+SPY,mean_reversion,long,724.246,2026-04-13 12:00:00+00:00,674.777220,2026-04-13 13:45:00+00:00,679.330165,3297.45,price 679.67 reverted to/above mean 678.33; exit long
+QQQ,mean_reversion,long,914.396,2026-04-13 12:30:00+00:00,607.993845,2026-04-13 13:45:00+00:00,611.314190,3036.11,price 611.62 reverted to/above mean 610.21; exit long
+BTC/USD,momentum_breakout,long,2.02474,2026-04-13 14:00:00+00:00,72485.839808,2026-04-13 15:00:00+00:00,71863.505272,-1260.07,trailing stop hit: bar low 71701.30 <= stop 72010.95
+BTC/USD,momentum_breakout,long,1.604889,2026-04-13 19:00:00+00:00,73406.259787,2026-04-14 14:00:00+00:00,75024.759355,2597.51,trailing stop hit: bar low 74217.50 <= stop 74585.75
+QQQ,mean_reversion,short,874.175,2026-04-13 19:45:00+00:00,617.016338,2026-04-16 13:45:00+00:00,636.738210,-17240.37,price 636.42 reverted to/below mean 636.70; exit short
+SPY,mean_reversion,short,783.225,2026-04-13 16:45:00+00:00,681.958850,2026-04-16 14:15:00+00:00,699.499575,-13738.33,price 699.15 reverted to/below mean 699.59; exit short
+BTC/USD,momentum_breakout,short,1.048888,2026-04-16 13:00:00+00:00,73742.816147,2026-04-16 15:00:00+00:00,74762.462050,-1069.49,trailing stop hit: bar high 74908.60 >= stop 74318.95
+SPY,mean_reversion,short,666.729,2026-04-16 15:00:00+00:00,701.054297,2026-04-16 17:00:00+00:00,700.420035,422.88,price 700.07 reverted to/below mean 700.77; exit short
+QQQ,mean_reversion,short,531.383,2026-04-16 15:00:00+00:00,639.580050,2026-04-16 18:00:00+00:00,639.119400,244.78,price 638.80 reverted to/below mean 639.40; exit short
+QQQ,mean_reversion,short,505.223,2026-04-17 12:15:00+00:00,643.478100,2026-04-17 17:15:00+00:00,647.728702,-2147.50,price 647.40 reverted to/below mean 647.86; exit short
+SPY,mean_reversion,short,526.657,2026-04-17 12:15:00+00:00,704.877385,2026-04-17 18:00:00+00:00,709.804725,-2595.02,price 709.45 reverted to/below mean 710.07; exit short
+SPY,mean_reversion,long,506.933,2026-04-17 19:00:00+00:00,709.484565,2026-04-17 20:00:00+00:00,710.094775,309.34,price 710.45 reverted to/above mean 710.42; exit long
+BTC/USD,momentum_breakout,long,0.89961,2026-04-17 13:00:00+00:00,77425.678492,2026-04-18 08:00:00+00:00,76743.390609,-613.79,trailing stop hit: bar low 76542.50 <= stop 76781.14
+BTC/USD,momentum_breakout,short,1.130768,2026-04-19 22:00:00+00:00,74038.762100,2026-04-20 01:00:00+00:00,74654.158425,-695.87,trailing stop hit: bar high 74790.72 >= stop 74550.95
+SPY,mean_reversion,long,548.122,2026-04-20 12:00:00+00:00,707.213430,2026-04-20 13:45:00+00:00,709.345150,1168.44,price 709.70 reverted to/above mean 709.25; exit long
+SPY,mean_reversion,long,533.372,2026-04-20 14:45:00+00:00,707.453550,2026-04-20 17:00:00+00:00,707.690978,126.64,price 708.04 reverted to/above mean 707.90; exit long
+QQQ,mean_reversion,long,480.667,2026-04-20 14:15:00+00:00,646.653165,2026-04-20 17:30:00+00:00,645.557060,-526.86,price 645.88 reverted to/above mean 645.80; exit long
+SPY,mean_reversion,short,712.5,2026-04-20 19:45:00+00:00,708.435605,2026-04-21 14:45:00+00:00,707.933790,357.54,price 707.58 reverted to/below mean 709.50; exit short
+QQQ,mean_reversion,short,669.195,2026-04-20 20:30:00+00:00,647.865905,2026-04-21 14:45:00+00:00,646.913295,637.48,price 646.59 reverted to/below mean 647.69; exit short
+SPY,mean_reversion,long,507.258,2026-04-21 15:15:00+00:00,707.003325,2026-04-21 19:00:00+00:00,706.286680,-363.52,price 706.64 reverted to/above mean 706.59; exit long
+QQQ,mean_reversion,long,409.721,2026-04-21 16:30:00+00:00,645.622650,2026-04-21 19:00:00+00:00,646.286695,272.07,price 646.61 reverted to/above mean 646.21; exit long
+SPY,mean_reversion,long,355.566,2026-04-21 19:30:00+00:00,703.551600,2026-04-21 20:00:00+00:00,706.426610,1022.26,price 706.78 reverted to/above mean 705.88; exit long
+QQQ,mean_reversion,long,322.021,2026-04-21 19:30:00+00:00,643.031355,2026-04-21 20:00:00+00:00,646.966355,1267.15,price 647.29 reverted to/above mean 645.72; exit long
+SPY,mean_reversion,short,332.817,2026-04-22 12:00:00+00:00,709.045300,2026-04-22 16:45:00+00:00,709.314480,-89.59,price 708.96 reverted to/below mean 709.28; exit short
+BTC/USD,momentum_breakout,long,1.092458,2026-04-22 13:00:00+00:00,78950.275410,2026-04-22 23:00:00+00:00,78187.181852,-833.65,trailing stop hit: bar low 78194.87 <= stop 78384.94
+SPY,mean_reversion,short,646.707,2026-04-22 19:15:00+00:00,710.099773,2026-04-23 12:15:00+00:00,710.304975,-132.71,price 709.95 reverted to/below mean 710.03; exit short
+QQQ,mean_reversion,short,318.512,2026-04-22 12:00:00+00:00,649.505085,2026-04-23 12:45:00+00:00,653.486580,-1268.15,price 653.16 reverted to/below mean 653.68; exit short
+SPY,mean_reversion,short,618.257,2026-04-23 14:45:00+00:00,711.394125,2026-04-23 16:15:00+00:00,711.095370,184.71,price 710.74 reverted to/below mean 710.78; exit short
+QQQ,mean_reversion,short,477.33,2026-04-23 15:00:00+00:00,655.911880,2026-04-23 17:00:00+00:00,652.185930,1778.51,price 651.86 reverted to/below mean 654.56; exit short
+QQQ,mean_reversion,long,413.39,2026-04-23 17:15:00+00:00,650.274975,2026-04-23 20:30:00+00:00,651.943865,689.90,price 652.27 reverted to/above mean 652.03; exit long
+SPY,mean_reversion,long,549.616,2026-04-23 17:00:00+00:00,708.073860,2026-04-24 12:00:00+00:00,711.584030,1929.25,price 711.94 reverted to/above mean 708.95; exit long
+BTC/USD,momentum_breakout,long,2.110062,2026-04-26 05:00:00+00:00,78037.169085,2026-04-27 05:00:00+00:00,77741.474818,-623.93,trailing stop hit: bar low 77617.68 <= stop 78390.23
+SPY,mean_reversion,short,434.69,2026-04-24 15:30:00+00:00,712.883380,2026-04-27 12:15:00+00:00,713.696670,-353.53,price 713.34 reverted to/below mean 713.56; exit short
+QQQ,mean_reversion,short,302.977,2026-04-24 12:00:00+00:00,659.859905,2026-04-27 13:00:00+00:00,663.761715,-1182.16,price 663.43 reverted to/below mean 663.56; exit short
+SPY,mean_reversion,long,683.644,2026-04-27 15:00:00+00:00,713.266455,2026-04-27 16:00:00+00:00,713.573035,209.59,price 713.93 reverted to/above mean 713.68; exit long
+QQQ,mean_reversion,long,546.225,2026-04-27 14:15:00+00:00,662.636152,2026-04-27 16:30:00+00:00,662.783443,80.45,price 663.12 reverted to/above mean 663.00; exit long
+SPY,mean_reversion,short,842.453,2026-04-27 17:00:00+00:00,713.982830,2026-04-28 12:00:00+00:00,710.765205,2710.70,price 710.41 reverted to/below mean 714.43; exit short
+SPY,mean_reversion,long,701.725,2026-04-28 12:15:00+00:00,710.284965,2026-04-28 17:30:00+00:00,710.384630,69.94,price 710.74 reverted to/above mean 710.66; exit long
+QQQ,mean_reversion,long,516.251,2026-04-28 12:00:00+00:00,655.777725,2026-04-28 17:30:00+00:00,656.091790,162.14,price 656.42 reverted to/above mean 656.22; exit long
+BTC/USD,momentum_breakout,short,1.41119,2026-04-28 11:00:00+00:00,76182.902494,2026-04-29 01:00:00+00:00,76600.431075,-589.21,trailing stop hit: bar high 76669.23 >= stop 76622.76
+BTC/USD,momentum_breakout,long,1.555108,2026-04-29 04:00:00+00:00,77302.543956,2026-04-29 13:00:00+00:00,76717.841890,-909.27,trailing stop hit: bar low 76416.97 <= stop 76881.61
+SPY,mean_reversion,short,775.898,2026-04-28 18:45:00+00:00,711.169238,2026-04-29 13:30:00+00:00,710.425035,577.43,price 710.07 reverted to/below mean 711.02; exit short
+QQQ,mean_reversion,short,538.632,2026-04-28 19:00:00+00:00,658.200735,2026-04-29 16:15:00+00:00,658.784228,-314.29,price 658.46 reverted to/below mean 659.14; exit short
+SPY,mean_reversion,long,729.826,2026-04-29 15:00:00+00:00,710.595120,2026-04-29 17:45:00+00:00,710.244700,-255.75,price 710.60 reverted to/above mean 710.54; exit long
+SPY,mean_reversion,long,677.668,2026-04-29 18:00:00+00:00,709.424535,2026-04-29 18:45:00+00:00,710.254695,562.57,price 710.61 reverted to/above mean 710.23; exit long
+QQQ,mean_reversion,short,452.76,2026-04-29 19:45:00+00:00,661.259205,2026-04-29 20:00:00+00:00,656.948310,1951.80,price 656.62 reverted to/below mean 659.36; exit short
+BTC/USD,momentum_breakout,short,1.128075,2026-04-29 18:00:00+00:00,75429.986140,2026-04-29 21:00:00+00:00,75940.030039,-575.37,trailing stop hit: bar high 76061.26 >= stop 75987.14
+SPY,mean_reversion,short,591.518,2026-04-29 19:45:00+00:00,711.234205,2026-04-30 13:45:00+00:00,711.565605,-196.03,price 711.21 reverted to/below mean 711.46; exit short
+QQQ,mean_reversion,short,257.982,2026-04-30 12:15:00+00:00,665.986840,2026-04-30 13:45:00+00:00,659.784728,1600.03,price 659.46 reverted to/below mean 660.80; exit short
+SPY,mean_reversion,short,528.133,2026-04-30 17:30:00+00:00,716.091775,2026-05-01 16:30:00+00:00,722.070855,-3157.75,price 721.71 reverted to/below mean 722.14; exit short
+QQQ,mean_reversion,short,363.44,2026-04-30 18:00:00+00:00,666.966350,2026-05-01 18:30:00+00:00,674.036850,-2569.70,price 673.70 reverted to/below mean 674.53; exit short
+BTC/USD,momentum_breakout,long,1.52624,2026-05-01 12:00:00+00:00,77930.365710,2026-05-01 20:00:00+00:00,77839.772644,-138.27,trailing stop hit: bar low 77731.01 <= stop 77886.49
+QQQ,mean_reversion,long,549.356,2026-05-01 20:15:00+00:00,673.526595,2026-05-04 12:45:00+00:00,674.372645,464.78,price 674.71 reverted to/above mean 674.32; exit long
+SPY,mean_reversion,long,617.636,2026-05-01 18:30:00+00:00,721.580610,2026-05-04 14:15:00+00:00,720.824408,-467.06,price 721.18 reverted to/above mean 721.13; exit long
+QQQ,mean_reversion,short,561.456,2026-05-04 14:30:00+00:00,676.011825,2026-05-04 15:15:00+00:00,673.196430,1580.72,price 672.86 reverted to/below mean 674.52; exit short
+QQQ,mean_reversion,long,437.21,2026-05-04 15:30:00+00:00,672.836250,2026-05-04 19:15:00+00:00,672.488588,-152.00,price 672.83 reverted to/above mean 672.67; exit long
+SPY,mean_reversion,long,556.499,2026-05-04 15:15:00+00:00,718.809225,2026-05-04 19:45:00+00:00,717.730955,-600.06,price 718.09 reverted to/above mean 717.81; exit long
+SPY,mean_reversion,short,501.787,2026-05-05 12:00:00+00:00,721.209215,2026-05-05 19:45:00+00:00,724.111875,-1456.52,price 723.75 reverted to/below mean 723.89; exit short
+QQQ,mean_reversion,short,411.655,2026-05-05 12:30:00+00:00,677.431115,2026-05-05 19:45:00+00:00,681.870765,-1827.60,price 681.53 reverted to/below mean 681.79; exit short
+BTC/USD,momentum_breakout,long,1.183505,2026-05-06 08:00:00+00:00,81988.763895,2026-05-06 13:00:00+00:00,81616.136018,-441.01,trailing stop hit: bar low 81586.30 <= stop 81605.05
+SPY,mean_reversion,short,560.505,2026-05-06 12:00:00+00:00,728.855390,2026-05-07 15:45:00+00:00,734.367000,-3089.28,price 734.00 reverted to/below mean 734.57; exit short
+QQQ,mean_reversion,short,610.74,2026-05-05 20:15:00+00:00,683.518070,2026-05-07 15:45:00+00:00,697.698675,-8660.66,price 697.35 reverted to/below mean 697.46; exit short
+BTC/USD,momentum_breakout,short,0.957838,2026-05-07 13:00:00+00:00,80441.409175,2026-05-08 11:00:00+00:00,80252.551222,180.90,trailing stop hit: bar high 80343.97 >= stop 80289.22
+SPY,mean_reversion,long,488.79,2026-05-07 16:00:00+00:00,733.066350,2026-05-08 12:00:00+00:00,734.862385,877.88,price 735.23 reverted to/above mean 731.83; exit long
+QQQ,mean_reversion,long,255.194,2026-05-07 17:15:00+00:00,693.406530,2026-05-08 12:15:00+00:00,699.580035,1575.44,price 699.93 reverted to/above mean 695.23; exit long
+SPY,mean_reversion,short,363.512,2026-05-08 12:15:00+00:00,734.832400,2026-05-08 18:45:00+00:00,736.758195,-700.05,price 736.39 reverted to/below mean 737.10; exit short
+BTC/USD,momentum_breakout,long,0.99689,2026-05-10 22:00:00+00:00,82062.969980,2026-05-11 00:00:00+00:00,81399.981149,-660.93,trailing stop hit: bar low 81209.99 <= stop 81607.67
+SPY,mean_reversion,long,567.042,2026-05-11 12:00:00+00:00,736.848240,2026-05-11 13:30:00+00:00,738.000815,653.56,price 738.37 reverted to/above mean 737.15; exit long
+QQQ,mean_reversion,short,244.848,2026-05-08 12:30:00+00:00,701.678985,2026-05-11 14:15:00+00:00,710.144895,-2072.86,price 709.79 reverted to/below mean 710.48; exit short
+SPY,mean_reversion,short,554.964,2026-05-11 13:45:00+00:00,738.280675,2026-05-11 18:45:00+00:00,738.909270,-348.85,price 738.54 reverted to/below mean 739.68; exit short
+QQQ,mean_reversion,short,289.056,2026-05-11 15:15:00+00:00,712.843400,2026-05-11 18:45:00+00:00,712.686165,45.45,price 712.33 reverted to/below mean 713.09; exit short
+SPY,mean_reversion,long,528.307,2026-05-11 19:15:00+00:00,738.869250,2026-05-12 17:30:00+00:00,734.402615,-2359.75,price 734.77 reverted to/above mean 734.37; exit long
+BTC/USD,momentum_breakout,short,0.91415,2026-05-12 15:00:00+00:00,80254.952450,2026-05-12 18:00:00+00:00,80702.531100,-409.15,trailing stop hit: bar high 80741.21 >= stop 80698.58
+QQQ,mean_reversion,long,286.099,2026-05-12 12:15:00+00:00,706.813230,2026-05-12 18:15:00+00:00,702.398625,-1263.01,price 702.75 reverted to/above mean 701.95; exit long
+BTC/USD,momentum_breakout,short,0.864301,2026-05-13 13:00:00+00:00,79583.168510,2026-05-13 18:00:00+00:00,79621.841025,-33.42,trailing stop hit: bar high 79794.40 >= stop 79716.89
+QQQ,mean_reversion,short,213.154,2026-05-12 19:30:00+00:00,705.716965,2026-05-14 12:45:00+00:00,715.077360,-1995.21,price 714.72 reverted to/below mean 715.27; exit short
+QQQ,mean_reversion,short,246.225,2026-05-14 13:30:00+00:00,717.885877,2026-05-14 17:15:00+00:00,719.139390,-308.65,price 718.78 reverted to/below mean 718.91; exit short
+SPY,mean_reversion,short,345.08,2026-05-12 18:15:00+00:00,735.821905,2026-05-14 20:15:00+00:00,747.873750,-4158.85,price 747.50 reverted to/below mean 748.04; exit short
+BTC/USD,momentum_breakout,long,0.657851,2026-05-14 14:00:00+00:00,80994.074256,2026-05-15 02:00:00+00:00,81242.619369,163.51,trailing stop hit: bar low 80729.40 <= stop 80843.24
+SPY,mean_reversion,long,237.735,2026-05-15 12:00:00+00:00,740.470050,2026-05-15 16:30:00+00:00,741.149240,161.47,price 741.52 reverted to/above mean 741.15; exit long
+QQQ,mean_reversion,long,183.887,2026-05-15 13:15:00+00:00,710.515080,2026-05-15 17:15:00+00:00,713.103270,475.93,price 713.46 reverted to/above mean 711.83; exit long
+SPY,mean_reversion,short,229.888,2026-05-15 17:15:00+00:00,742.148740,2026-05-15 18:30:00+00:00,741.690660,105.31,price 741.32 reverted to/below mean 741.34; exit short
+QQQ,mean_reversion,short,182.677,2026-05-15 18:00:00+00:00,714.307667,2026-05-15 19:00:00+00:00,711.545595,504.57,price 711.19 reverted to/below mean 711.75; exit short
+BTC/USD,momentum_breakout,short,0.909708,2026-05-17 23:00:00+00:00,77365.612843,2026-05-18 12:00:00+00:00,77647.879537,-256.78,trailing stop hit: bar high 77780.30 >= stop 77407.49
+SPY,mean_reversion,long,263.24,2026-05-15 19:45:00+00:00,739.469550,2026-05-18 12:45:00+00:00,740.639495,307.98,price 741.01 reverted to/above mean 740.66; exit long
+QQQ,mean_reversion,long,188.106,2026-05-15 19:45:00+00:00,709.264455,2026-05-18 12:45:00+00:00,712.563540,620.58,price 712.92 reverted to/above mean 710.86; exit long
+SPY,mean_reversion,long,199.518,2026-05-18 15:00:00+00:00,737.638635,2026-05-18 19:30:00+00:00,737.391120,-49.38,price 737.76 reverted to/above mean 736.13; exit long
+QQQ,mean_reversion,long,141.454,2026-05-18 15:15:00+00:00,702.741195,2026-05-18 19:30:00+00:00,704.187730,204.62,price 704.54 reverted to/above mean 702.65; exit long
+SPY,mean_reversion,short,187.441,2026-05-18 19:45:00+00:00,738.030800,2026-05-19 12:00:00+00:00,736.047840,371.69,price 735.68 reverted to/below mean 736.18; exit short
+QQQ,mean_reversion,short,140.531,2026-05-18 19:45:00+00:00,705.337155,2026-05-19 12:15:00+00:00,700.380015,696.63,price 700.03 reverted to/below mean 702.79; exit short
+SPY,mean_reversion,long,232.867,2026-05-19 13:30:00+00:00,733.946790,2026-05-19 16:15:00+00:00,734.122755,40.98,price 734.49 reverted to/above mean 734.46; exit long
+QQQ,mean_reversion,long,134.692,2026-05-19 14:00:00+00:00,697.308480,2026-05-19 16:15:00+00:00,700.909370,485.01,price 701.26 reverted to/above mean 700.59; exit long
+SPY,mean_reversion,short,227.666,2026-05-19 17:00:00+00:00,736.521555,2026-05-19 18:45:00+00:00,734.837235,383.46,price 734.47 reverted to/below mean 734.67; exit short
+QQQ,mean_reversion,short,150.069,2026-05-19 17:00:00+00:00,704.917365,2026-05-19 19:30:00+00:00,702.105877,421.92,price 701.75 reverted to/below mean 702.41; exit short
+QQQ,mean_reversion,short,170.473,2026-05-20 14:15:00+00:00,708.165740,2026-05-20 20:45:00+00:00,711.105375,-501.13,price 710.75 reverted to/below mean 711.09; exit short
+SPY,mean_reversion,short,225.869,2026-05-20 14:30:00+00:00,737.875878,2026-05-21 12:00:00+00:00,739.809720,-436.80,price 739.44 reverted to/below mean 740.15; exit short
+SPY,mean_reversion,long,327.731,2026-05-21 12:15:00+00:00,738.989310,2026-05-21 16:00:00+00:00,739.010310,6.88,price 739.38 reverted to/above mean 739.32; exit long
+QQQ,mean_reversion,long,223.749,2026-05-21 14:15:00+00:00,708.574110,2026-05-21 16:00:00+00:00,710.024810,324.59,price 710.38 reverted to/above mean 710.15; exit long
+BTC/USD,momentum_breakout,short,0.940274,2026-05-22 14:00:00+00:00,76638.922869,2026-05-22 17:00:00+00:00,76694.034353,-51.82,trailing stop hit: bar high 77022.40 >= stop 77015.94
+SPY,mean_reversion,short,285.857,2026-05-21 17:00:00+00:00,740.079775,2026-05-22 18:00:00+00:00,747.503565,-2122.14,price 747.13 reverted to/below mean 747.21; exit short
+QQQ,mean_reversion,short,216.246,2026-05-21 17:00:00+00:00,711.673985,2026-05-22 18:15:00+00:00,720.420030,-1891.30,price 720.06 reverted to/below mean 720.11; exit short
+BTC/USD,momentum_breakout,short,0.793903,2026-05-22 18:00:00+00:00,76413.524125,2026-05-23 14:00:00+00:00,75495.168720,729.09,trailing stop hit: bar high 75605.15 >= stop 75342.66
+SPY,mean_reversion,long,336.899,2026-05-22 19:15:00+00:00,745.952790,2026-05-26 12:15:00+00:00,750.644490,1580.63,price 751.02 reverted to/above mean 747.27; exit long
+QQQ,mean_reversion,long,252.086,2026-05-22 19:00:00+00:00,718.939290,2026-05-26 12:15:00+00:00,725.117260,1557.38,price 725.48 reverted to/above mean 719.88; exit long
+SPY,mean_reversion,short,278.106,2026-05-26 13:30:00+00:00,750.279673,2026-05-26 16:45:00+00:00,749.384505,248.95,price 749.01 reverted to/below mean 749.18; exit short
+QQQ,mean_reversion,short,217.986,2026-05-26 12:30:00+00:00,726.076780,2026-05-26 17:15:00+00:00,727.983810,-415.71,price 727.62 reverted to/below mean 727.82; exit short
+SPY,mean_reversion,short,429.688,2026-05-26 19:30:00+00:00,750.144740,2026-05-27 13:30:00+00:00,749.884755,111.71,price 749.51 reverted to/below mean 749.85; exit short
+QQQ,mean_reversion,short,313.098,2026-05-26 19:30:00+00:00,730.144745,2026-05-27 13:30:00+00:00,728.348993,562.25,price 727.99 reverted to/below mean 730.64; exit short
+SPY,mean_reversion,short,349.052,2026-05-27 18:15:00+00:00,750.344640,2026-05-28 12:15:00+00:00,749.174400,408.47,price 748.80 reverted to/below mean 750.09; exit short
+QQQ,mean_reversion,short,213.051,2026-05-27 18:15:00+00:00,729.305165,2026-05-28 12:15:00+00:00,727.083360,473.36,price 726.72 reverted to/below mean 728.86; exit short
+BTC/USD,momentum_breakout,short,0.666157,2026-05-26 17:00:00+00:00,75778.989551,2026-05-28 21:00:00+00:00,73745.554350,1354.59,trailing stop hit: bar high 73832.60 >= stop 73784.08
+SPY,mean_reversion,short,331.452,2026-05-28 14:00:00+00:00,752.613505,2026-05-29 14:30:00+00:00,755.552587,-974.16,price 755.17 reverted to/below mean 755.36; exit short
+QQQ,mean_reversion,short,209.903,2026-05-28 14:00:00+00:00,731.773930,2026-05-29 14:30:00+00:00,736.182908,-925.46,price 735.82 reverted to/below mean 736.71; exit short
+SPY,mean_reversion,long,397.054,2026-05-29 17:45:00+00:00,755.667645,2026-05-29 19:15:00+00:00,756.456583,313.25,price 756.84 reverted to/above mean 756.44; exit long
+SPY,mean_reversion,short,418.62,2026-06-01 12:00:00+00:00,757.581020,2026-06-01 13:00:00+00:00,755.907765,700.46,price 755.53 reverted to/below mean 756.49; exit short
+QQQ,mean_reversion,short,263.297,2026-06-01 15:15:00+00:00,740.184723,2026-06-01 19:45:00+00:00,742.971300,-733.70,price 742.60 reverted to/below mean 742.78; exit short
+SPY,mean_reversion,short,420.948,2026-06-01 16:45:00+00:00,757.571025,2026-06-02 12:00:00+00:00,757.128375,186.33,price 756.75 reverted to/below mean 758.39; exit short
+BTC/USD,momentum_breakout,short,0.996802,2026-06-01 06:00:00+00:00,73006.026726,2026-06-03 05:00:00+00:00,67260.311849,5727.34,trailing stop hit: bar high 67323.96 >= stop 67187.53
+SPY,mean_reversion,short,752.224,2026-06-02 20:00:00+00:00,759.620000,2026-06-03 12:15:00+00:00,758.919270,527.11,price 758.54 reverted to/below mean 759.32; exit short
+QQQ,mean_reversion,short,419.277,2026-06-02 20:00:00+00:00,746.646490,2026-06-03 13:30:00+00:00,744.602115,857.16,price 744.23 reverted to/below mean 745.61; exit short
+QQQ,mean_reversion,long,327.911,2026-06-03 13:45:00+00:00,743.011320,2026-06-03 14:00:00+00:00,745.337145,762.66,price 745.71 reverted to/above mean 745.59; exit long
+QQQ,mean_reversion,long,273.832,2026-06-03 15:30:00+00:00,743.911770,2026-06-03 17:45:00+00:00,744.227700,86.51,price 744.60 reverted to/above mean 744.39; exit long
+SPY,mean_reversion,long,671.208,2026-06-03 12:30:00+00:00,758.308965,2026-06-03 18:15:00+00:00,755.582020,-1830.35,price 755.96 reverted to/above mean 755.55; exit long
+BTC/USD,momentum_breakout,short,0.656007,2026-06-03 20:00:00+00:00,64885.323109,2026-06-03 21:00:00+00:00,65698.342755,-533.35,trailing stop hit: bar high 65766.32 >= stop 65554.56
+BTC/USD,momentum_breakout,short,0.58394,2026-06-03 23:00:00+00:00,64016.160908,2026-06-04 03:00:00+00:00,64308.053958,-170.45,trailing stop hit: bar high 64456.76 >= stop 63692.51
+SPY,mean_reversion,long,492.794,2026-06-03 19:45:00+00:00,754.557090,2026-06-04 14:15:00+00:00,753.603010,-470.16,price 753.98 reverted to/above mean 753.90; exit long
+QQQ,mean_reversion,long,288.921,2026-06-03 20:30:00+00:00,741.440535,2026-06-04 15:00:00+00:00,739.420105,-583.74,price 739.79 reverted to/above mean 739.63; exit long
+SPY,mean_reversion,short,425.125,2026-06-04 16:00:00+00:00,755.861880,2026-06-04 20:00:00+00:00,756.808215,-402.31,price 756.43 reverted to/below mean 756.99; exit short
+BTC/USD,momentum_breakout,short,0.433479,2026-06-05 06:00:00+00:00,61844.964049,2026-06-05 07:00:00+00:00,63092.825647,-540.92,trailing stop hit: bar high 63068.47 >= stop 62794.04
+BTC/USD,momentum_breakout,short,0.341196,2026-06-05 13:00:00+00:00,60645.793934,2026-06-05 21:00:00+00:00,61666.507845,-348.26,trailing stop hit: bar high 61973.06 >= stop 61783.47
+SPY,mean_reversion,long,540.59,2026-06-05 12:00:00+00:00,754.006815,2026-06-08 12:00:00+00:00,742.438595,-6253.66,price 742.81 reverted to/above mean 740.04; exit long
+QQQ,mean_reversion,long,268.338,2026-06-05 12:00:00+00:00,732.546090,2026-06-08 12:00:00+00:00,714.462590,-4852.49,price 714.82 reverted to/above mean 710.21; exit long
+SPY,mean_reversion,long,159.564,2026-06-08 17:30:00+00:00,740.800215,2026-06-09 12:15:00+00:00,741.898865,175.30,price 742.27 reverted to/above mean 741.38; exit long
+QQQ,mean_reversion,long,123.052,2026-06-08 19:00:00+00:00,715.777710,2026-06-09 12:15:00+00:00,721.049295,648.68,price 721.41 reverted to/above mean 718.09; exit long
+SPY,mean_reversion,short,196.312,2026-06-09 13:30:00+00:00,744.977325,2026-06-09 14:00:00+00:00,741.905767,602.98,price 741.53 reverted to/below mean 741.57; exit short
+QQQ,mean_reversion,short,136.297,2026-06-09 12:30:00+00:00,722.018810,2026-06-09 14:00:00+00:00,717.678660,591.55,price 717.32 reverted to/below mean 718.91; exit short
+SPY,mean_reversion,long,160.527,2026-06-09 14:30:00+00:00,739.009320,2026-06-09 18:15:00+00:00,734.742445,-684.95,price 735.11 reverted to/above mean 733.94; exit long
+QQQ,mean_reversion,long,112.443,2026-06-09 14:30:00+00:00,712.646145,2026-06-09 18:45:00+00:00,706.366640,-706.09,price 706.72 reverted to/above mean 702.82; exit long
+BTC/USD,momentum_breakout,short,0.562882,2026-06-09 14:00:00+00:00,61480.213016,2026-06-09 19:00:00+00:00,62075.217097,-334.92,trailing stop hit: bar high 62053.42 >= stop 62040.78
+BTC/USD,momentum_breakout,long,0.486753,2026-06-10 15:00:00+00:00,62613.451080,2026-06-10 16:00:00+00:00,62134.926995,-232.92,trailing stop hit: bar low 61867.11 <= stop 62005.69
+QQQ,mean_reversion,long,86.681,2026-06-10 19:45:00+00:00,694.046850,2026-06-11 12:00:00+00:00,702.438605,727.41,price 702.79 reverted to/above mean 697.19; exit long
+SPY,mean_reversion,long,100.335,2026-06-10 15:00:00+00:00,731.045340,2026-06-11 12:15:00+00:00,728.545545,-250.82,price 728.91 reverted to/above mean 728.59; exit long
+SPY,mean_reversion,short,112.894,2026-06-11 16:00:00+00:00,729.520058,2026-06-11 16:45:00+00:00,726.903270,295.42,price 726.54 reverted to/below mean 727.62; exit short
+SPY,mean_reversion,short,102.68,2026-06-11 17:15:00+00:00,732.098768,2026-06-12 13:30:00+00:00,736.257945,-427.06,price 735.89 reverted to/below mean 735.99; exit short
+QQQ,mean_reversion,short,75.11,2026-06-11 17:15:00+00:00,706.816415,2026-06-12 13:30:00+00:00,712.926285,-458.91,price 712.57 reverted to/below mean 714.86; exit short
+SPY,mean_reversion,short,105.555,2026-06-12 14:45:00+00:00,742.038795,2026-06-12 15:45:00+00:00,739.279455,291.26,price 738.91 reverted to/below mean 739.36; exit short
+QQQ,mean_reversion,short,80.488,2026-06-12 14:45:00+00:00,720.679480,2026-06-12 15:45:00+00:00,716.648145,324.47,price 716.29 reverted to/below mean 717.79; exit short
+BTC/USD,momentum_breakout,long,1.01002,2026-06-13 15:00:00+00:00,64292.968419,2026-06-13 16:00:00+00:00,63966.607697,-329.63,trailing stop hit: bar low 63875.30 <= stop 63980.00
+BTC/USD,momentum_breakout,short,1.058748,2026-06-14 17:00:00+00:00,63675.311418,2026-06-14 20:00:00+00:00,64012.035022,-356.51,trailing stop hit: bar high 64073.76 >= stop 63971.97
+SPY,mean_reversion,short,117.975,2026-06-15 12:00:00+00:00,751.214205,2026-06-15 18:15:00+00:00,755.087355,-456.93,price 754.71 reverted to/below mean 754.95; exit short
+BTC/USD,momentum_breakout,long,0.724105,2026-06-15 11:00:00+00:00,66259.128007,2026-06-15 19:00:00+00:00,66546.410150,208.02,trailing stop hit: bar low 66330.48 <= stop 66385.13
+QQQ,mean_reversion,short,100.772,2026-06-15 12:15:00+00:00,736.081775,2026-06-15 19:15:00+00:00,743.206418,-717.96,price 742.84 reverted to/below mean 743.28; exit short
+QQQ,mean_reversion,long,240.609,2026-06-16 12:30:00+00:00,742.971300,2026-06-17 12:15:00+00:00,733.633000,-2246.88,price 734.00 reverted to/above mean 732.77; exit long
+BTC/USD,momentum_breakout,short,0.558026,2026-06-17 08:00:00+00:00,64842.542010,2026-06-17 13:00:00+00:00,65254.134262,-229.68,trailing stop hit: bar high 65330.70 >= stop 65275.47
+SPY,mean_reversion,long,298.908,2026-06-16 13:00:00+00:00,754.577100,2026-06-17 14:15:00+00:00,751.314155,-975.32,price 751.69 reverted to/above mean 751.41; exit long
+SPY,mean_reversion,long,222.47,2026-06-17 14:30:00+00:00,750.565095,2026-06-17 16:15:00+00:00,750.404610,-35.70,price 750.78 reverted to/above mean 750.70; exit long
+SPY,mean_reversion,long,235.033,2026-06-17 17:00:00+00:00,749.739682,2026-06-17 17:45:00+00:00,750.494565,177.42,price 750.87 reverted to/above mean 750.39; exit long
+SPY,mean_reversion,long,160.835,2026-06-17 18:00:00+00:00,747.033330,2026-06-17 18:30:00+00:00,749.565030,407.19,price 749.94 reverted to/above mean 749.82; exit long
+QQQ,mean_reversion,long,108.893,2026-06-17 18:00:00+00:00,729.654645,2026-06-17 18:30:00+00:00,734.627502,541.51,price 735.00 reverted to/above mean 732.51; exit long
+QQQ,mean_reversion,long,83.003,2026-06-17 18:45:00+00:00,729.924780,2026-06-18 12:00:00+00:00,732.213710,189.99,price 732.58 reverted to/above mean 729.34; exit long
+SPY,mean_reversion,long,123.383,2026-06-17 18:45:00+00:00,746.342985,2026-06-18 13:15:00+00:00,746.416605,9.08,price 746.79 reverted to/above mean 746.22; exit long
+SPY,mean_reversion,short,160.925,2026-06-18 17:00:00+00:00,747.206210,2026-06-18 19:00:00+00:00,745.892760,211.37,price 745.52 reverted to/below mean 746.41; exit short
+BTC/USD,momentum_breakout,short,0.400582,2026-06-17 19:00:00+00:00,64208.689595,2026-06-19 13:00:00+00:00,63187.012717,409.27,trailing stop hit: bar high 63526.37 >= stop 63130.99
+BTC/USD,momentum_breakout,short,0.916569,2026-06-21 20:00:00+00:00,63739.955080,2026-06-22 00:00:00+00:00,63839.260679,-91.02,trailing stop hit: bar high 64023.96 >= stop 63881.36
+BTC/USD,momentum_breakout,long,0.63258,2026-06-22 01:00:00+00:00,64552.036888,2026-06-22 03:00:00+00:00,63859.417319,-438.14,trailing stop hit: bar low 63825.74 <= stop 64124.61
+SPY,mean_reversion,short,218.645,2026-06-18 20:15:00+00:00,748.085770,2026-06-22 14:15:00+00:00,746.933280,251.99,price 746.56 reverted to/below mean 747.24; exit short
+QQQ,mean_reversion,short,181.324,2026-06-22 12:15:00+00:00,741.289170,2026-06-22 14:15:00+00:00,740.810220,86.85,price 740.44 reverted to/below mean 740.65; exit short
+BTC/USD,momentum_breakout,long,0.603543,2026-06-22 12:00:00+00:00,65113.515487,2026-06-22 16:00:00+00:00,64608.406637,-304.85,trailing stop hit: bar low 64431.89 <= stop 64674.05
+QQQ,mean_reversion,long,129.542,2026-06-22 14:30:00+00:00,737.728680,2026-06-22 19:45:00+00:00,737.730950,0.29,price 738.10 reverted to/above mean 736.53; exit long
+QQQ,mean_reversion,long,92.802,2026-06-23 12:15:00+00:00,717.448545,2026-06-23 17:00:00+00:00,718.370635,85.57,price 718.73 reverted to/above mean 718.20; exit long
+BTC/USD,momentum_breakout,short,0.575445,2026-06-23 06:00:00+00:00,62845.141710,2026-06-24 01:00:00+00:00,62885.877225,-23.44,trailing stop hit: bar high 63034.68 >= stop 63029.59
+SPY,mean_reversion,long,175.456,2026-06-22 14:30:00+00:00,744.902265,2026-06-24 12:00:00+00:00,736.121755,-1540.59,price 736.49 reverted to/above mean 735.84; exit long
+QQQ,mean_reversion,long,107.667,2026-06-23 18:30:00+00:00,713.766705,2026-06-24 12:15:00+00:00,718.630505,523.67,price 718.99 reverted to/above mean 716.78; exit long
+QQQ,mean_reversion,short,94.038,2026-06-24 14:45:00+00:00,719.170235,2026-06-24 15:30:00+00:00,716.137890,285.16,price 715.78 reverted to/below mean 715.82; exit short
+SPY,mean_reversion,short,135.137,2026-06-24 14:45:00+00:00,739.230200,2026-06-24 16:30:00+00:00,736.688160,343.52,price 736.32 reverted to/below mean 736.68; exit short
+SPY,mean_reversion,long,144.044,2026-06-24 17:15:00+00:00,732.506070,2026-06-24 20:00:00+00:00,736.141745,523.70,price 736.51 reverted to/above mean 734.65; exit long
+QQQ,mean_reversion,long,102.615,2026-06-24 16:45:00+00:00,713.126385,2026-06-24 20:00:00+00:00,718.130755,513.52,price 718.49 reverted to/above mean 711.42; exit long
+BTC/USD,momentum_breakout,short,0.532951,2026-06-24 13:00:00+00:00,61201.225080,2026-06-24 20:00:00+00:00,60885.172372,168.44,trailing stop hit: bar high 61114.39 >= stop 60450.29
+SPY,mean_reversion,short,168.043,2026-06-25 12:00:00+00:00,737.890870,2026-06-25 13:30:00+00:00,734.652142,544.25,price 734.28 reverted to/below mean 734.73; exit short
+QQQ,mean_reversion,short,81.68,2026-06-24 20:15:00+00:00,722.018810,2026-06-25 13:45:00+00:00,706.182915,1293.48,price 705.83 reverted to/below mean 714.87; exit short
+BTC/USD,momentum_breakout,short,0.373954,2026-06-25 13:00:00+00:00,58171.549675,2026-06-25 14:00:00+00:00,59406.158235,-461.69,trailing stop hit: bar high 60372.43 >= stop 58869.09
+SPY,mean_reversion,long,142.747,2026-06-25 13:45:00+00:00,730.244940,2026-06-25 14:15:00+00:00,735.042295,684.81,price 735.41 reverted to/above mean 734.91; exit long
+SPY,mean_reversion,short,150.639,2026-06-25 20:15:00+00:00,734.992320,2026-06-26 12:00:00+00:00,730.695165,647.32,price 730.33 reverted to/below mean 733.41; exit short
+SPY,mean_reversion,long,152.047,2026-06-26 12:30:00+00:00,730.174905,2026-06-26 14:00:00+00:00,732.838398,404.98,price 733.21 reverted to/above mean 732.83; exit long
+QQQ,mean_reversion,long,77.843,2026-06-26 12:45:00+00:00,706.042845,2026-06-26 15:15:00+00:00,712.073785,469.47,price 712.43 reverted to/above mean 712.29; exit long
+SPY,mean_reversion,short,142.031,2026-06-26 15:30:00+00:00,735.831900,2026-06-26 18:15:00+00:00,733.241437,367.93,price 732.88 reverted to/below mean 733.53; exit short
+BTC/USD,momentum_breakout,short,0.932422,2026-06-28 16:00:00+00:00,59575.383907,2026-06-28 23:00:00+00:00,59506.018140,64.68,trailing stop hit: bar high 59751.10 >= stop 59729.22
+QQQ,mean_reversion,long,117.147,2026-06-26 18:45:00+00:00,708.884265,2026-06-29 12:30:00+00:00,714.552545,664.02,price 714.91 reverted to/above mean 710.18; exit long
+SPY,mean_reversion,long,181.833,2026-06-26 18:45:00+00:00,731.985810,2026-06-29 13:30:00+00:00,738.850390,1248.21,price 739.22 reverted to/above mean 733.51; exit long
+SPY,mean_reversion,short,105.971,2026-06-29 13:45:00+00:00,736.461585,2026-06-29 14:00:00+00:00,733.496565,314.21,price 733.13 reverted to/below mean 733.53; exit short
+QQQ,mean_reversion,short,108.296,2026-06-29 13:30:00+00:00,717.101270,2026-06-29 14:00:00+00:00,707.233440,1068.65,price 706.88 reverted to/below mean 710.35; exit short
+BTC/USD,momentum_breakout,short,0.815777,2026-06-30 12:00:00+00:00,58284.693075,2026-06-30 14:00:00+00:00,58384.817820,-81.68,trailing stop hit: bar high 59171.20 >= stop 58711.07
+QQQ,mean_reversion,short,211.168,2026-06-30 12:15:00+00:00,724.897370,2026-06-30 20:15:00+00:00,735.937785,-2331.38,price 735.57 reverted to/below mean 735.84; exit short
+SPY,mean_reversion,short,110.266,2026-06-29 14:45:00+00:00,737.431100,2026-07-01 12:15:00+00:00,745.672650,-908.76,price 745.30 reverted to/below mean 746.50; exit short
+SPY,mean_reversion,long,335.958,2026-07-01 12:30:00+00:00,744.632130,2026-07-01 14:00:00+00:00,746.231698,537.39,price 746.61 reverted to/above mean 746.36; exit long
+SPY,mean_reversion,short,259.947,2026-07-01 15:15:00+00:00,748.915355,2026-07-01 17:45:00+00:00,747.553590,353.99,price 747.18 reverted to/below mean 747.24; exit short
+QQQ,mean_reversion,long,214.352,2026-07-01 12:30:00+00:00,730.695165,2026-07-02 12:15:00+00:00,727.236200,-741.44,price 727.60 reverted to/above mean 727.34; exit long
+SPY,mean_reversion,long,329.775,2026-07-01 19:45:00+00:00,746.037832,2026-07-02 12:30:00+00:00,748.995315,975.30,price 749.37 reverted to/above mean 747.67; exit long
+BTC/USD,momentum_breakout,long,0.613391,2026-07-02 13:00:00+00:00,61905.045054,2026-07-02 14:00:00+00:00,61600.794195,-186.62,trailing stop hit: bar low 61313.57 <= stop 61374.12
+SPY,mean_reversion,short,254.488,2026-07-02 13:30:00+00:00,749.425100,2026-07-02 14:30:00+00:00,747.218422,561.57,price 746.85 reverted to/below mean 747.77; exit short
+SPY,mean_reversion,long,178.69,2026-07-02 15:15:00+00:00,745.262445,2026-07-02 19:45:00+00:00,744.487570,-138.46,price 744.86 reverted to/above mean 743.12; exit long
+QQQ,mean_reversion,long,123.232,2026-07-02 14:15:00+00:00,722.531085,2026-07-02 19:45:00+00:00,712.173735,-1276.36,price 712.53 reverted to/above mean 712.16; exit long
+BTC/USD,momentum_breakout,long,1.019554,2026-07-04 17:00:00+00:00,63264.512448,2026-07-04 23:00:00+00:00,63057.922766,-210.63,trailing stop hit: bar low 62875.90 <= stop 62942.29
+BTC/USD,momentum_breakout,long,0.922303,2026-07-05 22:00:00+00:00,63699.323245,2026-07-06 00:00:00+00:00,63667.845153,-29.03,trailing stop hit: bar low 63282.68 <= stop 63348.52
+QQQ,mean_reversion,short,97.386,2026-07-06 12:00:00+00:00,721.599020,2026-07-06 17:15:00+00:00,723.111375,-147.28,price 722.75 reverted to/below mean 723.52; exit short
+SPY,mean_reversion,short,177.548,2026-07-06 13:30:00+00:00,748.265680,2026-07-07 13:30:00+00:00,750.425025,-383.39,price 750.05 reverted to/below mean 751.08; exit short
+QQQ,mean_reversion,long,175.2,2026-07-07 12:00:00+00:00,716.778210,2026-07-07 16:15:00+00:00,712.493575,-750.67,price 712.85 reverted to/above mean 712.45; exit long
+SPY,mean_reversion,long,283.919,2026-07-07 13:45:00+00:00,749.149387,2026-07-07 16:45:00+00:00,748.585520,-160.09,price 748.96 reverted to/above mean 748.80; exit long
+QQQ,mean_reversion,long,147.282,2026-07-08 12:15:00+00:00,703.441545,2026-07-08 13:45:00+00:00,708.855395,797.36,price 709.21 reverted to/above mean 708.85; exit long
+QQQ,mean_reversion,long,125.906,2026-07-08 15:15:00+00:00,701.885767,2026-07-08 16:15:00+00:00,706.436605,572.98,price 706.79 reverted to/above mean 705.80; exit long
+SPY,mean_reversion,long,253.555,2026-07-08 12:00:00+00:00,743.761695,2026-07-08 16:30:00+00:00,743.598015,-41.50,price 743.97 reverted to/above mean 743.49; exit long
+QQQ,mean_reversion,short,134.693,2026-07-08 17:15:00+00:00,710.364640,2026-07-09 20:45:00+00:00,723.361500,-1750.59,price 723.00 reverted to/below mean 723.08; exit short
+QQQ,mean_reversion,long,233.895,2026-07-10 12:00:00+00:00,720.630135,2026-07-10 13:45:00+00:00,722.558540,451.04,price 722.92 reverted to/above mean 722.78; exit long
+SPY,mean_reversion,short,239.962,2026-07-09 12:15:00+00:00,747.126250,2026-07-10 14:45:00+00:00,751.605615,-1074.88,price 751.23 reverted to/below mean 751.64; exit short
+QQQ,mean_reversion,long,144.964,2026-07-10 14:45:00+00:00,720.650145,2026-07-10 15:15:00+00:00,723.682977,439.65,price 724.04 reverted to/above mean 722.35; exit long
+BTC/USD,momentum_breakout,long,0.641584,2026-07-10 01:00:00+00:00,63744.046095,2026-07-10 18:00:00+00:00,63720.118003,-15.35,trailing stop hit: bar low 63680.98 <= stop 63698.67
+SPY,mean_reversion,short,231.863,2026-07-10 15:15:00+00:00,752.853385,2026-07-13 12:00:00+00:00,752.055840,184.92,price 751.68 reverted to/below mean 753.97; exit short
+BTC/USD,momentum_breakout,short,0.813916,2026-07-13 13:00:00+00:00,62223.302785,2026-07-13 14:00:00+00:00,62761.129882,-437.75,trailing stop hit: bar high 62735.28 >= stop 62590.31
+BTC/USD,momentum_breakout,short,0.677796,2026-07-13 17:00:00+00:00,61805.586747,2026-07-13 19:00:00+00:00,62240.671784,-294.90,trailing stop hit: bar high 62234.34 >= stop 62213.19
+QQQ,mean_reversion,long,178.025,2026-07-13 12:15:00+00:00,717.768705,2026-07-14 12:15:00+00:00,716.341650,-254.05,price 716.70 reverted to/above mean 712.86; exit long
+SPY,mean_reversion,long,322.768,2026-07-13 12:15:00+00:00,752.596110,2026-07-14 12:30:00+00:00,751.534045,-342.80,price 751.91 reverted to/above mean 749.91; exit long
+QQQ,mean_reversion,short,133.255,2026-07-14 12:30:00+00:00,719.819910,2026-07-14 19:15:00+00:00,720.289965,-62.64,price 719.93 reverted to/below mean 720.46; exit short
+QQQ,mean_reversion,short,197.295,2026-07-15 12:00:00+00:00,721.658990,2026-07-15 13:45:00+00:00,720.750195,179.30,price 720.39 reverted to/below mean 721.07; exit short
+SPY,mean_reversion,short,187.501,2026-07-14 13:45:00+00:00,750.994315,2026-07-15 15:45:00+00:00,753.046335,-384.76,price 752.67 reverted to/below mean 753.07; exit short
+SPY,mean_reversion,long,230.685,2026-07-15 16:00:00+00:00,751.595610,2026-07-15 17:30:00+00:00,752.938343,309.75,price 753.32 reverted to/above mean 752.94; exit long
+QQQ,mean_reversion,long,148.373,2026-07-15 14:15:00+00:00,718.579110,2026-07-15 17:45:00+00:00,716.801420,-263.76,price 717.16 reverted to/above mean 716.56; exit long
+BTC/USD,momentum_breakout,long,0.661003,2026-07-14 14:00:00+00:00,64277.387632,2026-07-16 00:00:00+00:00,64516.963881,158.36,trailing stop hit: bar low 64453.60 <= stop 64586.96
+BTC/USD,momentum_breakout,short,0.687094,2026-07-17 05:00:00+00:00,62739.453581,2026-07-17 10:00:00+00:00,63145.672057,-279.11,trailing stop hit: bar high 63156.30 >= stop 63137.44
+QQQ,mean_reversion,long,134.998,2026-07-16 12:00:00+00:00,710.855250,2026-07-17 15:45:00+00:00,699.030310,-1596.34,price 699.38 reverted to/above mean 696.27; exit long
+SPY,mean_reversion,long,217.6,2026-07-16 17:30:00+00:00,751.725675,2026-07-17 16:45:00+00:00,745.946840,-1257.47,price 746.32 reverted to/above mean 746.17; exit long
+BTC/USD,momentum_breakout,long,1.104462,2026-07-18 16:00:00+00:00,64299.493680,2026-07-19 11:00:00+00:00,64399.614085,110.58,trailing stop hit: bar low 64390.50 <= stop 64398.29
+BTC/USD,momentum_breakout,short,0.722372,2026-07-20 06:00:00+00:00,63818.497789,2026-07-20 07:00:00+00:00,64250.480185,-312.05,trailing stop hit: bar high 64248.39 >= stop 64169.35
+SPY,mean_reversion,long,163.535,2026-07-17 18:30:00+00:00,743.631630,2026-07-20 12:00:00+00:00,746.056785,396.60,price 746.43 reverted to/above mean 745.05; exit long
+SPY,mean_reversion,short,148.318,2026-07-20 13:30:00+00:00,748.170727,2026-07-20 14:00:00+00:00,745.272450,429.87,price 744.90 reverted to/below mean 745.12; exit short
+QQQ,mean_reversion,short,108.518,2026-07-20 13:30:00+00:00,705.047300,2026-07-20 14:45:00+00:00,698.979315,658.49,price 698.63 reverted to/below mean 698.77; exit short
+QQQ,mean_reversion,long,118.773,2026-07-20 18:30:00+00:00,698.208930,2026-07-21 12:00:00+00:00,704.467590,743.36,price 704.82 reverted to/above mean 699.59; exit long
+SPY,mean_reversion,long,177.464,2026-07-20 18:30:00+00:00,742.961295,2026-07-21 13:30:00+00:00,744.097765,201.68,price 744.47 reverted to/above mean 744.13; exit long
+BTC/USD,momentum_breakout,long,0.709949,2026-07-21 14:00:00+00:00,66831.953277,2026-07-21 16:00:00+00:00,66478.021362,-251.27,trailing stop hit: bar low 66426.17 <= stop 66442.21
+QQQ,mean_reversion,short,124.566,2026-07-21 12:45:00+00:00,705.037305,2026-07-21 19:15:00+00:00,708.724185,-459.26,price 708.37 reverted to/below mean 708.68; exit short
+SPY,mean_reversion,short,169.765,2026-07-21 14:15:00+00:00,746.471578,2026-07-21 19:45:00+00:00,748.529077,-349.29,price 748.15 reverted to/below mean 748.26; exit short
+BTC/USD,momentum_breakout,short,0.754212,2026-07-22 06:00:00+00:00,65859.362346,2026-07-22 12:00:00+00:00,65624.245725,177.33,trailing stop hit: bar high 66283.53 >= stop 66212.56
+SPY,mean_reversion,long,321.328,2026-07-22 12:00:00+00:00,746.162895,2026-07-22 13:45:00+00:00,748.360633,706.19,price 748.74 reverted to/above mean 748.12; exit long
+QQQ,mean_reversion,long,173.924,2026-07-22 12:15:00+00:00,702.090870,2026-07-22 13:45:00+00:00,707.650998,967.04,price 708.00 reverted to/above mean 707.49; exit long
+SPY,mean_reversion,short,277.622,2026-07-22 15:15:00+00:00,749.035295,2026-07-22 17:45:00+00:00,748.889257,40.54,price 748.51 reverted to/below mean 748.53; exit short
+SPY,mean_reversion,long,396.182,2026-07-22 19:30:00+00:00,748.158892,2026-07-23 19:45:00+00:00,737.690970,-4147.20,price 738.06 reverted to/above mean 737.59; exit long
+QQQ,mean_reversion,long,221.965,2026-07-22 19:45:00+00:00,705.542595,2026-07-23 19:45:00+00:00,691.634010,-3087.22,price 691.98 reverted to/above mean 691.33; exit long
+QQQ,mean_reversion,short,99.615,2026-07-23 20:30:00+00:00,695.082285,2026-07-24 12:45:00+00:00,692.476065,259.62,price 692.13 reverted to/below mean 692.16; exit short
+SPY,mean_reversion,short,141.113,2026-07-24 12:30:00+00:00,740.289670,2026-07-24 13:45:00+00:00,737.993812,323.98,price 737.62 reverted to/below mean 738.04; exit short
+QQQ,mean_reversion,long,92.51,2026-07-24 13:45:00+00:00,685.512585,2026-07-24 15:45:00+00:00,690.994330,507.12,price 691.34 reverted to/above mean 690.05; exit long
+SPY,mean_reversion,short,114.428,2026-07-24 14:45:00+00:00,740.259685,2026-07-24 18:00:00+00:00,740.960295,-80.17,price 740.59 reverted to/below mean 740.96; exit short
+QQQ,mean_reversion,long,98.187,2026-07-24 18:30:00+00:00,684.582120,2026-07-27 12:00:00+00:00,693.433110,869.05,price 693.78 reverted to/above mean 687.41; exit long
+SPY,mean_reversion,long,146.581,2026-07-24 18:30:00+00:00,738.178905,2026-07-27 12:30:00+00:00,744.527550,930.59,price 744.90 reverted to/above mean 740.56; exit long
+QQQ,mean_reversion,short,103.049,2026-07-27 12:45:00+00:00,693.732960,2026-07-27 13:45:00+00:00,686.498077,745.55,price 686.15 reverted to/below mean 687.53; exit short
+SPY,mean_reversion,long,122.995,2026-07-27 14:30:00+00:00,737.108370,2026-07-27 18:45:00+00:00,738.685472,193.98,price 739.05 reverted to/above mean 737.97; exit long
+QQQ,mean_reversion,long,85.148,2026-07-27 14:30:00+00:00,676.658160,2026-07-27 18:45:00+00:00,681.579040,419.00,price 681.92 reverted to/above mean 679.55; exit long
+QQQ,mean_reversion,short,108.477,2026-07-27 19:00:00+00:00,681.898880,2026-07-28 12:00:00+00:00,676.758210,557.64,price 676.42 reverted to/below mean 680.13; exit short
+SPY,mean_reversion,short,166.634,2026-07-27 19:15:00+00:00,739.265183,2026-07-28 13:30:00+00:00,737.403517,310.22,price 737.03 reverted to/below mean 738.18; exit short
+BTC/USD,momentum_breakout,short,0.585588,2026-07-27 23:00:00+00:00,63670.099025,2026-07-28 15:00:00+00:00,63891.658864,-129.74,trailing stop hit: bar high 63954.65 >= stop 63720.28
+QQQ,mean_reversion,long,118.796,2026-07-28 13:30:00+00:00,671.620642,2026-07-28 15:30:00+00:00,677.890885,744.88,price 678.23 reverted to/above mean 676.64; exit long
+SPY,mean_reversion,short,156.16,2026-07-28 15:15:00+00:00,740.859385,2026-07-28 19:45:00+00:00,741.165397,-47.79,price 740.79 reverted to/below mean 741.27; exit short
+BTC/USD,momentum_breakout,long,0.717431,2026-07-29 07:00:00+00:00,64500.709237,2026-07-29 13:00:00+00:00,64563.047328,44.72,trailing stop hit: bar low 64060.07 <= stop 64128.17
+SPY,mean_reversion,long,257.726,2026-07-29 12:15:00+00:00,740.730180,2026-07-29 17:00:00+00:00,736.231700,-1159.38,price 736.60 reverted to/above mean 736.34; exit long
+QQQ,mean_reversion,long,119.006,2026-07-29 13:45:00+00:00,671.285475,2026-07-29 17:00:00+00:00,670.814425,-56.06,price 671.15 reverted to/above mean 669.91; exit long
+SPY,mean_reversion,short,129.389,2026-07-29 18:30:00+00:00,740.349640,2026-07-29 19:15:00+00:00,735.532582,623.27,price 735.16 reverted to/below mean 735.78; exit short
+QQQ,mean_reversion,short,86.889,2026-07-29 18:30:00+00:00,676.706478,2026-07-29 19:30:00+00:00,665.352510,986.53,price 665.02 reverted to/below mean 669.57; exit short
+SPY,mean_reversion,long,99.643,2026-07-29 19:30:00+00:00,731.545590,2026-07-30 12:00:00+00:00,734.652490,309.58,price 735.02 reverted to/above mean 734.81; exit long
+QQQ,mean_reversion,long,71.459,2026-07-29 20:00:00+00:00,660.420045,2026-07-30 12:00:00+00:00,671.404130,784.91,price 671.74 reverted to/above mean 668.47; exit long
+SPY,mean_reversion,short,195.386,2026-07-30 19:00:00+00:00,741.718955,2026-07-31 14:00:00+00:00,738.854242,559.72,price 738.49 reverted to/below mean 741.23; exit short
+QQQ,mean_reversion,short,128.559,2026-07-30 19:00:00+00:00,684.257700,2026-07-31 14:00:00+00:00,681.765712,320.37,price 681.42 reverted to/below mean 684.89; exit short
+BTC/USD,momentum_breakout,short,0.736909,2026-07-31 13:00:00+00:00,63151.463473,2026-08-02 00:00:00+00:00,62798.658637,259.99,trailing stop hit: bar high 62918.66 >= stop 62902.90
+BTC/USD,momentum_breakout,long,1.157669,2026-08-02 02:00:00+00:00,63429.407855,2026-08-02 08:00:00+00:00,63101.557438,-379.54,trailing stop hit: bar low 63112.55 <= stop 63167.41
+BTC/USD,momentum_breakout,long,0.724909,2026-08-03 14:00:00+00:00,63929.383717,2026-08-03 21:00:00+00:00,63500.423905,-310.96,trailing stop hit: bar low 63513.65 <= stop 63548.40
+QQQ,mean_reversion,short,123.004,2026-08-03 13:45:00+00:00,692.843405,2026-08-04 20:30:00+00:00,721.530585,-3528.64,price 721.17 reverted to/below mean 722.14; exit short
+BTC/USD,momentum_breakout,long,0.522017,2026-08-04 18:00:00+00:00,64287.923398,2026-08-05 01:00:00+00:00,64253.622617,-17.91,trailing stop hit: bar low 63887.38 <= stop 63904.71
+QQQ,mean_reversion,short,109.48,2026-08-05 13:30:00+00:00,727.626005,2026-08-05 14:30:00+00:00,723.781710,420.87,price 723.42 reverted to/below mean 724.09; exit short
+SPY,mean_reversion,short,153.461,2026-07-31 16:15:00+00:00,744.007810,2026-08-05 15:00:00+00:00,773.431522,-4515.39,price 773.04 reverted to/below mean 773.21; exit short
+SPY,mean_reversion,long,184.52,2026-08-05 19:45:00+00:00,770.174895,2026-08-06 14:00:00+00:00,771.144235,178.86,price 771.53 reverted to/above mean 771.22; exit long
+QQQ,mean_reversion,long,127.589,2026-08-05 19:45:00+00:00,717.458550,2026-08-06 14:45:00+00:00,718.215713,96.61,price 718.58 reverted to/above mean 717.66; exit long
+SPY,mean_reversion,long,168.037,2026-08-06 15:15:00+00:00,769.589602,2026-08-06 18:15:00+00:00,769.030292,-93.98,price 769.41 reverted to/above mean 769.23; exit long
+BTC/USD,momentum_breakout,long,0.716046,2026-08-07 12:00:00+00:00,65276.152766,2026-08-07 13:00:00+00:00,64931.701908,-246.64,trailing stop hit: bar low 64939.46 <= stop 64979.05
+SPY,mean_reversion,short,185.538,2026-08-07 12:15:00+00:00,769.974820,2026-08-07 18:00:00+00:00,771.925770,-361.98,price 771.54 reverted to/below mean 772.22; exit short
+QQQ,mean_reversion,short,99.068,2026-08-07 12:30:00+00:00,722.068785,2026-08-07 18:00:00+00:00,720.500070,155.41,price 720.14 reverted to/below mean 720.77; exit short
+BTC/USD,momentum_breakout,long,1.279449,2026-08-09 13:00:00+00:00,65209.001206,2026-08-09 20:00:00+00:00,65059.683885,-191.04,trailing stop hit: bar low 65005.50 <= stop 65031.94
+BTC/USD,momentum_breakout,short,0.730764,2026-08-10 13:00:00+00:00,64473.037855,2026-08-10 14:00:00+00:00,64587.555639,-83.69,trailing stop hit: bar high 64843.95 >= stop 64757.24
+QQQ,mean_reversion,short,131.057,2026-08-10 12:00:00+00:00,723.468085,2026-08-10 14:45:00+00:00,722.130885,175.25,price 721.77 reverted to/below mean 722.09; exit short
+SPY,mean_reversion,short,200.396,2026-08-10 13:45:00+00:00,773.083265,2026-08-10 16:30:00+00:00,772.541077,108.65,price 772.15 reverted to/below mean 773.26; exit short
+QQQ,mean_reversion,long,128.615,2026-08-10 16:30:00+00:00,721.190415,2026-08-10 19:00:00+00:00,721.703968,66.05,price 722.07 reverted to/above mean 722.06; exit long
+BTC/USD,momentum_breakout,short,0.650179,2026-08-10 15:00:00+00:00,64194.931478,2026-08-11 11:00:00+00:00,64355.821830,-104.61,trailing stop hit: bar high 64381.02 >= stop 64324.97
+QQQ,mean_reversion,short,201.669,2026-08-11 12:15:00+00:00,722.698470,2026-08-11 13:30:00+00:00,720.860250,370.71,price 720.50 reverted to/below mean 721.65; exit short
+SPY,mean_reversion,short,258.644,2026-08-11 12:15:00+00:00,773.672970,2026-08-11 15:00:00+00:00,773.116365,143.96,price 772.73 reverted to/below mean 773.17; exit short
+QQQ,mean_reversion,long,161.321,2026-08-11 15:45:00+00:00,719.489565,2026-08-11 19:30:00+00:00,718.105768,-223.24,price 718.47 reverted to/above mean 718.38; exit long
+BTC/USD,momentum_breakout,short,0.73401,2026-08-11 15:00:00+00:00,63520.624300,2026-08-12 01:00:00+00:00,63797.315216,-203.09,trailing stop hit: bar high 63834.60 >= stop 63810.85
+SPY,mean_reversion,long,244.704,2026-08-11 15:15:00+00:00,772.801207,2026-08-12 12:00:00+00:00,772.093760,-173.12,price 772.48 reverted to/above mean 770.98; exit long
+QQQ,mean_reversion,short,168.084,2026-08-12 12:00:00+00:00,722.928355,2026-08-12 15:45:00+00:00,723.606622,-114.01,price 723.25 reverted to/below mean 723.43; exit short
+SPY,mean_reversion,short,242.802,2026-08-12 12:15:00+00:00,772.703455,2026-08-12 19:45:00+00:00,772.926270,-54.10,price 772.54 reverted to/below mean 772.73; exit short
+QQQ,mean_reversion,long,198.271,2026-08-12 20:15:00+00:00,723.381510,2026-08-13 13:00:00+00:00,724.267685,175.70,price 724.63 reverted to/above mean 724.33; exit long
+BTC/USD,momentum_breakout,short,0.555931,2026-08-13 16:00:00+00:00,63065.860296,2026-08-13 19:00:00+00:00,63385.017670,-177.43,trailing stop hit: bar high 63449.09 >= stop 63406.88
+QQQ,mean_reversion,short,175.389,2026-08-13 13:30:00+00:00,727.266185,2026-08-13 19:45:00+00:00,732.476055,-913.75,price 732.11 reverted to/below mean 732.17; exit short
+SPY,mean_reversion,short,270.91,2026-08-13 12:30:00+00:00,773.662975,2026-08-14 14:15:00+00:00,777.793702,-1119.06,price 777.40 reverted to/below mean 777.72; exit short
+QQQ,mean_reversion,short,202.413,2026-08-14 12:45:00+00:00,733.692970,2026-08-14 14:15:00+00:00,731.845740,373.90,price 731.48 reverted to/below mean 732.86; exit short
+QQQ,mean_reversion,long,160.647,2026-08-14 14:45:00+00:00,731.055345,2026-08-14 19:15:00+00:00,729.520058,-246.64,price 729.88 reverted to/above mean 729.58; exit long
+SPY,mean_reversion,long,256.804,2026-08-14 14:45:00+00:00,777.148380,2026-08-14 19:30:00+00:00,775.771920,-353.48,price 776.16 reverted to/above mean 776.16; exit long
+BTC/USD,momentum_breakout,long,1.313102,2026-08-16 16:00:00+00:00,63204.808111,2026-08-16 17:00:00+00:00,63054.809324,-196.96,trailing stop hit: bar low 63039.44 <= stop 63052.34
+BTC/USD,momentum_breakout,long,0.779047,2026-08-17 06:00:00+00:00,63644.206200,2026-08-17 08:00:00+00:00,63279.544400,-284.09,trailing stop hit: bar low 63270.70 <= stop 63411.18
+SPY,mean_reversion,short,295.285,2026-08-17 12:15:00+00:00,776.331640,2026-08-17 13:30:00+00:00,775.977795,104.49,price 775.59 reverted to/below mean 776.09; exit short
+QQQ,mean_reversion,short,208.455,2026-08-14 19:45:00+00:00,730.679477,2026-08-17 16:30:00+00:00,732.496065,-378.68,price 732.13 reverted to/below mean 732.80; exit short
+SPY,mean_reversion,long,274.546,2026-08-17 13:45:00+00:00,775.577595,2026-08-18 18:15:00+00:00,767.935840,-2098.01,price 768.32 reverted to/above mean 768.25; exit long
+QQQ,mean_reversion,long,155.085,2026-08-17 17:00:00+00:00,731.215425,2026-08-18 19:30:00+00:00,717.576032,-2115.27,price 717.93 reverted to/above mean 717.93; exit long
+SPY,mean_reversion,long,177.684,2026-08-18 19:00:00+00:00,768.003810,2026-08-19 12:30:00+00:00,769.125245,199.26,price 769.51 reverted to/above mean 768.11; exit long
+QQQ,mean_reversion,short,119.198,2026-08-19 12:30:00+00:00,719.470085,2026-08-19 13:45:00+00:00,716.042842,408.52,price 715.68 reverted to/below mean 718.07; exit short
+QQQ,mean_reversion,long,70.987,2026-08-19 14:00:00+00:00,713.091367,2026-08-19 14:45:00+00:00,718.070785,353.47,price 718.43 reverted to/above mean 717.73; exit long
+SPY,mean_reversion,short,159.219,2026-08-19 12:45:00+00:00,770.614500,2026-08-19 16:45:00+00:00,770.114865,79.55,price 769.73 reverted to/below mean 769.98; exit short
+QQQ,mean_reversion,long,109.341,2026-08-20 12:00:00+00:00,711.265455,2026-08-20 16:30:00+00:00,712.193725,101.50,price 712.55 reverted to/above mean 712.50; exit long
+BTC/USD,momentum_breakout,long,0.404032,2026-08-19 14:00:00+00:00,65933.175613,2026-08-21 09:00:00+00:00,77843.708675,4812.24,trailing stop hit: bar low 77249.46 <= stop 77391.54
+SPY,mean_reversion,long,141.527,2026-08-20 12:00:00+00:00,765.472545,2026-08-21 12:00:00+00:00,765.497060,3.47,price 765.88 reverted to/above mean 764.50; exit long
+QQQ,mean_reversion,long,103.701,2026-08-20 18:00:00+00:00,709.554600,2026-08-21 12:15:00+00:00,715.242200,589.81,price 715.60 reverted to/above mean 711.05; exit long
+QQQ,mean_reversion,short,129.181,2026-08-21 12:45:00+00:00,715.831905,2026-08-21 13:30:00+00:00,711.990817,496.20,price 711.63 reverted to/below mean 711.67; exit short
+SPY,mean_reversion,short,179.669,2026-08-21 14:45:00+00:00,765.432093,2026-08-21 17:30:00+00:00,766.037827,-108.83,price 765.65 reverted to/below mean 765.68; exit short
+BTC/USD,momentum_breakout,long,0.366053,2026-08-23 13:00:00+00:00,77517.691476,2026-08-23 14:00:00+00:00,77142.809300,-137.23,trailing stop hit: bar low 76787.95 <= stop 76989.71
+BTC/USD,momentum_breakout,long,0.316871,2026-08-24 11:00:00+00:00,78474.958870,2026-08-24 13:00:00+00:00,78520.425647,14.41,trailing stop hit: bar low 77848.21 <= stop 77909.01
+SPY,mean_reversion,long,254.229,2026-08-24 12:15:00+00:00,765.032325,2026-08-24 15:45:00+00:00,764.147735,-224.89,price 764.53 reverted to/above mean 764.49; exit long
+QQQ,mean_reversion,long,179.061,2026-08-24 13:00:00+00:00,709.564605,2026-08-24 16:15:00+00:00,708.510568,-188.74,price 708.87 reverted to/above mean 708.54; exit long
+BTC/USD,momentum_breakout,long,0.242899,2026-08-25 02:00:00+00:00,80671.320503,2026-08-25 07:00:00+00:00,79630.382891,-252.84,trailing stop hit: bar low 79338.70 <= stop 79917.48
+QQQ,mean_reversion,long,175.424,2026-08-24 20:15:00+00:00,706.543095,2026-08-25 12:30:00+00:00,711.574035,882.55,price 711.93 reverted to/above mean 707.85; exit long
+SPY,mean_reversion,short,213.486,2026-08-25 12:30:00+00:00,766.326645,2026-08-25 14:30:00+00:00,764.572095,374.57,price 764.19 reverted to/below mean 764.35; exit short
+QQQ,mean_reversion,short,147.126,2026-08-25 12:45:00+00:00,711.943850,2026-08-25 17:00:00+00:00,710.239942,250.69,price 709.88 reverted to/below mean 710.54; exit short
+QQQ,mean_reversion,short,207.115,2026-08-25 20:15:00+00:00,711.214215,2026-08-26 12:00:00+00:00,709.524585,349.95,price 709.17 reverted to/below mean 710.14; exit short
+GLD,trend_following,long,39.79,2026-08-25 16:00:00+00:00,428.274030,2026-08-26 12:00:00+00:00,421.324233,-276.53,trailing stop hit: bar low 420.38 <= stop 423.40
+SPY,mean_reversion,short,318.579,2026-08-25 20:00:00+00:00,765.467075,2026-08-26 12:30:00+00:00,765.232425,74.75,price 764.85 reverted to/below mean 765.37; exit short
+QQQ,mean_reversion,long,207.104,2026-08-26 12:30:00+00:00,708.634140,2026-08-26 13:30:00+00:00,710.864390,461.89,price 711.22 reverted to/above mean 709.79; exit long
+SPY,mean_reversion,short,260.924,2026-08-26 13:30:00+00:00,765.941838,2026-08-26 14:15:00+00:00,765.482550,119.84,price 765.10 reverted to/below mean 765.48; exit short
+QQQ,mean_reversion,short,169.308,2026-08-26 13:45:00+00:00,711.823910,2026-08-26 14:15:00+00:00,708.914280,492.62,price 708.56 reverted to/below mean 709.93; exit short
+SPY,mean_reversion,long,263.224,2026-08-26 16:15:00+00:00,765.202410,2026-08-26 17:15:00+00:00,765.287165,22.31,price 765.67 reverted to/above mean 765.57; exit long
+BTC/USD,momentum_breakout,long,0.41807,2026-08-27 08:00:00+00:00,79794.227175,2026-08-27 11:00:00+00:00,79436.566847,-149.53,trailing stop hit: bar low 79188.89 <= stop 79286.91
+SPY,mean_reversion,short,303.476,2026-08-26 18:45:00+00:00,766.116750,2026-08-27 18:00:00+00:00,770.655135,-1377.29,price 770.27 reverted to/below mean 770.41; exit short
+QQQ,mean_reversion,short,211.195,2026-08-26 18:45:00+00:00,711.534055,2026-08-27 18:00:00+00:00,718.639140,-1500.56,price 718.28 reverted to/below mean 718.61; exit short
+SPY,mean_reversion,short,218.093,2026-08-28 13:30:00+00:00,772.223695,2026-08-28 14:00:00+00:00,770.605110,353.00,price 770.22 reverted to/below mean 771.00; exit short
+QQQ,mean_reversion,short,153.703,2026-08-27 19:45:00+00:00,720.839400,2026-08-28 14:00:00+00:00,717.938790,445.83,price 717.58 reverted to/below mean 719.40; exit short
+SPY,mean_reversion,short,150.542,2026-08-28 14:30:00+00:00,773.073270,2026-08-28 15:45:00+00:00,771.465540,242.03,price 771.08 reverted to/below mean 771.60; exit short
+QQQ,mean_reversion,short,111.31,2026-08-28 14:30:00+00:00,722.008815,2026-08-28 15:45:00+00:00,718.218930,421.85,price 717.86 reverted to/below mean 720.43; exit short
+QQQ,mean_reversion,long,101.186,2026-08-28 16:15:00+00:00,716.698170,2026-08-28 20:30:00+00:00,716.391625,-31.02,price 716.75 reverted to/above mean 716.51; exit long
+BTC/USD,momentum_breakout,short,0.299188,2026-08-28 15:00:00+00:00,78283.698570,2026-08-29 19:00:00+00:00,78238.099500,13.64,trailing stop hit: bar high 78330.46 >= stop 78259.95
+BTC/USD,momentum_breakout,long,0.74562,2026-08-30 12:00:00+00:00,78825.793200,2026-08-30 18:00:00+00:00,78980.435028,115.30,trailing stop hit: bar low 78760.35 <= stop 78762.76
+BTC/USD,momentum_breakout,short,0.428471,2026-08-30 23:00:00+00:00,77635.196483,2026-08-31 00:00:00+00:00,77960.385712,-139.33,trailing stop hit: bar high 78171.42 >= stop 78103.81
+QQQ,mean_reversion,long,160.317,2026-08-31 12:00:00+00:00,714.767205,2026-08-31 16:15:00+00:00,714.412615,-56.85,price 714.77 reverted to/above mean 714.66; exit long
+QQQ,mean_reversion,short,159.959,2026-08-31 16:45:00+00:00,714.902370,2026-08-31 17:15:00+00:00,714.587115,50.43,price 714.23 reverted to/below mean 714.49; exit short
+SPY,mean_reversion,long,143.563,2026-08-28 17:15:00+00:00,769.214415,2026-08-31 17:30:00+00:00,765.826895,-486.32,price 766.21 reverted to/above mean 765.95; exit long
+SPY,mean_reversion,short,216.439,2026-08-31 18:00:00+00:00,766.336640,2026-08-31 18:30:00+00:00,765.727673,131.80,price 765.35 reverted to/below mean 765.84; exit short
+SPY,mean_reversion,short,225.735,2026-08-31 19:15:00+00:00,766.286665,2026-09-01 12:00:00+00:00,762.851235,775.50,price 762.47 reverted to/below mean 765.87; exit short
+QQQ,mean_reversion,short,183.834,2026-08-31 19:30:00+00:00,715.701970,2026-09-01 12:00:00+00:00,709.224435,1190.79,price 708.87 reverted to/below mean 715.01; exit short
+QQQ,mean_reversion,long,153.063,2026-09-01 12:15:00+00:00,709.114380,2026-09-01 15:30:00+00:00,711.184230,316.82,price 711.54 reverted to/above mean 710.66; exit long
+SPY,mean_reversion,long,190.479,2026-09-01 12:15:00+00:00,762.791205,2026-09-01 15:45:00+00:00,763.892862,209.84,price 764.27 reverted to/above mean 764.23; exit long
+SPY,mean_reversion,long,236.85,2026-09-01 18:15:00+00:00,761.590605,2026-09-01 20:15:00+00:00,761.768925,42.24,price 762.15 reverted to/above mean 761.95; exit long
+BTC/USD,momentum_breakout,short,0.422538,2026-09-01 18:00:00+00:00,77086.149644,2026-09-02 03:00:00+00:00,77557.971106,-199.36,trailing stop hit: bar high 77751.77 >= stop 77620.41
+QQQ,mean_reversion,long,165.928,2026-09-01 18:30:00+00:00,705.352500,2026-09-02 12:15:00+00:00,707.705970,390.51,price 708.06 reverted to/above mean 707.87; exit long
+QQQ,mean_reversion,long,215.49,2026-09-02 12:45:00+00:00,705.982815,2026-09-02 14:00:00+00:00,707.316165,287.32,price 707.67 reverted to/above mean 707.17; exit long
+SPY,mean_reversion,short,270.527,2026-09-02 13:30:00+00:00,762.418600,2026-09-02 18:30:00+00:00,765.102360,-726.03,price 764.72 reverted to/below mean 765.12; exit short
+QQQ,mean_reversion,short,165.098,2026-09-02 14:15:00+00:00,708.835405,2026-09-02 18:30:00+00:00,708.379012,75.35,price 708.02 reverted to/below mean 708.46; exit short
+SPY,mean_reversion,short,272.598,2026-09-03 12:30:00+00:00,766.076770,2026-09-03 20:00:00+00:00,773.501557,-2023.98,price 773.12 reverted to/below mean 773.13; exit short
+QQQ,mean_reversion,short,259.452,2026-09-03 12:30:00+00:00,709.515065,2026-09-03 20:00:00+00:00,717.608625,-2099.89,price 717.25 reverted to/below mean 717.64; exit short
+BTC/USD,momentum_breakout,long,0.450657,2026-09-03 13:00:00+00:00,78870.144364,2026-09-04 08:00:00+00:00,81101.533948,1005.59,trailing stop hit: bar low 80491.44 <= stop 80568.96
+SPY,mean_reversion,long,267.489,2026-09-03 20:15:00+00:00,772.776195,2026-09-04 12:15:00+00:00,772.773420,-0.74,price 773.16 reverted to/above mean 773.11; exit long
+QQQ,mean_reversion,short,191.787,2026-09-04 12:00:00+00:00,720.279680,2026-09-04 12:45:00+00:00,717.858750,464.30,price 717.50 reverted to/below mean 717.78; exit short
+QQQ,mean_reversion,short,160.659,2026-09-04 13:30:00+00:00,719.520060,2026-09-04 14:30:00+00:00,718.409025,178.50,price 718.05 reverted to/below mean 718.60; exit short
+SPY,mean_reversion,long,221.754,2026-09-04 12:30:00+00:00,772.145880,2026-09-04 18:45:00+00:00,769.874870,-503.61,price 770.26 reverted to/above mean 770.20; exit long
+BTC/USD,momentum_breakout,long,0.690842,2026-09-05 16:00:00+00:00,80090.740858,2026-09-05 19:00:00+00:00,79718.315903,-257.29,trailing stop hit: bar low 79717.81 <= stop 79791.53
+BTC/USD,momentum_breakout,long,0.679774,2026-09-06 23:00:00+00:00,80383.666247,2026-09-07 00:00:00+00:00,80118.750585,-180.08,trailing stop hit: bar low 80054.89 <= stop 80083.88
+QQQ,mean_reversion,short,202.551,2026-09-08 12:45:00+00:00,720.669485,2026-09-08 13:30:00+00:00,717.018330,739.55,price 716.66 reverted to/below mean 718.32; exit short
+BTC/USD,momentum_breakout,short,0.455198,2026-09-08 13:00:00+00:00,77895.523754,2026-09-08 14:00:00+00:00,78579.720225,-311.44,trailing stop hit: bar high 78593.12 >= stop 78316.53
+SPY,mean_reversion,long,264.877,2026-09-08 12:30:00+00:00,769.114365,2026-09-08 17:45:00+00:00,767.176220,-513.37,price 767.56 reverted to/above mean 767.55; exit long
+QQQ,mean_reversion,long,185.039,2026-09-08 19:30:00+00:00,718.929285,2026-09-09 13:45:00+00:00,718.490575,-81.18,price 718.85 reverted to/above mean 718.32; exit long
+SPY,mean_reversion,long,212.371,2026-09-08 19:45:00+00:00,766.443030,2026-09-09 17:45:00+00:00,762.643487,-806.91,price 763.02 reverted to/above mean 762.86; exit long
+QQQ,mean_reversion,long,156.548,2026-09-10 12:15:00+00:00,710.915280,2026-09-10 16:45:00+00:00,710.559543,-55.69,price 710.91 reverted to/above mean 710.01; exit long
+SPY,mean_reversion,long,228.074,2026-09-10 12:00:00+00:00,761.790705,2026-09-11 12:00:00+00:00,761.858880,15.55,price 762.24 reverted to/above mean 758.53; exit long
+SPY,mean_reversion,short,161.376,2026-09-11 12:15:00+00:00,762.518550,2026-09-11 18:30:00+00:00,765.512565,-483.16,price 765.13 reverted to/below mean 765.42; exit short
+QQQ,mean_reversion,short,137.72,2026-09-11 12:30:00+00:00,713.832905,2026-09-11 18:45:00+00:00,716.267955,-335.36,price 715.91 reverted to/below mean 716.04; exit short
+QQQ,mean_reversion,long,180.998,2026-09-11 19:45:00+00:00,715.247445,2026-09-14 15:30:00+00:00,710.154745,-921.77,price 710.51 reverted to/above mean 708.19; exit long
+SPY,mean_reversion,long,217.206,2026-09-11 19:45:00+00:00,764.522070,2026-09-14 16:15:00+00:00,761.688965,-615.37,price 762.07 reverted to/above mean 761.66; exit long
+BTC/USD,momentum_breakout,long,0.36439,2026-09-14 16:00:00+00:00,78795.958290,2026-09-14 23:00:00+00:00,78138.286812,-239.65,trailing stop hit: bar low 78116.25 <= stop 78392.71
+BTC/USD,momentum_breakout,short,0.310918,2026-09-15 14:00:00+00:00,75844.102478,2026-09-15 15:00:00+00:00,76503.732750,-205.09,trailing stop hit: bar high 76556.37 >= stop 76354.73
+SPY,mean_reversion,long,171.972,2026-09-15 13:30:00+00:00,760.324973,2026-09-15 18:00:00+00:00,757.416102,-500.24,price 757.79 reverted to/above mean 757.71; exit long
+QQQ,mean_reversion,long,139.203,2026-09-15 14:00:00+00:00,707.273460,2026-09-15 20:00:00+00:00,705.107270,-301.54,price 705.46 reverted to/above mean 705.00; exit long
+QQQ,mean_reversion,short,161.89,2026-09-16 12:00:00+00:00,708.615515,2026-09-16 17:15:00+00:00,709.954800,-216.82,price 709.60 reverted to/below mean 709.71; exit short
+SPY,mean_reversion,short,175.529,2026-09-16 12:15:00+00:00,759.679970,2026-09-16 17:30:00+00:00,759.709665,-5.21,price 759.33 reverted to/below mean 759.84; exit short
+SPY,mean_reversion,long,120.832,2026-09-16 18:30:00+00:00,759.389505,2026-09-17 12:00:00+00:00,761.638990,271.81,price 762.02 reverted to/above mean 757.90; exit long
+QQQ,mean_reversion,long,80.262,2026-09-16 18:45:00+00:00,704.567108,2026-09-17 12:00:00+00:00,713.613015,726.04,price 713.97 reverted to/above mean 707.61; exit long
+QQQ,mean_reversion,short,69.903,2026-09-17 12:15:00+00:00,714.942350,2026-09-17 18:30:00+00:00,716.488065,-108.05,price 716.13 reverted to/below mean 716.22; exit short
+QQQ,mean_reversion,short,171.586,2026-09-17 19:30:00+00:00,716.951345,2026-09-17 20:00:00+00:00,716.828235,21.12,price 716.47 reverted to/below mean 716.55; exit short
+QQQ,mean_reversion,short,172.297,2026-09-18 12:30:00+00:00,717.830905,2026-09-18 14:00:00+00:00,716.958300,150.35,price 716.60 reverted to/below mean 717.05; exit short
+SPY,mean_reversion,long,168.254,2026-09-18 12:00:00+00:00,761.100360,2026-09-18 17:45:00+00:00,759.460080,-275.98,price 759.84 reverted to/above mean 759.68; exit long
+BTC/USD,momentum_breakout,long,0.275354,2026-09-18 13:00:00+00:00,80067.798892,2026-09-19 20:00:00+00:00,81090.052691,281.48,trailing stop hit: bar low 81050.77 <= stop 81112.08
+BTC/USD,momentum_breakout,long,0.366368,2026-09-21 00:00:00+00:00,81644.376787,2026-09-21 01:00:00+00:00,80938.919296,-258.46,trailing stop hit: bar low 80843.46 <= stop 81245.40
+USO,trend_following,long,68.69,2026-08-31 12:00:00+00:00,133.016475,2026-09-21 12:00:00+00:00,148.325800,1051.60,trailing stop hit: bar low 147.43 <= stop 152.01
+SPY,mean_reversion,short,205.851,2026-09-18 18:15:00+00:00,760.034792,2026-09-22 14:15:00+00:00,773.936775,-2861.74,price 773.55 reverted to/below mean 773.83; exit short
+SPY,mean_reversion,long,75.734,2026-09-22 15:30:00+00:00,773.231423,2026-09-22 16:45:00+00:00,773.233190,0.13,price 773.62 reverted to/above mean 773.59; exit long
+SPY,mean_reversion,short,91.265,2026-09-22 19:15:00+00:00,773.987813,2026-09-22 19:45:00+00:00,773.826720,14.70,price 773.44 reverted to/below mean 773.62; exit short
+QQQ,mean_reversion,short,192.904,2026-09-18 18:30:00+00:00,717.840900,2026-09-23 12:15:00+00:00,745.592610,-5353.42,price 745.22 reverted to/below mean 746.18; exit short
+QQQ,mean_reversion,long,68.026,2026-09-23 13:30:00+00:00,745.312470,2026-09-23 18:15:00+00:00,740.634498,-318.22,price 741.00 reverted to/above mean 740.81; exit long
+BTC/USD,momentum_breakout,short,0.082519,2026-09-23 14:00:00+00:00,84484.515611,2026-09-24 14:00:00+00:00,83690.960568,65.48,trailing stop hit: bar high 84908.69 >= stop 84394.56
+SPY,mean_reversion,long,88.669,2026-09-23 12:00:00+00:00,773.006310,2026-09-24 16:15:00+00:00,766.731443,-556.39,price 767.12 reverted to/above mean 765.48; exit long
+QQQ,mean_reversion,long,36.199,2026-09-24 12:15:00+00:00,734.877255,2026-09-24 16:15:00+00:00,739.190220,156.13,price 739.56 reverted to/above mean 736.69; exit long
+QQQ,mean_reversion,short,29.27,2026-09-24 16:30:00+00:00,740.389620,2026-09-24 20:15:00+00:00,739.199415,34.84,price 738.83 reverted to/below mean 739.73; exit short
+SPY,mean_reversion,short,37.446,2026-09-24 16:45:00+00:00,767.950833,2026-09-25 14:00:00+00:00,767.213415,27.61,price 766.83 reverted to/below mean 768.01; exit short
+QQQ,mean_reversion,short,31.478,2026-09-25 12:30:00+00:00,744.367630,2026-09-25 14:00:00+00:00,741.340485,95.29,price 740.97 reverted to/below mean 741.45; exit short
+BTC/USD,momentum_breakout,short,0.171981,2026-09-27 22:00:00+00:00,84140.833538,2026-09-27 23:00:00+00:00,84500.178975,-61.80,trailing stop hit: bar high 84519.28 >= stop 84483.37
+SPY,mean_reversion,short,34.005,2026-09-25 16:00:00+00:00,771.124245,2026-09-28 12:00:00+00:00,768.974295,73.11,price 768.59 reverted to/below mean 770.72; exit short
+BTC/USD,momentum_breakout,short,0.138452,2026-09-28 02:00:00+00:00,83367.475410,2026-09-28 12:00:00+00:00,83586.497362,-30.32,trailing stop hit: bar high 83607.80 >= stop 83404.84
+SPY,mean_reversion,long,47.0,2026-09-28 12:30:00+00:00,769.094355,2026-09-28 16:15:00+00:00,768.315650,-36.60,price 768.70 reverted to/above mean 767.89; exit long
+QQQ,mean_reversion,long,39.396,2026-09-28 12:15:00+00:00,740.900265,2026-09-28 16:15:00+00:00,739.055287,-72.68,price 739.42 reverted to/above mean 738.49; exit long
+SPY,mean_reversion,long,51.098,2026-09-29 13:30:00+00:00,765.552585,2026-09-29 18:15:00+00:00,763.608005,-99.36,price 763.99 reverted to/above mean 763.79; exit long
+BTC/USD,momentum_breakout,long,0.103038,2026-09-30 12:00:00+00:00,85301.248810,2026-09-30 13:00:00+00:00,84558.849425,-76.50,trailing stop hit: bar low 84001.13 <= stop 84767.49
+SPY,mean_reversion,short,55.854,2026-09-30 12:15:00+00:00,764.767425,2026-09-30 17:15:00+00:00,767.383500,-146.12,price 767.00 reverted to/below mean 767.58; exit short
+QQQ,mean_reversion,short,45.685,2026-09-29 20:30:00+00:00,738.960335,2026-09-30 17:15:00+00:00,742.691160,-170.44,price 742.32 reverted to/below mean 742.89; exit short
+QQQ,mean_reversion,long,34.089,2026-09-30 19:45:00+00:00,739.879755,2026-10-01 12:15:00+00:00,743.428100,120.96,price 743.80 reverted to/above mean 743.04; exit long
+SPY,mean_reversion,long,47.066,2026-09-30 18:15:00+00:00,767.193405,2026-10-01 17:15:00+00:00,763.238190,-186.16,price 763.62 reverted to/above mean 762.05; exit long
+QQQ,mean_reversion,long,29.27,2026-10-01 14:00:00+00:00,739.304467,2026-10-01 17:15:00+00:00,742.238695,85.88,price 742.61 reverted to/above mean 739.90; exit long
+BTC/USD,momentum_breakout,long,0.094455,2026-10-02 04:00:00+00:00,86672.264475,2026-10-02 05:00:00+00:00,85936.775118,-69.47,trailing stop hit: bar low 85851.25 <= stop 86131.71
+QQQ,mean_reversion,short,29.107,2026-10-02 12:00:00+00:00,746.006810,2026-10-02 16:30:00+00:00,749.494560,-101.52,price 749.12 reverted to/below mean 749.86; exit short
+SPY,mean_reversion,short,32.111,2026-10-01 17:30:00+00:00,764.392613,2026-10-02 17:15:00+00:00,768.934275,-145.84,price 768.55 reverted to/below mean 769.46; exit short
+GLD,trend_following,short,11.462,2026-09-23 12:00:00+00:00,392.363720,2026-10-03 04:00:00+00:00,380.385097,137.30,end_of_backtest_window
+SPY,mean_reversion,short,44.169,2026-10-02 19:45:00+00:00,769.265175,2026-10-03 04:00:00+00:00,770.104860,-37.09,end_of_backtest_window

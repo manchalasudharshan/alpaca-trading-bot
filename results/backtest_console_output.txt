@@ -1,56 +1,57 @@
-2026-10-03 04:40:07,641 [INFO] bot.backtest: Connecting to Alpaca...
-2026-10-03 04:40:07,756 [INFO] bot.broker: Connected to Alpaca. Account status=ACTIVE, equity=100000, buying_power=400000
-2026-10-03 04:40:07,756 [INFO] bot.backtest: Fetching 6 months of historical data for all instruments...
-2026-10-03 04:40:07,756 [INFO] bot.backtest: Fetching 6 months of 15Min bars for SPY...
-2026-10-03 04:40:08,161 [WARNING] bot.broker: Alpaca APIError (attempt 1/5): subscription does not permit querying recent SIP data
-2026-10-03 04:40:08,161 [INFO] bot.broker: Retrying in 2.0s...
-2026-10-03 04:40:10,190 [WARNING] bot.broker: Alpaca APIError (attempt 2/5): subscription does not permit querying recent SIP data
-2026-10-03 04:40:10,191 [INFO] bot.broker: Retrying in 4.0s...
-2026-10-03 04:40:14,221 [WARNING] bot.broker: Alpaca APIError (attempt 3/5): subscription does not permit querying recent SIP data
-2026-10-03 04:40:14,221 [INFO] bot.broker: Retrying in 8.0s...
-2026-10-03 04:40:22,250 [WARNING] bot.broker: Alpaca APIError (attempt 4/5): subscription does not permit querying recent SIP data
-2026-10-03 04:40:22,250 [INFO] bot.broker: Retrying in 16.0s...
-2026-10-03 04:40:38,279 [WARNING] bot.broker: Alpaca APIError (attempt 5/5): subscription does not permit querying recent SIP data
-2026-10-03 04:40:38,279 [INFO] bot.broker: Retrying in 32.0s...
-2026-10-03 04:41:10,279 [ERROR] bot.broker: Exhausted 5 retries calling _fetch; giving up for this cycle.
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 589, in <module>
-    run_backtest()
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 549, in run_backtest
-    bars_by_symbol = fetch_all_bars(broker, months=params["lookback_months"])
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 128, in fetch_all_bars
-    df = broker.get_historical_bars(
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 210, in get_historical_bars
-    df = _retry(_fetch)
-         ^^^^^^^^^^^^^^
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 88, in _retry
-    raise last_exc
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 69, in _retry
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 204, in _fetch
-    bars = self.api.get_bars(
-           ^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 735, in get_bars
-    bars = list(self.get_bars_iter(symbol,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 718, in get_bars_iter
-    for bar in bars:
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 594, in _data_get
-    resp = self.data_get(path, data=data, feed=feed,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 274, in data_get
-    return self._request(
-           ^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 222, in _request
-    return self._one_request(method, url, opts, retry)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 248, in _one_request
-    raise_api_error(resp, http_error)
-  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 83, in raise_api_error
-    raise APIError(error, http_error) from None
-alpaca_trade_api.rest.APIError: subscription does not permit querying recent SIP data
+2026-10-03 04:42:22,887 [INFO] bot.backtest: Connecting to Alpaca...
+2026-10-03 04:42:23,015 [INFO] bot.broker: Connected to Alpaca. Account status=ACTIVE, equity=100000, buying_power=400000
+2026-10-03 04:42:23,015 [INFO] bot.backtest: Fetching 6 months of historical data for all instruments...
+2026-10-03 04:42:23,015 [INFO] bot.backtest: Fetching 6 months of 15Min bars for SPY...
+2026-10-03 04:42:23,752 [INFO] bot.backtest:   -> 3798 bars (2026-04-06 12:00:00+00:00 to 2026-10-02 20:15:00+00:00)
+2026-10-03 04:42:23,752 [INFO] bot.backtest: Fetching 6 months of 15Min bars for QQQ...
+2026-10-03 04:42:24,491 [INFO] bot.backtest:   -> 4175 bars (2026-04-06 12:15:00+00:00 to 2026-10-02 20:45:00+00:00)
+2026-10-03 04:42:24,491 [INFO] bot.backtest: Fetching 6 months of 1Hour bars for BTC/USD...
+2026-10-03 04:42:27,235 [INFO] bot.backtest:   -> 4320 bars (2026-04-06 05:00:00+00:00 to 2026-10-03 04:00:00+00:00)
+2026-10-03 04:42:27,235 [INFO] bot.backtest: Fetching 6 months of 4Hour bars for GLD...
+2026-10-03 04:42:27,664 [INFO] bot.backtest:   -> 275 bars (2026-04-06 12:00:00+00:00 to 2026-10-02 16:00:00+00:00)
+2026-10-03 04:42:27,664 [INFO] bot.backtest: Fetching 6 months of 4Hour bars for USO...
+2026-10-03 04:42:27,899 [INFO] bot.backtest:   -> 265 bars (2026-04-06 12:00:00+00:00 to 2026-10-02 16:00:00+00:00)
+2026-10-03 04:42:27,899 [INFO] bot.backtest: Backtesting SPY (mean_reversion strategy, 15Min candles)...
+2026-10-03 04:42:31,011 [INFO] bot.backtest: Backtesting QQQ (mean_reversion strategy, 15Min candles)...
+2026-10-03 04:42:34,488 [INFO] bot.backtest: Backtesting BTC/USD (momentum_breakout strategy, 1Hour candles)...
+2026-10-03 04:42:38,846 [INFO] bot.backtest: Backtesting GLD (trend_following strategy, 4Hour candles)...
+2026-10-03 04:42:38,915 [INFO] bot.backtest: Backtesting USO (trend_following strategy, 4Hour candles)...
+2026-10-03 04:42:38,972 [INFO] bot.backtest: Running combined portfolio backtest (correlation filter active)...
+2026-10-03 04:42:40,323 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:40,328 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:41,049 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:41,412 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:42,150 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:42,390 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:44,217 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:44,634 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:44,966 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:44,978 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:46,421 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:46,470 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:46,893 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:48,014 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+2026-10-03 04:42:49,784 [INFO] bot.risk_manager: Correlation filter: blocking BTC/USD long entry because ['SPY', 'QQQ'] are all already long.
+
+====================================================================================================
+BACKTEST SUMMARY
+====================================================================================================
+    Instrument   Trades     Win%      AvgWin     AvgLoss   ProfitFactor    MaxDD%    Sharpe   TotalRet%    FinalEquity
+----------------------------------------------------------------------------------------------------
+           SPY      173     53.8      836.84    -2007.73           0.48    -83.65     -3.42      -82.79      17,208.28
+           QQQ      168     61.3     1259.22    -2958.21           0.67    -64.79     -1.41      -62.58      37,415.77
+       BTC/USD      106     23.6     2898.94     -933.79           0.96    -26.93      0.01       -3.16      96,836.54
+           GLD        2     50.0     2487.07    -1489.99           1.67     -1.70      0.69        1.00     100,997.09
+           USO        1    100.0     5846.89        0.00            inf     -4.67      2.61        5.85     105,846.89
+COMBINED PORTFOLIO      438     50.2      567.78    -1011.70           0.57    -95.98     -2.07      -95.64       4,360.85
+====================================================================================================
+
+⚠️  NEGATIVE SHARPE RATIO -- parameters likely need adjustment:
+   - SPY: Sharpe = -3.42, total return = -82.79%, win rate = 53.8%, profit factor = 0.48
+   - QQQ: Sharpe = -1.41, total return = -62.58%, win rate = 61.3%, profit factor = 0.67
+   Consider revisiting entry thresholds, trailing-stop multiples, or timeframe for these.
+
+2026-10-03 04:42:50,418 [INFO] matplotlib.font_manager: Failed to extract font properties from /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf: Non-scalable fonts are not supported
+2026-10-03 04:42:50,530 [INFO] matplotlib.font_manager: generated new fontManager
+2026-10-03 04:42:51,180 [INFO] bot.backtest: Saved equity curve chart to ./backtest_results.png
+2026-10-03 04:42:51,185 [INFO] bot.backtest: Wrote 888 simulated trades to ./backtest_trades.csv
