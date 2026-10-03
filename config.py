@@ -84,9 +84,14 @@ INSTRUMENT_BY_SYMBOL: Dict[str, Instrument] = {i.symbol: i for i in INSTRUMENTS}
 MEAN_REVERSION_PARAMS = {
     "lookback": 20,                 # SMA / stddev period
     "timeframe": "15Min",
+    # Widened from the original 1.5 / 1.8 after a 6-month backtest showed
+    # those bands overtrading noise in a trending market (SPY: 398 trades,
+    # 33.2% win rate, Sharpe -7.06; QQQ: 305 trades, 36.4% win rate, Sharpe
+    # -0.43). Wider bands select for more extreme, higher-conviction
+    # dislocations and should cut trade frequency substantially.
     "entry_std_dev": {
-        "SPY": 1.5,
-        "QQQ": 1.8,
+        "SPY": 2.2,
+        "QQQ": 2.3,
     },
     # Exit when price crosses back through the mean -- no separate param
     # needed, handled in strategy logic.
@@ -96,11 +101,19 @@ MEAN_REVERSION_PARAMS = {
 # Strategy 2 -- Momentum Breakout (BTC/USD)
 # ---------------------------------------------------------------------------
 MOMENTUM_BREAKOUT_PARAMS = {
-    "lookback": 20,                 # period for high/low channel and avg volume
+    # Widened from 20 after a 6-month backtest showed a 19.8% win rate
+    # despite a healthy win/loss ratio (avg win $3,025 vs avg loss $920) --
+    # a sign of too many false/weak breakouts, not a bad edge. A longer
+    # channel selects for more significant breakouts.
+    "lookback": 30,
     "timeframe": "1Hour",
-    "volume_multiple": 1.5,         # breakout volume must be >= 1.5x the 20-period avg
+    # Raised from 1.5x -- a stricter volume filter should cut weak
+    # breakouts that reverse immediately.
+    "volume_multiple": 2.0,
     "atr_period": 14,
-    "trailing_stop_atr_multiple": 2.0,
+    # Widened from 2.0x -- the original stop was likely getting hit by
+    # normal post-breakout pullbacks before the move developed.
+    "trailing_stop_atr_multiple": 2.5,
 }
 
 # ---------------------------------------------------------------------------
