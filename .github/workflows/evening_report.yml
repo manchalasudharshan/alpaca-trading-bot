@@ -7,7 +7,7 @@ on:
     - cron: "30 15 * * *"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   report:
@@ -27,4 +27,18 @@ jobs:
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
       - name: Generate and send evening report
-        run: python -m bot.reporting.evening_report
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p results/reports
+          python -m bot.reporting.evening_report 2>&1 | tee "results/reports/evening_$(date -u +%F).txt"
+      - name: Commit report output (for audit, regardless of Telegram delivery)
+        if: always()
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git add results/reports/ 2>/dev/null || true
+          git diff --cached --quiet && echo "No report changes to commit" || \
+            git commit -m "Evening report ${{ github.run_id }} [skip ci]"
+          git pull --rebase origin main || true
+          git push origin HEAD:main || echo "push failed, see logs"
