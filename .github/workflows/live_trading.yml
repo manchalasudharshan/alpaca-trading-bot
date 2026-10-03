@@ -1,0 +1,58 @@
+name: Live Paper Trading Tick
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Every 15 minutes. GitHub's scheduler can run late under load (not a
+    # guaranteed real-time clock) -- fine for 15Min/1Hour/4Hour strategy
+    # timeframes, but don't rely on this for sub-minute precision.
+    - cron: "*/15 * * * *"
+
+# Ticks must run one at a time, in order -- bot_state.json is read, mutated,
+# and written back each tick, so two overlapping runs could both read the
+# same "no position open" state and double-enter, or race on the git commit.
+# cancel-in-progress: false means a new tick queues behind a running one
+# instead of killing it, so no in-flight order submission is ever cut off.
+concurrency:
+  group: live-trading
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+      APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+      APCA_API_BASE_URL: https://paper-api.alpaca.markets
+      APCA_DATA_URL: https://data.alpaca.markets
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+      - name: Run one trading tick
+        run: python -m bot.live_tick
+      - name: Upload bot.log (debugging aid, not committed to git)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-log-${{ github.run_id }}
+          path: bot.log
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Commit trading state back to repo
+        if: always()
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git add trades.csv daily_pnl.csv bot_state.json 2>/dev/null || true
+          git diff --cached --quiet && echo "No state changes to commit" || \
+            git commit -m "Live tick ${{ github.run_id }} [skip ci]"
+          # Another tick may have pushed while this one ran; rebase onto it
+          # rather than losing either side's trades.csv/daily_pnl.csv rows.
+          git pull --rebase origin main || true
+          git push origin HEAD:main || echo "push failed, see logs"

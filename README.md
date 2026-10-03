@@ -111,6 +111,92 @@ Outputs:
 Starting capital, slippage %, and the trading-day convention used to
 annualize Sharpe are all in `config.BACKTEST_PARAMS`.
 
+## Live paper trading (GitHub Actions) + Telegram reports
+
+Since the bot needs to run continuously for days/weeks and this project is
+developed in a sandbox with no outbound internet access, live paper trading
+runs the same way the backtest does: as a scheduled GitHub Actions workflow
+with real internet access, not as a process kept alive locally.
+
+**`.github/workflows/live_trading.yml`** runs `python -m bot.live_tick`
+every 15 minutes (`workflow_dispatch` also lets you trigger a tick
+manually). Each run is a fresh process, so open positions, stop prices, and
+the daily P&L accumulator are persisted to `bot_state.json` and reloaded at
+the start of every tick (`Portfolio.to_state_dict`/`load_state_dict` in
+`bot/portfolio.py`, `TradingBot.save_state`/`load_state` in `bot/main.py`)
+— without this, a fresh process every 15 minutes would have no memory of
+positions it already opened. `trades.csv`, `daily_pnl.csv`, and
+`bot_state.json` are committed back to the repo after every tick (same
+pattern as `results/` for the backtest), so the live record is durable and
+`git pull` always gets you the latest state. `bot.log` is uploaded as a
+workflow run artifact (Actions tab → the run → Artifacts) instead of
+committed, to keep repo history small.
+
+Runs are serialized (`concurrency: group: live-trading,
+cancel-in-progress: false`) so two ticks can never race on the same state
+file or double-enter a position.
+
+Every closed trade in `trades.csv` now also logs `equity_at_entry` and
+`loss_pct_of_equity_at_entry` — the direct audit trail for "is the hard
+stop actually capping losses at 1% of equity, no exceptions." A losing
+trade's `loss_pct_of_equity_at_entry` should read ≈ -1.00 every time
+regardless of instrument; `bot/reporting/data.py`'s `stop_loss_audit()`
+flags any that don't, and the evening report surfaces it.
+
+### Telegram reports
+
+Two more scheduled workflows read `trades.csv`/`daily_pnl.csv`/
+`bot_state.json` plus live Alpaca account state, compute the requested
+numbers in plain Python (`bot/reporting/data.py` — nothing here is
+LLM-guessed), and send a <200-word report to Telegram
+(`bot/reporting/telegram.py`):
+
+- **`.github/workflows/morning_briefing.yml`** — 7:00 AM IST (01:30 UTC)
+  daily, runs `bot/reporting/morning_briefing.py`: open positions with
+  entry price and unrealized P&L (straight from Alpaca's own position
+  object), yesterday's total and per-instrument P&L, market-condition
+  proxies (see caveat below), 7-day win rate, and risk flags (position
+  near its stop, correlation filter currently blocking, portfolio
+  drawdown from peak over 5%).
+- **`.github/workflows/evening_report.yml`** — 9:00 PM IST (15:30 UTC)
+  daily, runs `bot/reporting/evening_report.py`: today's trades and
+  instruments, today's P&L in dollars and % of equity, best/worst trade,
+  current equity, a directional comparison against the 6-month backtest's
+  per-instrument baseline, and whether any stop-loss exit today breached
+  the 1% cap.
+
+`bot/reporting/narrate.py` turns the computed facts into prose. If
+`ANTHROPIC_API_KEY` is set as a repo secret, it asks Claude to write the
+report (given only the already-correct numbers as context, so it can't
+invent a figure); without that secret, it falls back to a plain
+deterministic template so reporting still works.
+
+**Market-condition caveat:** Alpaca's data feed doesn't carry VIX, so "is
+VIX elevated" is a realized-volatility proxy computed from SPY's own 15Min
+returns, explicitly labeled as a proxy in the report — not the real index.
+Trend/range reads off the same 100-period SMA the live mean-reversion
+trend filter uses; crypto "unusual volume" compares BTC/USD's latest hourly
+bar to its own 30-hour average.
+
+### Setup
+
+In addition to the `APCA_API_KEY_ID`/`APCA_API_SECRET_KEY` repo secrets
+from [Backtesting](#backtesting), add:
+
+1. **Telegram bot**: message [@BotFather](https://t.me/BotFather) on
+   Telegram, send `/newbot`, follow the prompts — it replies with a token.
+2. Send any message to your new bot from whichever Telegram chat should
+   receive reports.
+3. Visit `https://api.telegram.org/bot<token>/getUpdates` in a browser and
+   read the chat id out of `"chat":{"id": ...}` in the JSON.
+4. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` as repo secrets:
+   `https://github.com/<owner>/<repo>/settings/secrets/actions`.
+5. *(Optional, for LLM-written reports instead of the plain template)* add
+   `ANTHROPIC_API_KEY` the same way.
+6. The three workflows above are already enabled once pushed to `main` —
+   no further action needed; `workflow_dispatch` lets you fire any of them
+   on demand to test before the first scheduled run.
+
 ## How it works
 
 The bot trades 5 instruments, each with a strategy chosen for how that

@@ -187,6 +187,12 @@ LOG_DIR = os.getenv("LOG_DIR", ".")
 TRADES_CSV_PATH = os.path.join(LOG_DIR, "trades.csv")
 DAILY_PNL_CSV_PATH = os.path.join(LOG_DIR, "daily_pnl.csv")
 BOT_LOG_PATH = os.path.join(LOG_DIR, "bot.log")
+# Open positions, last-seen-bar timestamps, and peak equity, persisted
+# across process restarts -- required for bot/live_tick.py, where each
+# GitHub Actions cron run is a fresh process (see bot/main.py TradingBot
+# .save_state/.load_state). Also used by the continuous bot/main.py loop
+# so a VPS restart doesn't lose track of open risk either.
+STATE_FILE_PATH = os.path.join(LOG_DIR, "bot_state.json")
 
 # ---------------------------------------------------------------------------
 # Misc

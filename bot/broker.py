@@ -264,6 +264,33 @@ class AlpacaBroker:
             logger.error("FAILED to submit %s %s qty=%s after retries: %s", side, symbol, qty, e)
             return None
 
+    def get_positions(self) -> list:
+        """
+        Returns Alpaca's own list of currently open positions (the broker's
+        source of truth), each with symbol, qty, side, avg_entry_price,
+        current_price, unrealized_pl, unrealized_plpc, market_value. Used by
+        the reporting scripts so "current positions" always reflects what
+        Alpaca actually holds, not just this process's in-memory book.
+        """
+        try:
+            positions = _retry(self.api.list_positions)
+            return [
+                {
+                    "symbol": p.symbol,
+                    "qty": float(p.qty),
+                    "side": "long" if float(p.qty) >= 0 else "short",
+                    "avg_entry_price": float(p.avg_entry_price),
+                    "current_price": float(p.current_price),
+                    "unrealized_pl": float(p.unrealized_pl),
+                    "unrealized_plpc": float(p.unrealized_plpc),
+                    "market_value": float(p.market_value),
+                }
+                for p in positions
+            ]
+        except Exception as e:
+            logger.error("Failed to fetch open positions: %s", e)
+            return []
+
     def get_last_trade_price(self, symbol: str, asset_class: str) -> Optional[float]:
         """Used as a fallback fill-price estimate if we want current price
         between bar closes (e.g. for logging); not required for the core

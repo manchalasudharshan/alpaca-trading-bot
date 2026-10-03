@@ -16,6 +16,7 @@ or which part of main.py triggers a fill.
 """
 
 import csv
+import json
 import logging
 import os
 import threading
@@ -38,6 +39,11 @@ class Position:
     stop_price: float         # current active stop (hard stop initially, then ratcheted trailing stop)
     strategy: str
     entry_time: datetime
+    # Account equity at the moment this trade was sized, so trades.csv can
+    # be audited after the fact: (entry_price - stop_price) * qty should
+    # equal ~1% of this value, "no exceptions" (see risk_manager.py). Not
+    # always available (e.g. old state files) -- defaults to None.
+    equity_at_entry: Optional[float] = None
 
 
 class Portfolio:
@@ -69,7 +75,7 @@ class Portfolio:
                 writer.writerow([
                     "timestamp", "instrument", "direction", "entry_price",
                     "exit_price", "profit_loss", "position_size", "strategy",
-                    "exit_reason",
+                    "exit_reason", "equity_at_entry", "loss_pct_of_equity_at_entry",
                 ])
         if not os.path.exists(self.daily_pnl_csv_path):
             with open(self.daily_pnl_csv_path, "w", newline="") as f:
@@ -99,12 +105,13 @@ class Portfolio:
     # Mutations
     # ------------------------------------------------------------------
     def open_position(self, symbol: str, side: str, qty: float, entry_price: float,
-                       entry_atr: float, stop_price: float, strategy: str):
+                       entry_atr: float, stop_price: float, strategy: str,
+                       equity_at_entry: Optional[float] = None):
         with self._lock:
             self.positions[symbol] = Position(
                 symbol=symbol, side=side, qty=qty, entry_price=entry_price,
                 entry_atr=entry_atr, stop_price=stop_price, strategy=strategy,
-                entry_time=datetime.now(timezone.utc),
+                entry_time=datetime.now(timezone.utc), equity_at_entry=equity_at_entry,
             )
         logger.info("Opened %s %s qty=%s @ %.4f (stop=%.4f, strategy=%s)",
                     side, symbol, qty, entry_price, stop_price, strategy)
@@ -143,6 +150,14 @@ class Portfolio:
     # CSV writers
     # ------------------------------------------------------------------
     def _log_trade(self, pos: Position, exit_price: float, pnl: float, exit_reason: str):
+        # loss_pct_of_equity_at_entry is the direct audit trail for "stop
+        # losses triggering at exactly 1% of equity, no exceptions": for a
+        # losing trade this should read ~-1.00 (never more negative, modulo
+        # the small slippage model) regardless of which instrument or
+        # strategy produced it.
+        loss_pct = None
+        if pos.equity_at_entry and pos.equity_at_entry > 0 and pnl < 0:
+            loss_pct = (pnl / pos.equity_at_entry) * 100.0
         with open(self.trades_csv_path, "a", newline="") as f:
             writer = csv.writer(f)
             writer.writerow([
@@ -155,6 +170,8 @@ class Portfolio:
                 pos.qty,
                 pos.strategy,
                 exit_reason,
+                f"{pos.equity_at_entry:.2f}" if pos.equity_at_entry else "",
+                f"{loss_pct:.3f}" if loss_pct is not None else "",
             ])
 
     def _accumulate_daily_pnl(self, pnl: float):
@@ -209,3 +226,40 @@ class Portfolio:
         """Call once near market close / once a day from main.py's scheduler
         to guarantee a row exists even on days with zero trades."""
         self._flush_daily_pnl_row(upsert=True)
+
+    # ------------------------------------------------------------------
+    # State persistence (for process restarts, e.g. each GitHub Actions
+    # "tick" run of bot/live_tick.py is a fresh process -- open positions,
+    # their stop prices, and the daily-P&L accumulator must survive across
+    # runs or every restart would silently lose track of open risk).
+    # ------------------------------------------------------------------
+    def to_state_dict(self) -> dict:
+        with self._lock:
+            return {
+                "positions": {
+                    sym: {
+                        **asdict(p),
+                        "entry_time": p.entry_time.isoformat(),
+                    }
+                    for sym, p in self.positions.items()
+                },
+                "pnl_date": self._pnl_date.isoformat(),
+                "daily_realized_pnl": self._daily_realized_pnl,
+                "trades_closed_today": getattr(self, "_trades_closed_today", 0),
+            }
+
+    def load_state_dict(self, state: dict):
+        if not state:
+            return
+        with self._lock:
+            self.positions = {}
+            for sym, p in state.get("positions", {}).items():
+                p = dict(p)
+                p["entry_time"] = datetime.fromisoformat(p["entry_time"])
+                self.positions[sym] = Position(**p)
+            if state.get("pnl_date"):
+                self._pnl_date = datetime.fromisoformat(state["pnl_date"]).date()
+            self._daily_realized_pnl = state.get("daily_realized_pnl", 0.0)
+            self._trades_closed_today = state.get("trades_closed_today", 0)
+        logger.info("Loaded portfolio state: %d open position(s): %s",
+                    len(self.positions), list(self.positions.keys()))

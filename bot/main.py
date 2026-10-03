@@ -19,7 +19,9 @@ risk manager, and the portfolio/logger, then runs a continuous loop that:
 Run with:  python -m bot.main
 """
 
+import json
 import logging
+import os
 import signal
 import sys
 import time
@@ -78,6 +80,11 @@ class TradingBot:
         self.last_seen_bar: Dict[str, Optional[datetime]] = {
             inst.symbol: None for inst in config.INSTRUMENTS
         }
+        # High-water mark for total account equity, used to report portfolio
+        # drawdown from peak. Persisted across restarts via state.json (see
+        # save_state/load_state) since a fresh process otherwise has no
+        # memory of equity highs reached in prior ticks.
+        self.peak_equity: Optional[float] = None
 
         self._shutdown = False
         signal.signal(signal.SIGINT, self._handle_shutdown)
@@ -95,23 +102,15 @@ class TradingBot:
     # ------------------------------------------------------------------
     def run(self):
         logger.info("Starting main loop. Poll interval=%ds", config.POLL_INTERVAL_SECONDS)
-        last_day_flushed = datetime.now(timezone.utc).date()
+        self.load_state(config.STATE_FILE_PATH)
 
         while not self._shutdown:
             cycle_start = time.time()
+            self.run_once()
             try:
-                self._run_cycle()
-            except Exception as e:  # noqa: BLE001 -- never let the loop die
-                logger.exception("Unhandled error during trading cycle: %s", e)
-
-            # End-of-day P&L flush, once per UTC calendar day.
-            today = datetime.now(timezone.utc).date()
-            if today != last_day_flushed:
-                try:
-                    self.portfolio.end_of_day_flush()
-                except Exception as e:
-                    logger.error("Failed end-of-day P&L flush: %s", e)
-                last_day_flushed = today
+                self.save_state(config.STATE_FILE_PATH)
+            except Exception as e:
+                logger.error("Failed to save state: %s", e)
 
             elapsed = time.time() - cycle_start
             sleep_for = max(1.0, config.POLL_INTERVAL_SECONDS - elapsed)
@@ -121,8 +120,66 @@ class TradingBot:
 
         logger.info("Bot shut down cleanly.")
 
+    def run_once(self):
+        """
+        Runs exactly one cycle and the end-of-day flush check, then returns
+        -- no sleep, no loop. Used by bot/live_tick.py, where a GitHub
+        Actions cron schedule re-invokes a fresh process every few minutes
+        instead of one process looping forever (hosted runners cap a single
+        job at a few hours, far short of the "run for weeks" requirement).
+        """
+        try:
+            self._run_cycle()
+        except Exception as e:  # noqa: BLE001 -- never let a tick crash the workflow
+            logger.exception("Unhandled error during trading cycle: %s", e)
+
+        today = datetime.now(timezone.utc).date()
+        if getattr(self, "_last_day_flushed", None) != today:
+            try:
+                self.portfolio.end_of_day_flush()
+            except Exception as e:
+                logger.error("Failed end-of-day P&L flush: %s", e)
+            self._last_day_flushed = today
+
+    # ------------------------------------------------------------------
+    # State persistence (open positions, last-seen bars, peak equity) --
+    # see Portfolio.to_state_dict/load_state_dict for why this exists.
+    # ------------------------------------------------------------------
+    def save_state(self, path: str):
+        state = {
+            "portfolio": self.portfolio.to_state_dict(),
+            "last_seen_bar": {
+                sym: (ts.isoformat() if ts is not None else None)
+                for sym, ts in self.last_seen_bar.items()
+            },
+            "peak_equity": self.peak_equity,
+            "saved_at": datetime.now(timezone.utc).isoformat(),
+        }
+        tmp_path = path + ".tmp"
+        with open(tmp_path, "w") as f:
+            json.dump(state, f, indent=2)
+        os.replace(tmp_path, path)
+        logger.info("Saved bot state to %s", path)
+
+    def load_state(self, path: str):
+        if not os.path.exists(path):
+            logger.info("No existing state file at %s; starting fresh.", path)
+            return
+        with open(path, "r") as f:
+            state = json.load(f)
+        self.portfolio.load_state_dict(state.get("portfolio", {}))
+        for sym, ts in state.get("last_seen_bar", {}).items():
+            self.last_seen_bar[sym] = datetime.fromisoformat(ts) if ts else None
+        self.peak_equity = state.get("peak_equity")
+        logger.info("Loaded bot state from %s (peak_equity=%s)", path, self.peak_equity)
+
     def _run_cycle(self):
         equity_market_open = self._safe_is_equity_market_open()
+
+        current_equity = self._safe_get_equity()
+        if current_equity is not None:
+            if self.peak_equity is None or current_equity > self.peak_equity:
+                self.peak_equity = current_equity
 
         for inst in config.INSTRUMENTS:
             is_crypto = inst.asset_class == config.CRYPTO
@@ -290,6 +347,7 @@ class TradingBot:
             self.portfolio.open_position(
                 symbol=inst.symbol, side=side, qty=sizing.qty, entry_price=sig.price,
                 entry_atr=sig.atr, stop_price=stop_price, strategy=inst.strategy,
+                equity_at_entry=equity,
             )
 
     def _exit_position(self, inst, sig):

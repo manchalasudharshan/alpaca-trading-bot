@@ -3,3 +3,8 @@ pandas>=2.0.0
 numpy>=1.24.0
 python-dotenv>=1.0.0
 matplotlib>=3.7.0
+requests>=2.31.0
+# Optional: only needed if ANTHROPIC_API_KEY is set, to have Claude write up
+# the morning/evening Telegram reports in prose. Without it, the reports
+# still send using a plain deterministic template (see bot/reporting/narrate.py).
+anthropic>=0.40.0
