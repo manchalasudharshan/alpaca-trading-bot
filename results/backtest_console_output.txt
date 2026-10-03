@@ -1,0 +1,56 @@
+2026-10-03 04:40:07,641 [INFO] bot.backtest: Connecting to Alpaca...
+2026-10-03 04:40:07,756 [INFO] bot.broker: Connected to Alpaca. Account status=ACTIVE, equity=100000, buying_power=400000
+2026-10-03 04:40:07,756 [INFO] bot.backtest: Fetching 6 months of historical data for all instruments...
+2026-10-03 04:40:07,756 [INFO] bot.backtest: Fetching 6 months of 15Min bars for SPY...
+2026-10-03 04:40:08,161 [WARNING] bot.broker: Alpaca APIError (attempt 1/5): subscription does not permit querying recent SIP data
+2026-10-03 04:40:08,161 [INFO] bot.broker: Retrying in 2.0s...
+2026-10-03 04:40:10,190 [WARNING] bot.broker: Alpaca APIError (attempt 2/5): subscription does not permit querying recent SIP data
+2026-10-03 04:40:10,191 [INFO] bot.broker: Retrying in 4.0s...
+2026-10-03 04:40:14,221 [WARNING] bot.broker: Alpaca APIError (attempt 3/5): subscription does not permit querying recent SIP data
+2026-10-03 04:40:14,221 [INFO] bot.broker: Retrying in 8.0s...
+2026-10-03 04:40:22,250 [WARNING] bot.broker: Alpaca APIError (attempt 4/5): subscription does not permit querying recent SIP data
+2026-10-03 04:40:22,250 [INFO] bot.broker: Retrying in 16.0s...
+2026-10-03 04:40:38,279 [WARNING] bot.broker: Alpaca APIError (attempt 5/5): subscription does not permit querying recent SIP data
+2026-10-03 04:40:38,279 [INFO] bot.broker: Retrying in 32.0s...
+2026-10-03 04:41:10,279 [ERROR] bot.broker: Exhausted 5 retries calling _fetch; giving up for this cycle.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 589, in <module>
+    run_backtest()
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 549, in run_backtest
+    bars_by_symbol = fetch_all_bars(broker, months=params["lookback_months"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/backtest.py", line 128, in fetch_all_bars
+    df = broker.get_historical_bars(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 210, in get_historical_bars
+    df = _retry(_fetch)
+         ^^^^^^^^^^^^^^
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 88, in _retry
+    raise last_exc
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 69, in _retry
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/alpaca-trading-bot/alpaca-trading-bot/bot/broker.py", line 204, in _fetch
+    bars = self.api.get_bars(
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 735, in get_bars
+    bars = list(self.get_bars_iter(symbol,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 718, in get_bars_iter
+    for bar in bars:
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 594, in _data_get
+    resp = self.data_get(path, data=data, feed=feed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 274, in data_get
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 222, in _request
+    return self._one_request(method, url, opts, retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 248, in _one_request
+    raise_api_error(resp, http_error)
+  File "/opt/hostedtoolcache/Python/3.11.16/x64/lib/python3.11/site-packages/alpaca_trade_api/rest.py", line 83, in raise_api_error
+    raise APIError(error, http_error) from None
+alpaca_trade_api.rest.APIError: subscription does not permit querying recent SIP data
