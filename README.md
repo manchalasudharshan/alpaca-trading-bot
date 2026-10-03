@@ -510,6 +510,22 @@ trend following — moves are more sustained and less choppy than indices.
 - **Sizing**: `qty = (account_equity × 1%) / ATR`, so a 1-ATR adverse move
   always costs ~1% of equity regardless of instrument — quiet instruments
   get larger size, volatile ones get smaller size.
+- **Notional cap**: the ATR formula above only controls dollar risk at a
+  1-ATR move. If an instrument's ATR is small relative to its price (e.g.
+  BTC/USD during a quiet stretch, ATR ~0.3% of price), that formula alone
+  can size a position many times larger than total account equity — the
+  dollar risk at 1 ATR is still "correct" on paper, but a gap or flash move
+  well beyond 1 ATR could lose far more than intended, and the order may
+  not even be fillable against real buying power. This happened for real:
+  on 2026-10-03 the bot attempted a **$328,951.11 notional BTC/USD order
+  against a $100,000 account** (over 3× equity); only Alpaca's own
+  $200,000 max-notional-per-order limit rejected it before anything went
+  wrong. `size_position()` now caps `qty` so total notional never exceeds
+  `max_position_notional_pct_of_equity` (config.py, default `1.0` = never
+  more than 100% of equity, i.e. no leverage), even if that means realized
+  risk at the hard stop comes in under the 1%-ATR target. When this cap
+  binds, `bot.log` gets a `WARNING` line and the trade's logged reason
+  includes `NOTIONAL-CAPPED`.
 - **Hard stop**: every position's stop is capped so realized loss can
   never exceed 1% of equity, even if a strategy's own trailing-stop
   distance (2× or 3× ATR) would imply more — the tighter of the two always
@@ -541,6 +557,12 @@ trend following — moves are more sustained and less choppy than indices.
   ```
   LOG_LEVEL=DEBUG venv/bin/python3 -m bot.live_tick
   ```
+  All logging setup goes through `bot/log_setup.py`'s single
+  `setup_logging()` function now, called by both `bot/main.py` and
+  `bot/live_tick.py` with `force=True` — this fixes a real bug where
+  `bot/main.py`'s own hardcoded `logging.basicConfig()` ran first (via
+  `live_tick.py`'s `from bot.main import TradingBot`) and silently made
+  `LOG_LEVEL` have no effect at all, regardless of what it was set to.
 
 ### Market hours
 - Equities (SPY, QQQ, GLD, USO): the bot checks Alpaca's market clock

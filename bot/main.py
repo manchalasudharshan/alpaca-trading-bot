@@ -20,10 +20,8 @@ Run with:  python -m bot.main
 """
 
 import json
-import logging
 import os
 import signal
-import sys
 import time
 from datetime import datetime, timezone
 from typing import Dict, Optional
@@ -41,15 +39,14 @@ from bot.strategies.trend_following import TrendFollowingStrategy
 # ---------------------------------------------------------------------------
 # Logging setup
 # ---------------------------------------------------------------------------
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(config.BOT_LOG_PATH),
-    ],
-)
-logger = logging.getLogger("bot.main")
+# Delegates to bot/log_setup.py so LOG_LEVEL is honored the same way whether
+# this module is run standalone (`python -m bot.main`) or imported by
+# bot/live_tick.py. See that module's docstring for why this used to be a
+# hardcoded logging.basicConfig(level=logging.INFO, ...) call here that
+# silently defeated live_tick.py's own LOG_LEVEL setting.
+from bot.log_setup import setup_logging
+
+logger = setup_logging("bot.main")
 
 # Timeframe -> approximate bar duration in seconds, used to decide when a
 # new bar has likely closed and it's worth re-fetching data for that

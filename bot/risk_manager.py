@@ -48,6 +48,10 @@ class RiskManager:
         self.params = params or config.RISK_PARAMS
         self.risk_per_atr = self.params["risk_per_atr_of_equity"]
         self.max_loss_fraction = self.params["max_loss_per_trade_of_equity"]
+        # Default to 1.0 (no leverage) if a params dict doesn't set this --
+        # keeps old callers/tests that construct RiskManager with a partial
+        # params dict safe rather than raising a KeyError.
+        self.max_notional_fraction = self.params.get("max_position_notional_pct_of_equity", 1.0)
         self.corr_cfg = self.params["correlation_block"]
 
     # ------------------------------------------------------------------
@@ -102,6 +106,27 @@ class RiskManager:
             qty = max_loss_dollars / atr
             implied_loss_at_1atr = qty * atr
 
+        # Notional cap: the ATR-based formula above only controls dollar
+        # risk at a 1-ATR move, which can produce a wildly oversized
+        # position (many multiples of account equity) when ATR is small
+        # relative to price -- see max_position_notional_pct_of_equity's
+        # comment in config.py for the real incident that exposed this.
+        # Cap qty so total notional never exceeds this fraction of equity,
+        # even if that means realized risk at the hard stop comes in under
+        # the ATR-based target.
+        max_notional_dollars = account_equity * self.max_notional_fraction
+        notional = qty * entry_price
+        notional_capped = notional > max_notional_dollars
+        if notional_capped:
+            logger.warning(
+                "%s %s: ATR-based sizing wanted $%.2f notional (ATR %.4f is only %.3f%% "
+                "of price %.4f) -- capping to %.0f%% of equity ($%.2f) instead.",
+                symbol, side, notional, atr, (atr / entry_price) * 100, entry_price,
+                self.max_notional_fraction * 100, max_notional_dollars,
+            )
+            qty = max_notional_dollars / entry_price
+            implied_loss_at_1atr = qty * atr
+
         stop_price = self._hard_stop_price(side, entry_price, atr)
 
         # Round down for equities (no fractional-share assumption needed,
@@ -119,12 +144,19 @@ class RiskManager:
                         f"(risk_dollars={risk_dollars:.2f}, atr={atr:.4f})"),
             )
 
+        notional_note = (
+            f" [NOTIONAL-CAPPED: {notional:.2f} would have exceeded "
+            f"{self.max_notional_fraction*100:.0f}% of equity cap "
+            f"({max_notional_dollars:.2f}); dollar_risk reduced below ATR target]"
+            if notional_capped else ""
+        )
         return SizingResult(
             allowed=True, qty=qty, dollar_risk=implied_loss_at_1atr, stop_price=stop_price,
             reason=(f"sized {symbol} {side}: qty={qty}, entry={entry_price:.4f}, "
                     f"atr={atr:.4f}, risk_dollars={implied_loss_at_1atr:.2f} "
                     f"({self.risk_per_atr*100:.1f}% of equity {account_equity:.2f}), "
-                    f"hard_stop={stop_price:.4f}"),
+                    f"hard_stop={stop_price:.4f}, notional={qty*entry_price:.2f}"
+                    f"{notional_note}"),
         )
 
     @staticmethod

@@ -176,6 +176,26 @@ RISK_PARAMS = {
     # Hard stop loss, expressed as a fraction of total account equity, that
     # is never exceeded regardless of how sizing works out.
     "max_loss_per_trade_of_equity": 0.01,
+    # Hard cap on a single position's total NOTIONAL exposure, as a fraction
+    # of account equity. 1.0 == never put on a position worth more than the
+    # whole account (no leverage), which is the right default for a cash
+    # paper-trading account.
+    #
+    # Why this exists: the ATR-based sizing above only controls dollar risk
+    # at a 1-ATR move (qty = risk_dollars / atr). If an instrument's ATR is
+    # small relative to its price (e.g. BTC/USD during a quiet stretch,
+    # ATR ~0.3% of price), that formula alone can size a position many times
+    # larger than total equity -- the dollar risk at 1 ATR is still correct,
+    # but a gap or flash move well beyond 1 ATR could lose far more than
+    # intended, and the order may not even be fillable against actual buying
+    # power. This was a real bug: on 2026-10-03 the bot attempted a
+    # $328,951.11 notional BTC/USD order against a $100,000 account (over
+    # 3x equity); Alpaca's own $200,000 max-notional-per-order cap rejected
+    # it, but the bot's own sizing should never have produced it.
+    # size_position() now caps qty so entry_price * qty never exceeds
+    # account_equity * max_position_notional_pct_of_equity, even if that
+    # means realized risk at the hard stop comes in under the 1% ATR target.
+    "max_position_notional_pct_of_equity": 1.0,
     # Correlation filter: block new BTC/USD longs when both of these
     # symbols are already long (risk-on exposure doubling).
     "correlation_block": {
