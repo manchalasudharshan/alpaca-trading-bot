@@ -102,11 +102,17 @@ class MomentumBreakoutStrategy:
             trace_verdict = "no signal: volume not confirmed"
         else:
             trace_verdict = "no signal: price within prior range"
+        # Volume itself is logged with %g (adaptive significant digits)
+        # rather than %.2f: crypto volume is denominated in coin units
+        # (e.g. 0.000728 BTC per 5Min bar), and %.2f rounded every such
+        # value down to a misleading "0.00" even when the strategy's own
+        # ratio math was correctly using the full-precision number -- it
+        # looked like a dead/missing volume feed when it wasn't.
         logger.debug(
             "%s momentum_breakout: close=%.2f prior_%d-bar_range=[%.2f, %.2f], "
-            "current volume %.2fx %d-bar avg (%.2f), need >=%.2fx -> %s",
+            "current volume %.2fx %d-bar avg (last=%.6g, avg=%.6g), need >=%.2fx -> %s",
             symbol, last_close, self.lookback, p_low, p_high, vol_ratio, self.lookback,
-            p_avg_vol, self.volume_multiple, trace_verdict,
+            last_volume, p_avg_vol, self.volume_multiple, trace_verdict,
         )
 
         # --- Trailing stop check takes priority over fresh entries ---
