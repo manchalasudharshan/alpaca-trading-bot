@@ -492,6 +492,24 @@ choppy than indices.
   reason.
 - `daily_pnl.csv`: one row per UTC calendar day with that day's realized
   P&L and trade count, updated intraday as trades close.
+- `bot.log`: every tick's run, at **INFO** level by default — tick
+  start/end, one line per instrument's signal (action + reason), order
+  submissions, and errors.
+- **`LOG_LEVEL`**: set this env var to `DEBUG` to additionally see *why*
+  each strategy did or didn't signal on every tick — current price, the
+  relevant indicator values (SMA/std-dev, volume vs. its rolling average,
+  fast/slow EMA spread, as applicable to that strategy), the threshold(s)
+  being compared against, and a one-line verdict, e.g.:
+  ```
+  BTC/USD momentum_breakout: close=67120.50 prior_20-bar_range=[65800.00, 67000.00], current volume 1.4x 20-bar avg (812.3), need >=2.2x -> no signal: volume not confirmed
+  SPY mean_reversion: price $512.30 is 1.10 std-dev from 20-SMA ($508.10, std=3.80), threshold=1.80 std-dev, bands=[501.26, 514.94], trend_filter=long_ok=True short_ok=False -> no signal
+  ```
+  Unset (or an invalid value) falls back to `INFO`, so nothing changes
+  unless you opt in. Add `LOG_LEVEL=DEBUG` to your VPS's `.env` for this
+  permanently, or set it for just one manual run without touching `.env`:
+  ```
+  LOG_LEVEL=DEBUG venv/bin/python3 -m bot.live_tick
+  ```
 
 ### Market hours
 - Equities (SPY, QQQ, GLD, USO): the bot checks Alpaca's market clock

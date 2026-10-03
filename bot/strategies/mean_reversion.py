@@ -117,6 +117,26 @@ class MeanReversionStrategy:
                 trend_allows_long = last_close > last_trend_sma
                 trend_allows_short = last_close < last_trend_sma
 
+        # Debug-level evaluation trace: purely additive logging, does not
+        # affect any decision below. Note: this verdict summary mirrors the
+        # same comparisons the branches below make, for a readable one-line
+        # read of why the strategy is/isn't acting.
+        std_dev_distance = abs(last_close - last_mean) / last_std if last_std else float("nan")
+        if last_close <= lower_band or last_close >= upper_band:
+            trace_verdict = "band breached" if (trend_allows_long or trend_allows_short) else \
+                "band breached but trend filter blocked entry"
+        else:
+            trace_verdict = "no signal"
+        logger.debug(
+            "%s mean_reversion: price $%.2f is %.2f std-dev from %d-SMA ($%.2f, std=%.2f), "
+            "threshold=%.2f std-dev, bands=[%.2f, %.2f], trend_filter=%s -> %s",
+            symbol, last_close, std_dev_distance, self.lookback, last_mean, last_std, threshold,
+            lower_band, upper_band,
+            "disabled" if not self.trend_filter_period else
+            f"long_ok={trend_allows_long} short_ok={trend_allows_short}",
+            trace_verdict,
+        )
+
         # --- Exit logic takes priority: if we're in a position and price has
         # reverted to (or past) the mean, flatten first. ---
         if currently_long and last_close >= last_mean:

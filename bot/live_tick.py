@@ -30,18 +30,32 @@ Run with:  python -m bot.live_tick
 
 import json
 import logging
+import os
 import sys
 from datetime import datetime, timezone
 
 import config
 from bot.main import TradingBot
 
+# LOG_LEVEL lets you opt into more verbose output (e.g. per-strategy
+# evaluation detail logged at DEBUG -- see bot/strategies/*.py) without
+# changing any code. Unset or invalid values fall back to INFO, which is
+# the long-standing default and keeps existing behavior unchanged.
+_LOG_LEVEL_NAME = os.environ.get("LOG_LEVEL", "INFO").strip().upper()
+_LOG_LEVEL = getattr(logging, _LOG_LEVEL_NAME, None)
+if not isinstance(_LOG_LEVEL, int):
+    _LOG_LEVEL = logging.INFO
+    _LOG_LEVEL_NAME = "INFO"
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=_LOG_LEVEL,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler(config.BOT_LOG_PATH)],
 )
 logger = logging.getLogger("bot.live_tick")
+if _LOG_LEVEL_NAME != os.environ.get("LOG_LEVEL", "INFO").strip().upper():
+    logger.warning("Invalid LOG_LEVEL=%r; falling back to INFO.",
+                    os.environ.get("LOG_LEVEL"))
 
 POSITIONS_SNAPSHOT_PATH = "positions_snapshot.json"
 

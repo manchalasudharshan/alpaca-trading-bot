@@ -74,6 +74,20 @@ class TrendFollowingStrategy:
         fast_val = float(fast.iloc[-1])
         slow_val = float(slow.iloc[-1])
 
+        # Debug-level evaluation trace: purely additive logging, does not
+        # affect any decision below.
+        if last_cross == 1:
+            trace_verdict = "LONG signal: golden cross"
+        elif last_cross == -1:
+            trace_verdict = "SHORT signal: death cross"
+        else:
+            trace_verdict = "no signal: no new cross"
+        logger.debug(
+            "%s trend_following: close=%.2f EMA%d=%.2f EMA%d=%.2f (spread=%.2f) -> %s",
+            symbol, last_close, self.fast_period, fast_val, self.slow_period, slow_val,
+            fast_val - slow_val, trace_verdict,
+        )
+
         # --- Trailing stop check takes priority ---
         if currently_long and trailing_stop_price is not None and last_low <= trailing_stop_price:
             return Signal(

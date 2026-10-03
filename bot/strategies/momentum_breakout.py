@@ -91,6 +91,24 @@ class MomentumBreakoutStrategy:
         breaks_up = last_close > p_high and volume_confirmed
         breaks_down = last_close < p_low and volume_confirmed
 
+        # Debug-level evaluation trace: purely additive logging, does not
+        # affect any decision below.
+        vol_ratio = last_volume / p_avg_vol if p_avg_vol else float("nan")
+        if breaks_up:
+            trace_verdict = "LONG signal: breakout confirmed"
+        elif breaks_down:
+            trace_verdict = "SHORT/exit signal: breakdown confirmed"
+        elif not volume_confirmed:
+            trace_verdict = "no signal: volume not confirmed"
+        else:
+            trace_verdict = "no signal: price within prior range"
+        logger.debug(
+            "%s momentum_breakout: close=%.2f prior_%d-bar_range=[%.2f, %.2f], "
+            "current volume %.2fx %d-bar avg (%.2f), need >=%.2fx -> %s",
+            symbol, last_close, self.lookback, p_low, p_high, vol_ratio, self.lookback,
+            p_avg_vol, self.volume_multiple, trace_verdict,
+        )
+
         # --- Trailing stop check takes priority over fresh entries ---
         if currently_long and trailing_stop_price is not None and last_low <= trailing_stop_price:
             return Signal(
