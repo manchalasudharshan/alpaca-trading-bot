@@ -53,7 +53,7 @@ jobs:
           # developer's own test runs don't get committed by accident), but
           # this workflow is the one place they SHOULD be tracked -- it's
           # the durable record of the live paper-trading run.
-          git add -f trades.csv daily_pnl.csv bot_state.json 2>/dev/null || true
+          git add -f trades.csv daily_pnl.csv bot_state.json positions_snapshot.json 2>/dev/null || true
           git diff --cached --quiet && echo "No state changes to commit" || \
             git commit -m "Live tick ${{ github.run_id }} [skip ci]"
           # Another tick may have pushed while this one ran; rebase onto it

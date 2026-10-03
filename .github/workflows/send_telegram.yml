@@ -1,0 +1,35 @@
+name: Send Telegram Message
+
+# A deliberately dumb pipe: takes finished text and posts it to Telegram.
+# Triggered on demand (not on a schedule) -- by a scheduled Claude Cowork
+# session that read trades.csv/daily_pnl.csv/positions_snapshot.json out of
+# this repo, wrote the actual morning/evening briefing, and calls this
+# workflow via `gh api ... dispatches -f message=...` because the dev
+# sandbox that session runs in has no direct route to api.telegram.org.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Finished report text to post to Telegram"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TELEGRAM_MESSAGE: ${{ inputs.message }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install requests
+      - name: Post to Telegram
+        run: python scripts/send_telegram.py

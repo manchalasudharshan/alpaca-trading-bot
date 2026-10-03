@@ -140,48 +140,48 @@ Every closed trade in `trades.csv` now also logs `equity_at_entry` and
 `loss_pct_of_equity_at_entry` — the direct audit trail for "is the hard
 stop actually capping losses at 1% of equity, no exceptions." A losing
 trade's `loss_pct_of_equity_at_entry` should read ≈ -1.00 every time
-regardless of instrument; `bot/reporting/data.py`'s `stop_loss_audit()`
-flags any that don't, and the evening report surfaces it.
+regardless of instrument.
 
-### Telegram reports
+Each tick also writes **`positions_snapshot.json`**: Alpaca's own current
+positions, account equity, and market-open status, straight from the
+broker (not just this process's local book) — see `bot/broker.py`'s
+`get_positions()` and `bot/live_tick.py`'s `write_positions_snapshot()`.
+This is the bridge the Telegram reports below use to know "current
+positions"/"current equity" without needing their own route to Alpaca.
 
-Two more scheduled workflows read `trades.csv`/`daily_pnl.csv`/
-`bot_state.json` plus live Alpaca account state, compute the requested
-numbers in plain Python (`bot/reporting/data.py` — nothing here is
-LLM-guessed), and send a <200-word report to Telegram
-(`bot/reporting/telegram.py`):
+### Telegram reports — written by scheduled Claude Cowork sessions
 
-- **`.github/workflows/morning_briefing.yml`** — 7:00 AM IST (01:30 UTC)
-  daily, runs `bot/reporting/morning_briefing.py`: open positions with
-  entry price and unrealized P&L (straight from Alpaca's own position
-  object), yesterday's total and per-instrument P&L, market-condition
-  proxies (see caveat below), 7-day win rate, and risk flags (position
-  near its stop, correlation filter currently blocking, portfolio
-  drawdown from peak over 5%).
-- **`.github/workflows/evening_report.yml`** — 9:00 PM IST (15:30 UTC)
-  daily, runs `bot/reporting/evening_report.py`: today's trades and
-  instruments, today's P&L in dollars and % of equity, best/worst trade,
-  current equity, a directional comparison against the 6-month backtest's
-  per-instrument baseline, and whether any stop-loss exit today breached
-  the 1% cap.
+The morning/evening reports are **not** a canned script — they're written
+by two scheduled Claude sessions (set up with this project's scheduling
+tool), each of which actually reads `trades.csv`, `daily_pnl.csv`,
+`positions_snapshot.json`, and `results/` out of this repo, computes the
+requested numbers itself, and writes the briefing in prose, the same way
+Claude would if asked to do it in a live conversation.
 
-`bot/reporting/narrate.py` turns the computed facts into prose. If
-`ANTHROPIC_API_KEY` is set as a repo secret, it asks Claude to write the
-report (given only the already-correct numbers as context, so it can't
-invent a figure); without that secret, it falls back to a plain
-deterministic template so reporting still works.
+The one thing those scheduled sessions can't do directly is call the
+Telegram API — the sandbox they run in only has network access to GitHub,
+not to `api.telegram.org`. So delivery is split in two:
+
+1. **Claude reads + writes** — pulls this repo, computes every number from
+   the committed files (open positions and unrealized P&L from
+   `positions_snapshot.json`, yesterday's/today's P&L from `trades.csv`,
+   7-day win rate, stop-loss audit via `loss_pct_of_equity_at_entry`,
+   correlation-filter and drawdown-from-peak flags), and composes the
+   under-200-word report.
+2. **A dumb pipe delivers it** — `.github/workflows/send_telegram.yml`
+   (`workflow_dispatch`, takes a `message` input) does nothing but POST
+   that finished text to Telegram via `scripts/send_telegram.py`. Claude
+   triggers it with `gh api ... actions/workflows/send_telegram.yml/dispatches
+   -f message="..."` and confirms the run succeeded.
 
 **Market-condition caveat:** Alpaca's data feed doesn't carry VIX, so "is
-VIX elevated" is a realized-volatility proxy computed from SPY's own 15Min
-returns, explicitly labeled as a proxy in the report — not the real index.
-Trend/range reads off the same 100-period SMA the live mean-reversion
-trend filter uses; crypto "unusual volume" compares BTC/USD's latest hourly
-bar to its own 30-hour average.
+VIX elevated" has to be approximated (e.g. from SPY's own realized
+volatility) and should be reported as a proxy, not the real index.
 
 ### Setup
 
 In addition to the `APCA_API_KEY_ID`/`APCA_API_SECRET_KEY` repo secrets
-from [Backtesting](#backtesting), add:
+from [Backtesting](#backtesting):
 
 1. **Telegram bot**: message [@BotFather](https://t.me/BotFather) on
    Telegram, send `/newbot`, follow the prompts — it replies with a token.
@@ -191,11 +191,8 @@ from [Backtesting](#backtesting), add:
    read the chat id out of `"chat":{"id": ...}` in the JSON.
 4. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` as repo secrets:
    `https://github.com/<owner>/<repo>/settings/secrets/actions`.
-5. *(Optional, for LLM-written reports instead of the plain template)* add
-   `ANTHROPIC_API_KEY` the same way.
-6. The three workflows above are already enabled once pushed to `main` —
-   no further action needed; `workflow_dispatch` lets you fire any of them
-   on demand to test before the first scheduled run.
+5. The two scheduled tasks (morning/evening) are created directly in this
+   assistant — no extra setup beyond the secrets above.
 
 ## How it works
 
