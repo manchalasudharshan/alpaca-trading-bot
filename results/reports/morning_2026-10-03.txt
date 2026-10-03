@@ -1,0 +1,16 @@
+2026-10-03 05:28:30,567 [INFO] bot.broker: Connected to Alpaca. Account status=ACTIVE, equity=100000, buying_power=400000
+2026-10-03 05:28:31,562 [INFO] bot.reporting.morning_briefing: Morning briefing:
+MORNING BRIEFING
+Open positions: none
+Yesterday P&L: $0.00
+Market: SPY realized-vol proxy 9.7% (normal, proxy not real VIX); SPY trend down, QQQ trend down; BTC volume 0.0x 30h avg.
+7-day win rate: n/a%
+Risk flags: none
+2026-10-03 05:28:31,562 [ERROR] bot.reporting.telegram: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set -- cannot send Telegram message. Printing report to stdout instead:
+MORNING BRIEFING
+Open positions: none
+Yesterday P&L: $0.00
+Market: SPY realized-vol proxy 9.7% (normal, proxy not real VIX); SPY trend down, QQQ trend down; BTC volume 0.0x 30h avg.
+7-day win rate: n/a%
+Risk flags: none
+2026-10-03 05:28:31,562 [ERROR] bot.reporting.morning_briefing: Telegram send failed -- see TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID secrets.
