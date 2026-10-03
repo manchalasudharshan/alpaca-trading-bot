@@ -123,47 +123,71 @@ Indices tend to overextend in one direction over a few hours and then
 snap back. The bot fades those small reversions: when price moves more
 than **2.2 standard deviations** from the 20-period moving average on the
 15-minute chart, it takes the opposite side, expecting a revert to the
-mean, and exits when price crosses back through the mean.
+mean, and exits when price crosses back through the mean. Entries are
+additionally gated by a **100-period trend filter** (see below): longs
+only fire when price is above the 100-period SMA, shorts only when below
+it.
 
-> Originally spec'd at 1.5σ. A 6-month backtest (see `results/` and the
-> [Backtesting](#backtesting) section) showed that threshold overtrading
-> noise — 398 trades, a 33% win rate, and a deeply negative Sharpe ratio —
-> so it was widened to select for more extreme, higher-conviction
-> dislocations. Widening alone didn't fully fix it: see the note below.
+> Originally spec'd at 1.5σ with no trend filter. A 6-month backtest
+> showed that overtrading noise — 398 trades, a 33% win rate, deeply
+> negative Sharpe. Widening to 2.2σ alone didn't fix it (Sharpe -7.06 →
+> -4.89, win rate stuck ~30%). Adding the 100-period trend filter improved
+> it substantially (Sharpe -4.89 → **-2.71**, max drawdown -71.05% →
+> **-29.22%**) but **still fails** the Sharpe≥0-and-MaxDD≤15% bar. See the
+> "Known limitations" / recommendation note below — this one stays
+> **paper-only**, not a tuning problem to keep chasing.
 
 ### Nasdaq (QQQ) — Mean Reversion, 15-minute candles
-Same approach as SPY. Nasdaq tends to be more volatile, so the entry
-threshold is wider: **2.3 standard deviations** (originally 1.8σ, widened
-for the same reason as SPY — see below).
+Same approach as SPY, same 100-period trend filter. Nasdaq tends to be
+more volatile, so the entry threshold is wider: **2.3 standard
+deviations** (originally 1.8σ).
 
-> **Open issue, not yet resolved by parameter tuning:** over the specific
-> 6-month window backtested, SPY and QQQ both drifted steadily downward
-> rather than chopping sideways — a trending regime that fights mean
-> reversion by design. Widening the entry bands reduced trade frequency
-> but did not raise the win rate (it stayed ~30%), and QQQ's total return
-> actually got worse at the wider threshold. That's the signature of a
-> regime mismatch, not a threshold problem: no entry-band width fixes a
-> strategy that's structurally fading a persistent trend. Two real fixes,
-> neither implemented yet: (1) add a trend filter that disables
-> mean-reversion entries against the prevailing longer-term direction, or
-> (2) accept that mean reversion needs range-bound conditions and
-> re-evaluate over a different historical window before trusting it live.
+> **Tuning history (4 full backtest rounds, see `results/` and commit
+> history):** original 1.8σ/no filter → Sharpe -0.43. Widened to 2.3σ →
+> Sharpe -1.78 (worse — proof band-width alone wasn't the lever). Added
+> 100-period trend filter → **Sharpe -0.79, MaxDD -16.03%** (best result,
+> close to the line but still fails on both Sharpe and drawdown). Tried
+> widening entries further to 2.5σ with a 150-period filter → worse again
+> (Sharpe -1.31, MaxDD -18.92%). Reverted to the 100-period/2.3σ
+> combination above as the best of everything tried.
+>
+> **Root cause, not a parameter:** SPY and QQQ both drifted steadily in
+> one direction for the entire 6-month window tested — a trending regime
+> that structurally fights mean reversion. The trend filter helped a lot
+> (cut SPY's drawdown by more than half) but a filter can only *reduce*
+> counter-trend trades, it can't turn a trending window into a range-bound
+> one. **Recommendation: do not run SPY/QQQ mean reversion live on these
+> parameters.** Either re-backtest over a different (more range-bound)
+> historical window before trusting it, or treat SPY/QQQ as paper-trade-only
+> until a live range-bound period is observed.
 
 ### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
 Crypto trends harder than indices, so instead of fading the move the bot
 rides it. When price closes above the prior **30-period** high on the
-1-hour chart with volume ≥ **2.0×** the 30-period average, it goes long;
+1-hour chart with volume ≥ **2.2×** the 30-period average, it goes long;
 a close below the prior 30-period low with the same volume confirmation
-exits the long or opens a short. A **2.5×ATR** trailing stop ratchets in
+exits the long or opens a short. A **1.8×ATR** trailing stop ratchets in
 the position's favor every bar.
 
-> Originally spec'd at a 20-period lookback, 1.5× volume multiple, and
-> 2.0×ATR stop. The backtest showed a healthy win/loss ratio but only a
-> 19.8% win rate — too many weak breakouts reversing immediately, not a
-> bad edge. Tightening the volume filter, lengthening the lookback, and
-> giving the trailing stop more room flipped this from a losing strategy
-> (Sharpe -0.54, -14.7% return) to a profitable one (Sharpe +0.50, +9.1%
-> return) over the same window.
+> **Tuning history:** 20-period/1.5× volume/2.0×ATR stop → Sharpe -0.54,
+> -14.7% return, 19.8% win rate (too many weak breakouts reversing
+> immediately). Lengthened lookback to 30, volume filter to 2.0×, stop to
+> 2.5×ATR → Sharpe +0.50, +9.1% return, but MaxDD -23.36% (over the 15%
+> ceiling). Tightened volume to 2.2× and tried trailing-stop multiples of
+> 2.2×, 1.8×, and 1.5× ATR to find the drawdown/Sharpe sweet spot — **1.8×
+> was best** (Sharpe **+1.05**, MaxDD **-15.82%**, +23.6% return); 2.2× and
+> 1.5× were both worse on both metrics.
+>
+> **Still just over the line:** -15.82% is ~0.8 points past the 15% MaxDD
+> ceiling despite four tuning rounds, with a materially positive Sharpe.
+> This is the closest of the three failing instruments to passing —
+> reasonable next steps if you want to keep pushing it (not yet done):
+> tightening `RISK_PARAMS["max_loss_per_trade_of_equity"]` specifically
+> for BTC (smaller per-trade risk budget shrinks cumulative drawdown
+> directly, at the cost of smaller position sizes), or re-testing the
+> 30-period/2.2×-volume combination against a different 6-month window.
+> **Recommendation: keep on paper trading until MaxDD is confirmed under
+> 15% on at least one more independent window.**
 
 ### Gold (GLD) — Trend Following, 4-hour candles
 Commodities move in cleaner waves, and intraday whipsaws just add noise,
@@ -218,6 +242,29 @@ whole process.
 All thresholds (SMA/EMA periods, std-dev multiples, ATR multiples, volume
 multiple, risk-per-trade %, poll interval) live in `config.py` — nothing
 is hardcoded in the strategy files beyond the logic itself.
+
+## Go-live readiness (as of the latest backtest)
+
+Checked against the bar: **flag/fix any strategy with a negative Sharpe
+ratio or a max drawdown over 15%.** After 4 real backtest rounds against
+live Alpaca market data (see `results/` and the commit history for every
+parameter tried):
+
+| Instrument | Sharpe | MaxDD | Passes bar? |
+|---|---|---|---|
+| SPY | -2.71 | -29.22% | ❌ No — fails both. Regime mismatch, not a tunable parameter (see note above). |
+| QQQ | -0.79 | -16.03% | ❌ No — close, but fails both. |
+| BTC/USD | +1.05 | -15.82% | ❌ No — Sharpe is good, MaxDD just over the line. |
+| GLD | +0.98 | -1.31% | ✅ Yes |
+| USO | +3.37 | -3.42% | ✅ Yes (only 1 trade in 6 months — weak sample, read loosely) |
+
+**Recommendation: do not go live on SPY, QQQ, or BTC/USD with these
+parameters.** GLD and USO pass but on very few trades each, so "passing"
+there is a weak signal rather than a strong one. If you want to keep
+iterating instead of leaving these on paper: see the specific next-step
+suggestions under each instrument above — this file documents exactly
+what was tried and why it didn't fully close the gap, so you're not
+starting from zero.
 
 ## Known limitations / things to review before going live
 
