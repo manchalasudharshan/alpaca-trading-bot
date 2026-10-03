@@ -17,12 +17,16 @@ of loss. Test thoroughly on the Alpaca **paper** endpoint first.
 ```
 .
 ├── config.py                       # instruments, timeframes, strategy & risk params
+├── strategy_params.json             # auto-tunable signal params only (see below)
+├── tuning_history.csv               # auto-tuner audit trail (git-committed)
 ├── .env                             # your real secrets (gitignored)
 ├── .env.example                     # template for .env
 ├── requirements.txt
 └── bot/
     ├── main.py                      # entry point / continuous loop
     ├── backtest.py                  # 6-month historical backtest + report
+    ├── auto_tune.py                 # automated signal-param re-tuning (see "Automated parameter tuning")
+    ├── params_store.py              # strategy_params.json loader (defensive fallback to config.py)
     ├── broker.py                    # Alpaca REST wrapper (bars, orders, clock)
     ├── portfolio.py                 # position tracking + trades.csv / daily_pnl.csv
     ├── risk_manager.py              # ATR sizing, hard stop cap, correlation filter
@@ -270,6 +274,111 @@ risk. To resume trading:
 The threshold itself lives in `config.py` as `MAX_DRAWDOWN_PCT` (default
 `0.10`, i.e. 10%), overridable via the `MAX_DRAWDOWN_PCT` environment
 variable.
+
+## Automated parameter tuning
+
+`bot/auto_tune.py` lets the bot re-tune each strategy's own signal/indicator
+parameters automatically, with no human approval gate -- so it can keep
+adapting to changing market conditions on its own. It is deliberately
+**scoped down to just the knobs each strategy already exposes**
+(`strategy_params.json`, seeded from the values that used to be hardcoded in
+`config.py`):
+
+| Strategy | Tunable params |
+|---|---|
+| `mean_reversion` (SPY, QQQ) | `lookback` (SMA/stddev period), `entry_std_dev` (per symbol), `trend_filter_period` |
+| `momentum_breakout` (BTC/USD) | `lookback`, `volume_multiple`, `trailing_stop_atr_multiple` |
+| `trend_following` (GLD, USO) | `fast_ema`, `slow_ema`, `trailing_stop_atr_multiple` |
+
+**It never touches the user's non-negotiable risk rules.** The auto-tuner
+has no code path that can modify `bot/risk_manager.py` (the 1%-of-equity
+ATR position sizing, the correlation filter, or the hard-stop-never-widens
+logic), or `config.RISK_PARAMS`/`config.MAX_DRAWDOWN_PCT`/the circuit
+breaker in `bot/main.py`. Those stay exactly as a human configured them,
+regardless of what any backtest finds. `tests/test_auto_tune.py` asserts
+this directly (byte-for-byte hash of `bot/risk_manager.py` and `config.py`,
+plus an equality check on `config.RISK_PARAMS`/`MAX_DRAWDOWN_PCT`, before
+and after a tuning run that is engineered to adopt a change).
+
+**How each run works** (`python3 -m bot.auto_tune`):
+
+1. Refuses to run at all if `bot_state.json`'s `trading_halted` flag is set
+   (the circuit breaker has tripped) -- re-tuning while trading is halted
+   would be tuning against whatever caused the halt, so it no-ops and logs
+   why.
+2. Refuses to re-tune a strategy it already tuned earlier the same UTC
+   calendar day (guarded by `tuning_history.csv`'s last timestamp for that
+   strategy) -- safe to put on an hourly cron if you want, it will still
+   only actually act once/day per strategy.
+3. Pulls a trailing ~90 days of historical bars (reusing
+   `bot.backtest.fetch_all_bars`/`AlpacaBroker` -- no separate data-fetching
+   logic) and backtests candidates through `bot.backtest.simulate_instrument`/
+   `compute_metrics` -- the exact same strategy, risk-sizing, and hard-stop
+   code the live bot and `bot/backtest.py` already use.
+4. Searches a small, bounded, **per-parameter** grid of candidate values
+   (not a full cross-product grid): starting from the strategy's current
+   live params, each tunable parameter is nudged through a handful of
+   values around its current setting, one parameter at a time, each
+   candidate clipped to a hardcoded `[min, max]` range (see
+   `bot/auto_tune.py`'s `TUNE_SPECS` for the exact bounds and the reasoning
+   behind each one -- e.g. an ATR multiple can never go near zero, a
+   lookback period can never collapse to a handful of bars or balloon past
+   what the tuning window can even warm up on).
+5. Scores each backtest with a simple combination of metrics
+   `bot/backtest.py` already computes -- Sharpe ratio, total return, and a
+   max-drawdown penalty (`bot.auto_tune.score_metrics`) -- no new risk
+   framework invented.
+6. Only adopts a candidate if it produced **at least 10 trades** in the
+   tuning window (rejects degenerate/overfit candidates that "win" mostly
+   by barely trading) **and** beats the current live params' score by a
+   minimum margin (the larger of 1.0 score points or 10% of the baseline
+   score), so it doesn't thrash parameters chasing backtest noise.
+7. Writes any adopted change to `strategy_params.json` and always appends
+   one audit row per strategy to `tuning_history.csv` -- timestamp, old/new
+   params, old/new score and trade count, and whether it was applied --
+   whether or not anything changed, so the full tuning history (including
+   "considered but rejected") is reviewable.
+8. If either file changed, commits and pushes them to `main`, using the
+   same git identity and pull-rebase-then-retry-once pattern as
+   `scripts/vps_tick.sh`.
+
+**Cron setup (VPS):** add one line to the same crontab you set up in
+[VPS setup](#vps-setup-oracle-cloud-always-free-or-any-ubuntu-vps), running
+once a day during low-activity hours (adjust the path/venv to match your
+actual setup, same as the tick line above):
+
+```
+0 3 * * * cd /home/ubuntu/alpaca-trading-bot && venv/bin/python3 -m bot.auto_tune >> tuning.log 2>&1
+```
+
+Notes:
+- This is a separate cron line from the `*/5 * * * * ... scripts/vps_tick.sh`
+  line -- the tuner is its own process, run far less often, and does not
+  need `flock` coordination with the trading tick (it only reads
+  `bot_state.json` and writes `strategy_params.json`/`tuning_history.csv`,
+  neither of which the tick depends on mid-write).
+- **Circuit breaker interaction:** if the circuit breaker is tripped when
+  this cron fires, the run logs a warning and exits immediately without
+  touching anything -- it will start tuning again automatically once a
+  human clears `trading_halted` in `bot_state.json` (see
+  [Circuit breaker](#circuit-breaker)) and the next day's cron fire comes
+  around.
+- **Picking up new params live:** `bot/live_tick.py` (what the VPS cron
+  actually runs every few minutes) constructs a brand-new `TradingBot()`
+  every tick, which re-reads `strategy_params.json` from scratch on every
+  single tick -- so a tuned parameter change is live within one tick of
+  being committed, no restart needed. A long-running `python -m bot.main`
+  process (if you run it that way instead) also picks up changes without a
+  restart: it checks `strategy_params.json`'s mtime at the top of every
+  cycle and re-instantiates just the strategy objects when it changes
+  (`TradingBot._reload_strategies_if_params_changed`) -- this never
+  touches `risk_manager`, the correlation filter, or the circuit breaker,
+  all of which live outside the strategy objects.
+- **Review history:** `tuning_history.csv` (committed to the repo, same as
+  `trades.csv`) has one row per strategy per run -- `old_params`/`new_params`
+  are JSON blobs of just that strategy's tunable keys, so you can diff
+  exactly what changed and when, and `old_score`/`new_score`/`old_trades`/
+  `new_trades` show why (or why not) a change was adopted.
 
 ## How it works
 

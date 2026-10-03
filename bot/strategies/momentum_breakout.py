@@ -25,6 +25,7 @@ import logging
 import pandas as pd
 
 from bot.indicators import rolling_high, rolling_low, rolling_avg_volume, atr
+from bot.params_store import load_strategy_params
 from bot.strategies.base import Signal, SignalAction
 import config
 
@@ -35,7 +36,11 @@ class MomentumBreakoutStrategy:
     name = "momentum_breakout"
 
     def __init__(self, params: dict = None):
-        self.params = params or config.MOMENTUM_BREAKOUT_PARAMS
+        # See MeanReversionStrategy.__init__ for the params precedence
+        # (explicit dict > strategy_params.json > config.py default).
+        self.params = params if params is not None else load_strategy_params(
+            "momentum_breakout", config.MOMENTUM_BREAKOUT_PARAMS
+        )
         self.lookback = self.params["lookback"]
         self.volume_multiple = self.params["volume_multiple"]
         self.atr_period = self.params["atr_period"]

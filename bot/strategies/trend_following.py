@@ -22,6 +22,7 @@ import logging
 import pandas as pd
 
 from bot.indicators import ema, ema_cross, atr
+from bot.params_store import load_strategy_params
 from bot.strategies.base import Signal, SignalAction
 import config
 
@@ -32,7 +33,11 @@ class TrendFollowingStrategy:
     name = "trend_following"
 
     def __init__(self, params: dict = None):
-        self.params = params or config.TREND_FOLLOWING_PARAMS
+        # See MeanReversionStrategy.__init__ for the params precedence
+        # (explicit dict > strategy_params.json > config.py default).
+        self.params = params if params is not None else load_strategy_params(
+            "trend_following", config.TREND_FOLLOWING_PARAMS
+        )
         self.fast_period = self.params["fast_ema"]
         self.slow_period = self.params["slow_ema"]
         self.atr_period = self.params["atr_period"]

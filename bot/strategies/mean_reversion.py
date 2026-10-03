@@ -43,6 +43,7 @@ import logging
 import pandas as pd
 
 from bot.indicators import sma, rolling_std, atr
+from bot.params_store import load_strategy_params
 from bot.strategies.base import Signal, SignalAction
 import config
 
@@ -53,7 +54,14 @@ class MeanReversionStrategy:
     name = "mean_reversion"
 
     def __init__(self, params: dict = None):
-        self.params = params or config.MEAN_REVERSION_PARAMS
+        # Explicit `params` (used by backtests/the auto-tuner to evaluate a
+        # candidate parameter set) always wins. Otherwise, load the live
+        # tunable params from strategy_params.json, falling back to
+        # config.MEAN_REVERSION_PARAMS for anything missing/invalid -- see
+        # bot/params_store.py.
+        self.params = params if params is not None else load_strategy_params(
+            "mean_reversion", config.MEAN_REVERSION_PARAMS
+        )
         self.lookback = self.params["lookback"]
         self.entry_std_dev = self.params["entry_std_dev"]
         self.atr_period = config.RISK_PARAMS["atr_period"]

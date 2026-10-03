@@ -140,16 +140,25 @@ def fetch_all_bars(broker: AlpacaBroker, months: int = None) -> Dict[str, pd.Dat
 # ===========================================================================
 
 def simulate_instrument(inst: "config.Instrument", bars: pd.DataFrame,
-                         starting_equity: float, slippage_pct: float) -> Tuple[List[BacktestTrade], pd.Series]:
+                         starting_equity: float, slippage_pct: float,
+                         strategy=None) -> Tuple[List[BacktestTrade], pd.Series]:
     """
     Runs one instrument's strategy alone against its own simulated account,
     bar by bar, using only information available up to and including each
     bar (no lookahead -- the strategy only ever sees bars.iloc[:i+1]).
 
+    `strategy`: an optional, already-constructed strategy instance to use
+    instead of building a fresh default one from STRATEGY_CLASSES. This is
+    how bot/auto_tune.py backtests a *candidate* parameter set (e.g.
+    `MeanReversionStrategy(params=candidate)`) through this exact same
+    simulation loop without duplicating any of it. Risk sizing
+    (RiskManager) is never parameterized this way -- it always uses
+    config.RISK_PARAMS, untouched by the auto-tuner.
+
     Returns (trades, equity_curve) where equity_curve is a pd.Series of
     mark-to-market equity indexed by bar timestamp.
     """
-    strategy = STRATEGY_CLASSES[inst.strategy]()
+    strategy = strategy or STRATEGY_CLASSES[inst.strategy]()
     risk_manager = RiskManager()
     required = strategy.required_bars() + 2
 

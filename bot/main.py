@@ -29,6 +29,7 @@ from datetime import datetime, timezone
 from typing import Dict, Optional
 
 import config
+from bot import params_store
 from bot.broker import AlpacaBroker
 from bot.portfolio import Portfolio
 from bot.risk_manager import RiskManager
@@ -73,6 +74,14 @@ class TradingBot:
         self.portfolio = Portfolio()
         self.risk_manager = RiskManager()
         self.strategies = {name: cls() for name, cls in STRATEGY_CLASSES.items()}
+        # Tracks strategy_params.json's mtime so a long-running `python -m
+        # bot.main` process (unlike bot/live_tick.py, which gets this for
+        # free every tick by constructing a brand-new TradingBot()) still
+        # picks up bot/auto_tune.py's parameter updates without a restart.
+        # This only ever re-instantiates the strategy objects above (their
+        # own signal/indicator params) -- it never touches risk_manager,
+        # the correlation filter, hard-stop logic, or the circuit breaker.
+        self._strategy_params_mtime_seen = self._strategy_params_mtime()
 
         # Tracks the timestamp of the last bar we already acted on, per
         # symbol, so we don't re-process the same closed bar repeatedly
@@ -139,6 +148,8 @@ class TradingBot:
         instead of one process looping forever (hosted runners cap a single
         job at a few hours, far short of the "run for weeks" requirement).
         """
+        self._reload_strategies_if_params_changed()
+
         # --- Circuit breaker gate: checked first, before anything else. ---
         # If a prior cycle (this process or an earlier one, via bot_state.json)
         # tripped the max-drawdown circuit breaker, do not evaluate any new
@@ -245,6 +256,30 @@ class TradingBot:
                 self._process_instrument(inst)
             except Exception as e:  # noqa: BLE001 -- isolate per-instrument failures
                 logger.exception("Error processing %s: %s", inst.symbol, e)
+
+    # ------------------------------------------------------------------
+    # Strategy param hot-reload (strategy_params.json, written by
+    # bot/auto_tune.py) -- purely about each strategy's own signal/
+    # indicator params; never touches risk_manager, the correlation
+    # filter, hard-stop logic, or the circuit breaker below.
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _strategy_params_mtime() -> Optional[float]:
+        try:
+            return os.path.getmtime(params_store.PARAMS_FILE_PATH)
+        except OSError:
+            return None
+
+    def _reload_strategies_if_params_changed(self):
+        mtime = self._strategy_params_mtime()
+        if mtime == self._strategy_params_mtime_seen:
+            return
+        if self._strategy_params_mtime_seen is not None:
+            logger.info(
+                "strategy_params.json changed on disk; reloading strategy parameters."
+            )
+        self.strategies = {name: cls() for name, cls in STRATEGY_CLASSES.items()}
+        self._strategy_params_mtime_seen = mtime
 
     def _safe_is_equity_market_open(self) -> bool:
         try:
