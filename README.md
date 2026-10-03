@@ -401,6 +401,26 @@ each tick has a genuine chance to see a freshly-closed bar and run real
 strategy logic. This changes *how often* a signal can fire, not *what*
 counts as a signal -- the SMA/EMA/breakout math is unchanged.
 
+**Real bug this exposed (found and fixed 2026-10-03):** after this switch,
+BTC/USD (24/7 crypto) never once saw a new closed bar across 8+ days of
+5-minute ticks, even though `bot/broker.py`'s `get_bars()` was fetching
+data successfully every time. Root cause: `get_bars()` padded its lookback
+window 3x (to cover equities' weekend/holiday gaps) but then passed the
+caller's `limit` straight through as the Alpaca API's own `limit` —
+Alpaca returns bars ascending from the window's start and caps the total
+at `limit`, so for a 24/7 symbol whose padded window contains ~3x more
+real bars than `limit`, every single request got silently truncated to the
+*oldest* `limit` bars in the window, stuck roughly 8 days behind "now" —
+and because the window shifts forward by exactly as much as the truncation
+point every tick, it never caught up on its own. `get_bars()` now requests
+the full window uncapped (same approach `get_historical_bars()` already
+used) and slices to the most recent `limit` bars itself, so it always
+returns data ending at "now." Equities were far less affected (market
+hours naturally keep the real bar count in a window close to `limit`),
+which is why this went unnoticed until BTC/USD's cadence was investigated
+directly. See `tests/test_broker.py` for a regression test that reproduces
+the exact failure mode.
+
 **This is not free, though:** every threshold below (entry std-dev bands,
 EMA periods, volume multiples, trailing-stop ATR multiples) was tuned
 against 15Min/1Hour/4Hour data. The same numeric values can behave very

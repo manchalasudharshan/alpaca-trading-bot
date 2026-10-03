@@ -153,26 +153,51 @@ class AlpacaBroker:
     def get_bars(self, symbol: str, asset_class: str, timeframe: str, limit: int) -> pd.DataFrame:
         """
         Returns an OHLCV DataFrame indexed by timestamp (UTC, ascending),
-        with columns ['open', 'high', 'low', 'close', 'volume']. Works for
-        both equities and crypto -- alpaca_trade_api's get_bars() handles
-        crypto symbols like "BTC/USD" transparently in recent SDK versions,
-        but we branch explicitly so the data source is obvious and future
-        SDK differences are easy to patch in one place.
+        with columns ['open', 'high', 'low', 'close', 'volume']: the most
+        recent `limit` bars ending now. Works for both equities and crypto
+        -- alpaca_trade_api's get_bars() handles crypto symbols like
+        "BTC/USD" transparently in recent SDK versions, but we branch
+        explicitly so the data source is obvious and future SDK differences
+        are easy to patch in one place.
+
+        BUG FIX (found 2026-10-03): this used to pass the caller's `limit`
+        straight through as the Alpaca API call's own `limit` parameter.
+        But `limit` there caps the *total* bars Alpaca will paginate back
+        for the [start, end) window, returned ascending from `start` -- it
+        is not "give me the most recent N bars." _lookback_window() pads
+        the window generously (3x + 5 days) so equities' weekend/holiday
+        gaps don't starve it of `limit` real bars. For 24/7 crypto that
+        padding means the window actually contains ~3x more real bars than
+        `limit`, so Alpaca's own pagination cap silently truncated the
+        response to the OLDEST `limit` bars in the window -- stuck roughly
+        8 days behind "now" for BTC/USD at 5Min, every single tick, forever
+        (the padded window shifts forward each tick by exactly as much as
+        the truncation point does, so it never catches up). That is why
+        BTC/USD never saw a new closed bar after the 5Min timeframe switch:
+        main.py's "no new bar since last seen" gate was correctly firing on
+        genuinely stale data this whole time.
+
+        Fix: ask Alpaca for the FULL window (via _estimate_bar_count(), the
+        same uncapped-by-a-fixed-number approach get_historical_bars()
+        already uses), then slice to the most recent `limit` bars ourselves
+        once they're back. This guarantees get_bars() always returns bars
+        ending at `now`, which is what every caller actually expects.
         """
         tf = _timeframe_from_str(timeframe)
         end = datetime.now(timezone.utc)
         # Pad the lookback window generously; weekends/holidays mean a
         # naive "limit * timeframe" window can come up short for equities.
         start = end - self._lookback_window(timeframe, limit)
+        api_limit = self._estimate_bar_count(timeframe, start, end)
 
         def _fetch():
             if asset_class == config.CRYPTO:
                 bars = self.api.get_crypto_bars(
-                    symbol, tf, start.isoformat(), end.isoformat(), limit=limit,
+                    symbol, tf, start.isoformat(), end.isoformat(), limit=api_limit,
                 )
             else:
                 bars = self.api.get_bars(
-                    symbol, tf, start.isoformat(), end.isoformat(), limit=limit,
+                    symbol, tf, start.isoformat(), end.isoformat(), limit=api_limit,
                     adjustment="raw", feed=config.EQUITY_DATA_FEED,
                 )
             return bars.df
@@ -190,6 +215,12 @@ class AlpacaBroker:
             df = df.xs(symbol, level=0) if symbol in df.index.get_level_values(0) else df.droplevel(0)
 
         df = df[["open", "high", "low", "close", "volume"]].sort_index()
+        # api_limit may have pulled back far more than the caller asked
+        # for (that's the whole point -- see docstring); trim to the most
+        # recent `limit` bars, which is what "get_bars(..., limit=N)" means
+        # to every caller in this codebase.
+        if len(df) > limit:
+            df = df.tail(limit)
         return df
 
     def get_historical_bars(self, symbol: str, asset_class: str, timeframe: str,

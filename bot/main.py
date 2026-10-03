@@ -373,7 +373,17 @@ class TradingBot:
         latest_bar_ts = bars.index[-1]
         if self.last_seen_bar[inst.symbol] is not None and latest_bar_ts <= self.last_seen_bar[inst.symbol]:
             # No new closed bar since we last acted on this symbol --
-            # nothing to do until the next one forms.
+            # nothing to do until the next one forms. This used to return
+            # with ZERO logging, even at DEBUG -- making it indistinguishable
+            # from every other silent return in this function. Logging it
+            # is what actually answers "is a new bar just not closed yet
+            # (normal, 5Min cadence hasn't ticked over)" vs. "bars are
+            # genuinely stuck and not advancing at all (a real bug)".
+            logger.debug(
+                "%s: latest fetched bar %s is not newer than last-seen bar %s; "
+                "no new closed bar to evaluate yet.",
+                inst.symbol, latest_bar_ts, self.last_seen_bar[inst.symbol],
+            )
             return
 
         position = self.portfolio.get_position(inst.symbol)
