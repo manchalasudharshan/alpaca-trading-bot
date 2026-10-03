@@ -169,6 +169,17 @@ RISK_PARAMS = {
 }
 
 # ---------------------------------------------------------------------------
+# Portfolio-level circuit breaker (applies across every strategy/instrument)
+# ---------------------------------------------------------------------------
+# If current account equity ever falls this fraction below the highest
+# equity ever observed (bot/main.py's self.peak_equity), the bot closes
+# every open position immediately and halts ALL new trading. There is no
+# automatic resume: a human must manually clear the "trading_halted" flag
+# in bot_state.json after reviewing what happened. See README.md's
+# "Circuit breaker" section for the manual reset procedure.
+MAX_DRAWDOWN_PCT = float(os.getenv("MAX_DRAWDOWN_PCT", "0.10"))
+
+# ---------------------------------------------------------------------------
 # Scheduling / polling
 # ---------------------------------------------------------------------------
 # How often (seconds) the main loop wakes up to check whether any strategy's

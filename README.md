@@ -2,8 +2,9 @@
 
 A continuously-running Python bot that trades 5 instruments (SPY, QQQ,
 BTC/USD, GLD, USO) across 3 strategies via the Alpaca Markets API, with
-ATR-based position sizing, hard 1%-of-equity stop losses, and a
-correlation filter between equity index exposure and BTC.
+ATR-based position sizing, hard 1%-of-equity stop losses, a correlation
+filter between equity index exposure and BTC, and a portfolio-level
+max-drawdown circuit breaker (see [Circuit breaker](#circuit-breaker)).
 
 **This is not financial advice, and this code is not a guarantee of
 profitability.** It is a working implementation of the strategy
@@ -221,6 +222,54 @@ from [Backtesting](#backtesting):
    `https://github.com/<owner>/<repo>/settings/secrets/actions`.
 5. The two scheduled tasks (morning/evening) are created directly in this
    assistant — no extra setup beyond the secrets above.
+
+## Circuit breaker
+
+In addition to the per-trade risk controls (ATR sizing, hard 1% stop,
+correlation filter — see [How it works](#how-it-works)), the bot has a
+**portfolio-level max-drawdown circuit breaker** that is independent of,
+and never touched by, any of that per-trade logic.
+
+**How it works:** every cycle, `bot/main.py` tracks `peak_equity`, the
+highest total account equity ever observed (persisted in `bot_state.json`
+across restarts). If current equity ever falls to **`config.MAX_DRAWDOWN_PCT`
+below that peak (default 10%)**, the bot:
+
+1. Logs a `CRITICAL` message naming the drawdown and the threshold.
+2. Closes **every** open position immediately with market orders —
+   first at the broker directly (`AlpacaBroker.close_all_positions()`,
+   which flattens Alpaca's own books regardless of local state), then
+   reconciles the local position book and logs each close to `trades.csv`.
+3. Sets `"trading_halted": true` in `bot_state.json`, along with
+   `halt_reason` (the drawdown math) and `halt_at` (UTC timestamp).
+4. From that point on, **every subsequent cycle — this process or any
+   later one that loads this state file — checks the flag first and skips
+   all signal generation and trading entirely**, logging a `CRITICAL`
+   reminder each time. `bot/live_tick.py` still writes
+   `positions_snapshot.json` after a halted cycle, so monitoring/reporting
+   keeps working even while trading is stopped.
+
+**There is no automatic resume.** Nothing in this codebase ever sets
+`trading_halted` back to `false` — that is intentional: a drawdown this
+large should be reviewed by a human before any more capital is put at
+risk. To resume trading:
+
+1. Investigate why the drawdown happened (check `trades.csv`, `bot.log`,
+   and the Alpaca dashboard for what was open and why).
+2. Manually edit `bot_state.json` and set:
+   ```json
+   "trading_halted": false
+   ```
+   (Clearing `halt_reason`/`halt_at` to `null` as well is optional, but
+   keeps the file's audit trail clean for the next incident.)
+3. Restart the bot (`python -m bot.main`) or let the next `bot/live_tick.py`
+   cron tick pick up the edited state — it will resume evaluating signals
+   normally, with `peak_equity` and the threshold still in force for next
+   time.
+
+The threshold itself lives in `config.py` as `MAX_DRAWDOWN_PCT` (default
+`0.10`, i.e. 10%), overridable via the `MAX_DRAWDOWN_PCT` environment
+variable.
 
 ## How it works
 

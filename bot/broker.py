@@ -291,6 +291,26 @@ class AlpacaBroker:
             logger.error("Failed to fetch open positions: %s", e)
             return []
 
+    def close_all_positions(self, cancel_orders: bool = True) -> list:
+        """
+        Immediately flattens every open position at the broker with market
+        orders, regardless of this process's local position bookkeeping.
+        Used by the max-drawdown circuit breaker (bot/main.py) to guarantee
+        all exposure is closed even if local state has drifted from
+        Alpaca's own books. Also cancels any open orders by default so a
+        stale resting order can't re-open exposure right after.
+        """
+        try:
+            closed = _retry(self.api.close_all_positions, cancel_orders=cancel_orders)
+            logger.critical(
+                "close_all_positions: broker reports %d position(s) closed.",
+                len(closed) if closed else 0,
+            )
+            return closed or []
+        except Exception as e:
+            logger.error("FAILED to close all positions at broker: %s", e)
+            return []
+
     def get_last_trade_price(self, symbol: str, asset_class: str) -> Optional[float]:
         """Used as a fallback fill-price estimate if we want current price
         between bar closes (e.g. for logging); not required for the core

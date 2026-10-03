@@ -86,6 +86,17 @@ class TradingBot:
         # memory of equity highs reached in prior ticks.
         self.peak_equity: Optional[float] = None
 
+        # Max-drawdown circuit breaker state. Once tripped (current equity
+        # <= peak_equity * (1 - config.MAX_DRAWDOWN_PCT)), ALL open
+        # positions are closed and `trading_halted` stays True forever --
+        # there is no automatic resume logic anywhere in this class. A
+        # human must manually clear it in bot_state.json (see README
+        # "Circuit breaker" section) before the bot will trade again.
+        # Persisted across restarts the same way peak_equity is.
+        self.trading_halted: bool = False
+        self.halt_reason: Optional[str] = None
+        self.halt_at: Optional[str] = None
+
         self._shutdown = False
         signal.signal(signal.SIGINT, self._handle_shutdown)
         signal.signal(signal.SIGTERM, self._handle_shutdown)
@@ -128,6 +139,22 @@ class TradingBot:
         instead of one process looping forever (hosted runners cap a single
         job at a few hours, far short of the "run for weeks" requirement).
         """
+        # --- Circuit breaker gate: checked first, before anything else. ---
+        # If a prior cycle (this process or an earlier one, via bot_state.json)
+        # tripped the max-drawdown circuit breaker, do not evaluate any new
+        # signals or open any new trades. bot/live_tick.py still writes
+        # positions_snapshot.json after this returns, so monitoring/reporting
+        # keeps working -- only new-trade evaluation stops. No code anywhere
+        # clears this flag automatically; see README "Circuit breaker".
+        if self.trading_halted:
+            logger.critical(
+                "Trading is HALTED (circuit breaker tripped at %s: %s). Skipping this "
+                "cycle entirely -- manual review and a bot_state.json edit are required "
+                "to resume. See README.md 'Circuit breaker' section.",
+                self.halt_at, self.halt_reason,
+            )
+            return
+
         try:
             self._run_cycle()
         except Exception as e:  # noqa: BLE001 -- never let a tick crash the workflow
@@ -153,6 +180,13 @@ class TradingBot:
                 for sym, ts in self.last_seen_bar.items()
             },
             "peak_equity": self.peak_equity,
+            # Circuit breaker state -- see README "Circuit breaker". To
+            # manually resume trading after a halt, a human edits this file
+            # and sets "trading_halted": false (clearing halt_reason/halt_at
+            # is optional but recommended for a clean audit trail).
+            "trading_halted": self.trading_halted,
+            "halt_reason": self.halt_reason,
+            "halt_at": self.halt_at,
             "saved_at": datetime.now(timezone.utc).isoformat(),
         }
         tmp_path = path + ".tmp"
@@ -171,7 +205,17 @@ class TradingBot:
         for sym, ts in state.get("last_seen_bar", {}).items():
             self.last_seen_bar[sym] = datetime.fromisoformat(ts) if ts else None
         self.peak_equity = state.get("peak_equity")
-        logger.info("Loaded bot state from %s (peak_equity=%s)", path, self.peak_equity)
+        self.trading_halted = bool(state.get("trading_halted", False))
+        self.halt_reason = state.get("halt_reason")
+        self.halt_at = state.get("halt_at")
+        logger.info("Loaded bot state from %s (peak_equity=%s, trading_halted=%s)",
+                    path, self.peak_equity, self.trading_halted)
+        if self.trading_halted:
+            logger.critical(
+                "Loaded state with trading HALTED (tripped at %s: %s). Will not trade "
+                "until bot_state.json is manually edited. See README 'Circuit breaker'.",
+                self.halt_at, self.halt_reason,
+            )
 
     def _run_cycle(self):
         equity_market_open = self._safe_is_equity_market_open()
@@ -180,6 +224,15 @@ class TradingBot:
         if current_equity is not None:
             if self.peak_equity is None or current_equity > self.peak_equity:
                 self.peak_equity = current_equity
+
+            # --- Max-drawdown circuit breaker ---
+            # Checked every cycle, independent of and in addition to the
+            # existing 1%-per-trade/ATR sizing, correlation filter, and
+            # hard-stop logic below (none of that is touched by this).
+            if (not self.trading_halted and self.peak_equity and self.peak_equity > 0
+                    and current_equity <= self.peak_equity * (1 - config.MAX_DRAWDOWN_PCT)):
+                self._trip_circuit_breaker(current_equity)
+                return  # halted: skip all instrument/new-entry processing this cycle
 
         for inst in config.INSTRUMENTS:
             is_crypto = inst.asset_class == config.CRYPTO
@@ -199,6 +252,75 @@ class TradingBot:
         except Exception as e:
             logger.error("Could not determine market status, assuming CLOSED: %s", e)
             return False
+
+    # ------------------------------------------------------------------
+    # Max-drawdown circuit breaker
+    # ------------------------------------------------------------------
+    def _trip_circuit_breaker(self, current_equity: float):
+        """
+        Closes every open position immediately and permanently halts new
+        trading (no automatic resume -- see README "Circuit breaker"). This
+        is purely additive: the 1%-per-trade/ATR sizing, correlation
+        filter, and per-position hard-stop logic are untouched and simply
+        never get a chance to run again once `trading_halted` is True,
+        because run_once()/`_run_cycle()` gate on it first.
+        """
+        drawdown_pct = (self.peak_equity - current_equity) / self.peak_equity * 100.0
+        reason = (
+            f"Equity {current_equity:.2f} is {drawdown_pct:.2f}% below peak equity "
+            f"{self.peak_equity:.2f}, exceeding the {config.MAX_DRAWDOWN_PCT * 100:.1f}% "
+            f"max-drawdown circuit-breaker threshold (config.MAX_DRAWDOWN_PCT)."
+        )
+        logger.critical(
+            "CIRCUIT BREAKER TRIPPED: %s Closing ALL open positions and halting ALL "
+            "new trading. This will NOT auto-resume -- a human must manually review and "
+            "edit bot_state.json ('trading_halted': false) to continue trading. See "
+            "README.md 'Circuit breaker' section.",
+            reason,
+        )
+
+        self._close_all_positions(exit_reason="circuit_breaker_max_drawdown")
+
+        self.trading_halted = True
+        self.halt_reason = reason
+        self.halt_at = datetime.now(timezone.utc).isoformat()
+
+        # Persist immediately so the halt survives even if the process is
+        # killed before the normal end-of-cycle save_state() call (run()'s
+        # loop and live_tick.py both call save_state() after run_once(),
+        # but a halt is important enough to not rely on that alone).
+        try:
+            self.save_state(config.STATE_FILE_PATH)
+        except Exception as e:
+            logger.error("Failed to persist circuit-breaker halt state: %s", e)
+
+    def _close_all_positions(self, exit_reason: str):
+        """
+        Flattens everything at the broker first (authoritative, catches any
+        position the local book doesn't know about), then reconciles
+        bot/portfolio.py's local book + trades.csv/daily_pnl.csv so the
+        local record matches reality and every closed trade is logged.
+        """
+        self.broker.close_all_positions(cancel_orders=True)
+
+        for symbol in list(self.portfolio.positions.keys()):
+            position = self.portfolio.positions.get(symbol)
+            if position is None:
+                continue
+            inst = config.INSTRUMENT_BY_SYMBOL.get(symbol)
+            asset_class = inst.asset_class if inst else config.EQUITY
+            exit_price = self.broker.get_last_trade_price(symbol, asset_class)
+            if exit_price is None:
+                # Last resort so we still log a closed trade rather than
+                # leaving local state stuck "open" after the broker has
+                # already flattened it.
+                exit_price = position.entry_price
+                logger.warning(
+                    "Circuit breaker: could not fetch last trade price for %s; "
+                    "logging local close at entry price %.4f as an estimate.",
+                    symbol, exit_price,
+                )
+            self.portfolio.close_position(symbol, exit_price=exit_price, exit_reason=exit_reason)
 
     # ------------------------------------------------------------------
     # Per-instrument processing
