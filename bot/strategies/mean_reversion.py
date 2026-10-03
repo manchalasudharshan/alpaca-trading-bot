@@ -10,7 +10,26 @@ Logic
 - Entry (short): close >= SMA + (threshold * std)   -> expect reversion down
 - Exit: close crosses back through the SMA (i.e. price has reverted to the
   mean), independent of entry side.
-- threshold is per-symbol: 1.5 for SPY, 1.8 for QQQ (config.MEAN_REVERSION_PARAMS).
+- threshold is per-symbol (config.MEAN_REVERSION_PARAMS["entry_std_dev"]).
+
+Trend filter
+------------
+A 6-month backtest showed pure mean reversion losing badly on SPY/QQQ
+specifically because both drifted in one direction for the whole window --
+every dip-buy (long) was fighting a persistent downtrend. Widening the
+entry bands alone didn't fix it (win rate stayed ~30%), because the
+problem isn't trade selectivity, it's taking trades *against* the
+prevailing direction in a trending regime.
+
+The fix: a longer-period SMA (`trend_filter_period`, e.g. 100 bars) gives
+a regime read independent of the fast 20-period mean. Longs are only
+taken when price is above that longer SMA (don't fade dips in a
+downtrend), shorts only when price is below it (don't fade rallies in an
+uptrend). This keeps the strategy to reversions *within* the prevailing
+trend -- pullbacks, not full counter-trend bets -- which is the standard
+way mean reversion is paired with trend context. Set
+`trend_filter_period` to `None` (or omit it) to disable the filter and
+get the original unfiltered behavior.
 
 This module is stateless with respect to *position* -- it only looks at
 price vs. bands and emits entry signals, plus an exit signal whenever price
@@ -38,10 +57,15 @@ class MeanReversionStrategy:
         self.lookback = self.params["lookback"]
         self.entry_std_dev = self.params["entry_std_dev"]
         self.atr_period = config.RISK_PARAMS["atr_period"]
+        self.trend_filter_period = self.params.get("trend_filter_period")
 
     def required_bars(self) -> int:
-        # Need lookback bars for SMA/std plus a little headroom for ATR warmup.
-        return max(self.lookback, self.atr_period) + 5
+        # Need lookback bars for SMA/std, the trend filter's longer SMA (if
+        # enabled), and a little headroom for ATR warmup.
+        periods = [self.lookback, self.atr_period]
+        if self.trend_filter_period:
+            periods.append(self.trend_filter_period)
+        return max(periods) + 5
 
     def generate_signal(self, symbol: str, bars: pd.DataFrame,
                          currently_long: bool, currently_short: bool) -> Signal:
@@ -73,6 +97,18 @@ class MeanReversionStrategy:
         lower_band = last_mean - threshold * last_std
         upper_band = last_mean + threshold * last_std
 
+        # Trend filter: only allow entries in the direction consistent with
+        # the longer-period trend (see module docstring). None/absent
+        # disables this and restores the original unfiltered behavior.
+        trend_allows_long = True
+        trend_allows_short = True
+        if self.trend_filter_period:
+            trend_sma = sma(close, self.trend_filter_period)
+            last_trend_sma = float(trend_sma.iloc[-1])
+            if pd.notna(last_trend_sma):
+                trend_allows_long = last_close > last_trend_sma
+                trend_allows_short = last_close < last_trend_sma
+
         # --- Exit logic takes priority: if we're in a position and price has
         # reverted to (or past) the mean, flatten first. ---
         if currently_long and last_close >= last_mean:
@@ -90,19 +126,37 @@ class MeanReversionStrategy:
 
         # --- Entry logic (only if flat on the relevant side) ---
         if not currently_long and not currently_short:
-            if last_close <= lower_band:
+            if last_close <= lower_band and trend_allows_long:
                 return Signal(
                     symbol=symbol, action=SignalAction.LONG_ENTRY, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
                     reason=(f"price {last_close:.2f} <= lower band {lower_band:.2f} "
-                            f"(mean {last_mean:.2f} - {threshold}*std {last_std:.2f})"),
+                            f"(mean {last_mean:.2f} - {threshold}*std {last_std:.2f}); "
+                            f"trend filter OK"),
                 )
-            if last_close >= upper_band:
+            if last_close >= upper_band and trend_allows_short:
                 return Signal(
                     symbol=symbol, action=SignalAction.SHORT_ENTRY, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
                     reason=(f"price {last_close:.2f} >= upper band {upper_band:.2f} "
-                            f"(mean {last_mean:.2f} + {threshold}*std {last_std:.2f})"),
+                            f"(mean {last_mean:.2f} + {threshold}*std {last_std:.2f}); "
+                            f"trend filter OK"),
+                )
+            if last_close <= lower_band and not trend_allows_long:
+                return Signal(
+                    symbol=symbol, action=SignalAction.HOLD, price=last_close,
+                    atr=last_atr, bar_timestamp=last_ts,
+                    reason=(f"price {last_close:.2f} <= lower band {lower_band:.2f} but "
+                            f"trend filter blocked the long (price below "
+                            f"{self.trend_filter_period}-period trend SMA)"),
+                )
+            if last_close >= upper_band and not trend_allows_short:
+                return Signal(
+                    symbol=symbol, action=SignalAction.HOLD, price=last_close,
+                    atr=last_atr, bar_timestamp=last_ts,
+                    reason=(f"price {last_close:.2f} >= upper band {upper_band:.2f} but "
+                            f"trend filter blocked the short (price above "
+                            f"{self.trend_filter_period}-period trend SMA)"),
                 )
 
         return Signal(

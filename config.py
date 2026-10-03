@@ -93,6 +93,15 @@ MEAN_REVERSION_PARAMS = {
         "SPY": 2.2,
         "QQQ": 2.3,
     },
+    # Regime filter added after the widened-band backtest still showed SPY
+    # Sharpe -4.89 / QQQ Sharpe -1.78 with ~30% win rates unchanged -- a
+    # structural sign of fighting a persistent trend, not a band-width
+    # problem (see bot/strategies/mean_reversion.py docstring). A 100-period
+    # SMA on the 15Min chart (~25 trading hours) gates entries to only trade
+    # reversions *with* the prevailing direction: longs only above it,
+    # shorts only below it. Set to None to disable and restore pure
+    # unfiltered mean reversion.
+    "trend_filter_period": 100,
     # Exit when price crosses back through the mean -- no separate param
     # needed, handled in strategy logic.
 }
@@ -107,13 +116,16 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # channel selects for more significant breakouts.
     "lookback": 30,
     "timeframe": "1Hour",
-    # Raised from 1.5x -- a stricter volume filter should cut weak
-    # breakouts that reverse immediately.
-    "volume_multiple": 2.0,
+    # Raised again from 2.0x -- the Sharpe +0.50 run was still carrying a
+    # 23.36% max drawdown, over the user's 15% ceiling, so the volume bar
+    # is tightened further to admit only the most convincing breakouts.
+    "volume_multiple": 2.2,
     "atr_period": 14,
-    # Widened from 2.0x -- the original stop was likely getting hit by
-    # normal post-breakout pullbacks before the move developed.
-    "trailing_stop_atr_multiple": 2.5,
+    # Tightened from 2.5x -- a 23.36% max drawdown with a positive Sharpe
+    # means winners were being given back by a stop that trailed too loosely
+    # on the way down; a tighter multiple locks in gains sooner at some cost
+    # to how much room winning trades get to run.
+    "trailing_stop_atr_multiple": 2.2,
 }
 
 # ---------------------------------------------------------------------------
