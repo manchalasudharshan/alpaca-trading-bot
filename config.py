@@ -104,11 +104,11 @@ MEAN_REVERSION_PARAMS = {
     },
     # Regime filter: a longer SMA gates mean-reversion entries to only fire
     # *with* the prevailing direction (longs above it, shorts below it).
-    # 150 bars (vs. the original 100) is kept since it was tested alongside
-    # the wider bands above and is the more conservative of the two values
-    # tried; set to None to disable and restore pure unfiltered mean
-    # reversion.
-    "trend_filter_period": 150,
+    # Reverted 150->100: swapping only this value (bands held at 2.2/2.3)
+    # made SPY *and* QQQ both worse (SPY MaxDD -29.22%->-34.56%, QQQ MaxDD
+    # -16.03%->-18.72%), so 100 bars is the better of the two tried. Set to
+    # None to disable and restore pure unfiltered mean reversion.
+    "trend_filter_period": 100,
     # Exit when price crosses back through the mean -- no separate param
     # needed, handled in strategy logic.
 }
@@ -128,11 +128,13 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # is tightened further to admit only the most convincing breakouts.
     "volume_multiple": 2.2,
     "atr_period": 14,
-    # Tightened again (2.5->2.2->1.8->1.5) -- the 1.8x round got BTC to
-    # Sharpe +1.05 (its best yet) but MaxDD -15.82%, just barely over the
-    # 15% ceiling. One more turn of the screw to try to close that last gap
-    # without giving up the now-positive Sharpe.
-    "trailing_stop_atr_multiple": 1.5,
+    # Reverted 1.5->1.8: tightening further to 1.5x made things worse
+    # (Sharpe +1.05->+0.88, MaxDD -15.82%->-16.39%) -- 1.8x is the best of
+    # the three multiples tried (2.2x: Sharpe +0.54/MaxDD -20.03%; 1.8x:
+    # Sharpe +1.05/MaxDD -15.82%; 1.5x: Sharpe +0.88/MaxDD -16.39%). Still
+    # ~0.8 points over the 15% ceiling -- see README for the honest
+    # conclusion on this one.
+    "trailing_stop_atr_multiple": 1.8,
 }
 
 # ---------------------------------------------------------------------------
