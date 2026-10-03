@@ -1,0 +1,16 @@
+2026-10-03 05:27:52,661 [INFO] bot.broker: Connected to Alpaca. Account status=ACTIVE, equity=100000, buying_power=400000
+2026-10-03 05:27:53,249 [INFO] bot.reporting.evening_report: Evening report:
+EVENING REPORT
+Trades today: 0 (none)
+Today P&L: $0.00 (0.00% of equity)
+Current equity: $100000.00
+Vs backtest: No instruments traded today to compare against backtest baseline.
+Stop-loss exits today: none.
+2026-10-03 05:27:53,249 [ERROR] bot.reporting.telegram: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set -- cannot send Telegram message. Printing report to stdout instead:
+EVENING REPORT
+Trades today: 0 (none)
+Today P&L: $0.00 (0.00% of equity)
+Current equity: $100000.00
+Vs backtest: No instruments traded today to compare against backtest baseline.
+Stop-loss exits today: none.
+2026-10-03 05:27:53,249 [ERROR] bot.reporting.evening_report: Telegram send failed -- see TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID secrets.
