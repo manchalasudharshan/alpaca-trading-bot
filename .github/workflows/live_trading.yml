@@ -4,8 +4,13 @@ on:
   workflow_dispatch: {}
   schedule:
     # Every 15 minutes. GitHub's scheduler can run late under load (not a
-    # guaranteed real-time clock) -- fine for 15Min/1Hour/4Hour strategy
-    # timeframes, but don't rely on this for sub-minute precision.
+    # guaranteed real-time clock). NOTE: this workflow is currently disabled
+    # (see README "Option B") in favor of the VPS's */5 cron, which matches
+    # all 5 instruments' 5Min strategy timeframe far more closely than this
+    # 15-minute schedule would -- don't re-enable this as-is without first
+    # tightening the schedule, or most ticks will miss freshly-closed 5Min
+    # bars the same way the old per-strategy timeframes did against a 5-min
+    # tick (see config.py's INSTRUMENTS comment).
     - cron: "*/15 * * * *"
 
 # Ticks must run one at a time, in order -- bot_state.json is read, mutated,

@@ -5,7 +5,8 @@ Backtests all 3 strategies against historical Alpaca data for all 5
 instruments, simulating realistic trading conditions:
 
   - 6 months of history per instrument, pulled at each strategy's own
-    timeframe (15Min for SPY/QQQ, 1Hour for BTC/USD, 4Hour for GLD/USO).
+    timeframe (5Min for all 5 instruments -- see config.INSTRUMENTS and the
+    README's "5-minute timeframe" note for why).
   - The exact same strategy, risk-sizing, and trailing-stop logic used by
     the live bot (bot/strategies/*, bot/risk_manager.py) -- no separate
     "backtest version" of the trading rules, so results reflect what the

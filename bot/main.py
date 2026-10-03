@@ -6,7 +6,7 @@ risk manager, and the portfolio/logger, then runs a continuous loop that:
 
   1. Wakes up every config.POLL_INTERVAL_SECONDS.
   2. For each instrument, checks whether a new bar has closed on its
-     strategy's timeframe (15Min / 1Hour / 4Hour). If so, pulls fresh bars
+     strategy's timeframe (5Min for all 5 instruments). If so, pulls fresh bars
      and asks that instrument's strategy for a signal.
   3. Runs every signal through the correlation filter and ATR-based
      position sizing in risk_manager.py.
@@ -55,6 +55,7 @@ logger = logging.getLogger("bot.main")
 # new bar has likely closed and it's worth re-fetching data for that
 # instrument.
 TIMEFRAME_SECONDS = {
+    "5Min": 5 * 60,
     "15Min": 15 * 60,
     "1Hour": 60 * 60,
     "4Hour": 4 * 60 * 60,

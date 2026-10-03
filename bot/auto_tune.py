@@ -115,11 +115,26 @@ MIN_IMPROVEMENT_REL = 0.10
 # Per-parameter bounds (hardcoded; never derived from a backtest result)
 # ===========================================================================
 #
+# NOTE: all 5 instruments now trade on 5Min bars (config.INSTRUMENTS; see
+# README "5-minute timeframe" note). The bar-count rationale below was
+# originally written for the old per-strategy timeframes (15Min for mean
+# reversion, 1Hour for momentum breakout, 4Hour for trend following) --
+# e.g. "60 bars = 15 trading hours" assumed 15Min bars, and
+# momentum_breakout.lookback was described "(hours)" because it used to be
+# 1Hour bars. The bounds (the actual [lo, hi] numbers) are left unchanged
+# here -- changing them is a tuning decision, not a mechanical consequence
+# of the timeframe change -- but the number of *bars* each bound represents
+# now covers a much shorter wall-clock span than when these comments were
+# written (e.g. slow_ema=300 is 1500 minutes =~ 1 trading day at 5Min,
+# vs. 1200 hours =~ 50 days at 4Hour). A 90-day tuning window (below)
+# comfortably warms up every bound at 5Min granularity; it did not
+# necessarily do so at the old granularity for the largest bounds.
+#
 # Rationale, briefly (full detail in README "Automated parameter tuning"):
 #   - mean_reversion.lookback [10,60]: below 10 bars the SMA/stddev window is
-#     statistically meaningless noise; above 60 bars (15 trading hours on
-#     15-min data) it starts blending into trend_filter_period, collapsing
-#     the strategy's two-timeframe design into one.
+#     statistically meaningless noise; above 60 bars it starts blending into
+#     trend_filter_period, collapsing the strategy's two-timeframe design
+#     into one.
 #   - entry_std_dev (both symbols) [1.2,3.5]: below 1.2 the bands sit inside
 #     ordinary price noise (overtrades); above 3.5 entries become so rare
 #     the strategy barely trades at all -- a classic overfit-to-one-window
@@ -127,8 +142,8 @@ MIN_IMPROVEMENT_REL = 0.10
 #   - trend_filter_period [50,300]: below 50 it's not meaningfully slower
 #     than the 20-period fast SMA; above 300 it barely updates within a
 #     90-day tuning window (functionally frozen/overfit to one regime).
-#   - momentum_breakout.lookback [10,60] (hours): below 10h loses the
-#     "significant breakout" selectivity the strategy depends on; above 60h
+#   - momentum_breakout.lookback [10,60] (bars): below 10 loses the
+#     "significant breakout" selectivity the strategy depends on; above 60
 #     trade count collapses toward zero in a 90-day window.
 #   - volume_multiple [1.2,3.5]: below 1.2x isn't really a confirmation
 #     filter; above 3.5x almost never fires live.
@@ -139,9 +154,8 @@ MIN_IMPROVEMENT_REL = 0.10
 #     like a stop.
 #   - trend_following.fast_ema [10,120] / slow_ema [120,300], with fast
 #     always kept strictly below slow (_params_valid below): keeps "fast"
-#     meaningfully faster than "slow", and keeps slow_ema from exceeding
-#     what a 90-day window of 4h bars can even warm up on (required_bars()
-#     is slow_ema + 10; 500 would need far more than 90 days of 4h bars).
+#     meaningfully faster than "slow"; at 5Min granularity even slow_ema=300
+#     warms up well within the 90-day tuning window (see NOTE above).
 
 
 @dataclass(frozen=True)

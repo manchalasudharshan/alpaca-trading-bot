@@ -73,8 +73,8 @@ of loss. Test thoroughly on the Alpaca **paper** endpoint first.
 
 ## Backtesting
 
-`bot/backtest.py` pulls 6 months of historical bars per instrument (15Min
-for SPY/QQQ, 1Hour for BTC/USD, 4Hour for GLD/USO) from Alpaca and replays
+`bot/backtest.py` pulls 6 months of historical bars per instrument (5Min
+for all 5 instruments -- see the "5-minute timeframe" note below) from Alpaca and replays
 them through the *exact same* strategy, sizing, and trailing-stop code the
 live bot uses — there's no separate "backtest version" of the trading
 rules to drift out of sync.
@@ -387,11 +387,37 @@ market actually behaves — the parameters below are read from `config.py`,
 so if you retune them (see [Backtesting](#backtesting)) this section's
 numbers will drift from the file; the file is always the source of truth.
 
-### S&P 500 (SPY) — Mean Reversion, 15-minute candles
+### 5-minute timeframe (all instruments)
+
+All 5 instruments now run on **5-minute candles** (`timeframe="5Min"` in
+`config.INSTRUMENTS`), previously 15Min (SPY/QQQ), 1Hour (BTC/USD), and
+4Hour (GLD/USO). The live bot's cron tick fires every 5 minutes, but
+`bot/main.py` only evaluates a symbol's strategy when a *new* bar has
+closed for that symbol's timeframe -- with the old timeframes, most ticks
+had no chance of producing a signal for most symbols (e.g. 11 of every 12
+ticks did nothing for an hourly/4-hourly instrument). Moving every
+instrument to 5Min aligns strategy evaluation with the tick cadence, so
+each tick has a genuine chance to see a freshly-closed bar and run real
+strategy logic. This changes *how often* a signal can fire, not *what*
+counts as a signal -- the SMA/EMA/breakout math is unchanged.
+
+**This is not free, though:** every threshold below (entry std-dev bands,
+EMA periods, volume multiples, trailing-stop ATR multiples) was tuned
+against 15Min/1Hour/4Hour data. The same numeric values can behave very
+differently on 5Min bars (faster-moving indicators, more noise, more
+frequent entries), so **treat every parameter in this section as stale
+until `bot/auto_tune.py` has re-calibrated it against live 5Min data** (it
+runs at most once/day per strategy -- see "Automated parameter tuning"
+below) or you've re-run `bot/backtest.py` against a fresh 5Min historical
+window. Until then, the historical backtest numbers quoted in this section
+reflect the *old* timeframes and should be read as "how this strategy's
+logic performed in the past," not as a live expectation at 5Min.
+
+### S&P 500 (SPY) — Mean Reversion, 5-minute candles
 Indices tend to overextend in one direction over a few hours and then
 snap back. The bot fades those small reversions: when price moves more
 than **2.2 standard deviations** from the 20-period moving average on the
-15-minute chart, it takes the opposite side, expecting a revert to the
+5-minute chart, it takes the opposite side, expecting a revert to the
 mean, and exits when price crosses back through the mean. Entries are
 additionally gated by a **100-period trend filter** (see below): longs
 only fire when price is above the 100-period SMA, shorts only when below
@@ -406,7 +432,7 @@ it.
 > "Known limitations" / recommendation note below — this one stays
 > **paper-only**, not a tuning problem to keep chasing.
 
-### Nasdaq (QQQ) — Mean Reversion, 15-minute candles
+### Nasdaq (QQQ) — Mean Reversion, 5-minute candles
 Same approach as SPY, same 100-period trend filter. Nasdaq tends to be
 more volatile, so the entry threshold is wider: **2.3 standard
 deviations** (originally 1.8σ).
@@ -430,10 +456,10 @@ deviations** (originally 1.8σ).
 > historical window before trusting it, or treat SPY/QQQ as paper-trade-only
 > until a live range-bound period is observed.
 
-### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
+### Bitcoin (BTC/USD) — Momentum Breakout, 5-minute candles
 Crypto trends harder than indices, so instead of fading the move the bot
 rides it. When price closes above the prior **30-period** high on the
-1-hour chart with volume ≥ **2.2×** the 30-period average, it goes long;
+5-minute chart with volume ≥ **2.2×** the 30-period average, it goes long;
 a close below the prior 30-period low with the same volume confirmation
 exits the long or opens a short. A **1.8×ATR** trailing stop ratchets in
 the position's favor every bar.
@@ -458,22 +484,27 @@ the position's favor every bar.
 > **Recommendation: keep on paper trading until MaxDD is confirmed under
 > 15% on at least one more independent window.**
 
-### Gold (GLD) — Trend Following, 4-hour candles
+### Gold (GLD) — Trend Following, 5-minute candles
 Commodities move in cleaner waves, and intraday whipsaws just add noise,
-so this uses a slower signal: a 50/200 EMA crossover on the 4-hour chart.
-When the 50 EMA crosses above the 200, it goes long; when it crosses
-below, it exits or goes short. A 3×ATR trailing stop ratchets every bar.
+so this uses a slower signal relative to its own bars: a 50/200 EMA
+crossover. When the 50 EMA crosses above the 200, it goes long; when it
+crosses below, it exits or goes short. A 3×ATR trailing stop ratchets
+every bar.
 
-### Oil (USO) — Trend Following, 4-hour candles
+### Oil (USO) — Trend Following, 5-minute candles
 Same approach and parameters as gold. Commodities tend to respond well to
-longer-timeframe trend following — moves are more sustained and less
-choppy than indices.
+trend following — moves are more sustained and less choppy than indices.
 
 > GLD and USO parameters are unchanged from the original spec — both were
-> profitable in the 6-month backtest, though on very few trades (2 and 1
-> respectively), since 50/200 EMA crosses on 4h candles are rare. That low
-> sample size means "profitable" here is a weak signal either way; a
-> longer backtest window would be needed before reading much into it.
+> profitable in the 6-month backtest *on the old 4-hour candles*, though on
+> very few trades (2 and 1 respectively), since 50/200 EMA crosses on 4h
+> candles are rare. That low sample size means "profitable" here was a weak
+> signal either way even before the timeframe change. On 5-minute candles
+> the 50/200 EMA crossover will fire far more often (200 bars is ~16.7
+> hours of 5Min data vs. ~33 days of 4Hour data) -- this is exactly the kind
+> of parameter that needs fresh backtesting/auto-tuning at the new
+> granularity before being trusted, per the "5-minute timeframe" note
+> above.
 
 ### Risk management (`bot/risk_manager.py`)
 - **Sizing**: `qty = (account_equity × 1%) / ATR`, so a 1-ATR adverse move

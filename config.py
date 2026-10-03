@@ -62,12 +62,29 @@ class Instrument:
     timeframe: str               # Alpaca TimeFrame string, e.g. "15Min", "1Hour", "4Hour"
 
 
+# NOTE on timeframe="5Min" below: the live bot's cron tick fires every 5
+# minutes (see scripts/vps_tick.sh / .github/workflows/live_trading.yml),
+# but bot/main.py._process_instrument only evaluates a symbol's strategy
+# when a NEW bar has closed for that symbol's timeframe (the last_seen_bar
+# check). With the old 15Min/1Hour/4Hour timeframes, most ticks did nothing
+# for most symbols -- a tick could fire 11 times between two 1Hour closes
+# with zero chance of a signal. Setting every instrument to "5Min" aligns
+# the strategy evaluation cadence with the tick cadence, so (almost) every
+# tick has a genuine chance to see a freshly-closed bar and run real
+# strategy logic -- this does NOT change what counts as a signal (same
+# SMA/EMA/breakout rules), only how often a fresh bar is available to
+# evaluate them against. See bot/broker.py's _lookback_window /
+# _estimate_bar_count for how the bar-fetch window was re-checked against
+# this change, and the README's "How it works" section for the note that
+# all 5 strategies' tuned parameters need re-validation at this finer
+# granularity (the auto-tuner was previously tuned on 15Min/1Hour/4Hour
+# data and has not yet seen a 5Min regime).
 INSTRUMENTS: List[Instrument] = [
-    Instrument(symbol="SPY", asset_class=EQUITY, strategy="mean_reversion", timeframe="15Min"),
-    Instrument(symbol="QQQ", asset_class=EQUITY, strategy="mean_reversion", timeframe="15Min"),
-    Instrument(symbol="BTC/USD", asset_class=CRYPTO, strategy="momentum_breakout", timeframe="1Hour"),
-    Instrument(symbol="GLD", asset_class=EQUITY, strategy="trend_following", timeframe="4Hour"),
-    Instrument(symbol="USO", asset_class=EQUITY, strategy="trend_following", timeframe="4Hour"),
+    Instrument(symbol="SPY", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
+    Instrument(symbol="QQQ", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
+    Instrument(symbol="BTC/USD", asset_class=CRYPTO, strategy="momentum_breakout", timeframe="5Min"),
+    Instrument(symbol="GLD", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
+    Instrument(symbol="USO", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
 ]
 
 SYMBOLS_BY_STRATEGY: Dict[str, List[str]] = {
@@ -83,7 +100,7 @@ INSTRUMENT_BY_SYMBOL: Dict[str, Instrument] = {i.symbol: i for i in INSTRUMENTS}
 # ---------------------------------------------------------------------------
 MEAN_REVERSION_PARAMS = {
     "lookback": 20,                 # SMA / stddev period
-    "timeframe": "15Min",
+    "timeframe": "5Min",
     # Widened from the original 1.5 / 1.8 after a 6-month backtest showed
     # those bands overtrading noise in a trending market (SPY: 398 trades,
     # 33.2% win rate, Sharpe -7.06; QQQ: 305 trades, 36.4% win rate, Sharpe
@@ -122,7 +139,7 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # a sign of too many false/weak breakouts, not a bad edge. A longer
     # channel selects for more significant breakouts.
     "lookback": 30,
-    "timeframe": "1Hour",
+    "timeframe": "5Min",
     # Raised again from 2.0x -- the Sharpe +0.50 run was still carrying a
     # 23.36% max drawdown, over the user's 15% ceiling, so the volume bar
     # is tightened further to admit only the most convincing breakouts.
@@ -143,7 +160,7 @@ MOMENTUM_BREAKOUT_PARAMS = {
 TREND_FOLLOWING_PARAMS = {
     "fast_ema": 50,
     "slow_ema": 200,
-    "timeframe": "4Hour",
+    "timeframe": "5Min",
     "atr_period": 14,
     "trailing_stop_atr_multiple": 3.0,
 }

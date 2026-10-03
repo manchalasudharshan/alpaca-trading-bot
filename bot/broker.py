@@ -42,6 +42,7 @@ except ImportError as e:  # pragma: no cover
 def _timeframe_from_str(tf: str) -> TimeFrame:
     mapping = {
         "1Min": TimeFrame.Minute,
+        "5Min": TimeFrame(5, TimeFrameUnit.Minute),
         "15Min": TimeFrame(15, TimeFrameUnit.Minute),
         "1Hour": TimeFrame.Hour,
         "4Hour": TimeFrame(4, TimeFrameUnit.Hour),
@@ -50,6 +51,18 @@ def _timeframe_from_str(tf: str) -> TimeFrame:
     if tf not in mapping:
         raise ValueError(f"Unsupported timeframe string: {tf}")
     return mapping[tf]
+
+
+# Bar duration per supported timeframe string -- shared by _lookback_window
+# (live polling) and _estimate_bar_count (fixed-range historical fetches).
+_PER_BAR_DURATION = {
+    "1Min": timedelta(minutes=1),
+    "5Min": timedelta(minutes=5),
+    "15Min": timedelta(minutes=15),
+    "1Hour": timedelta(hours=1),
+    "4Hour": timedelta(hours=4),
+    "1Day": timedelta(days=1),
+}
 
 
 def _retry(fn, *args, max_retries=None, backoff_base=None, **kwargs):
@@ -180,20 +193,34 @@ class AlpacaBroker:
         return df
 
     def get_historical_bars(self, symbol: str, asset_class: str, timeframe: str,
-                             start: datetime, end: datetime, limit: int = 10000) -> pd.DataFrame:
+                             start: datetime, end: datetime,
+                             limit: Optional[int] = None) -> pd.DataFrame:
         """
         Like get_bars(), but for an explicit [start, end) date range rather
-        than "the last `limit` bars ending now" -- what bot/backtest.py uses
-        to pull a fixed historical window (e.g. the last 6 months) per
-        instrument.
+        than "the last `limit` bars ending now" -- what bot/backtest.py and
+        bot/auto_tune.py use to pull a fixed historical window (e.g. the
+        last ~90 days or 6 months) per instrument.
 
-        Note: Alpaca's REST API caps bars per request; for the timeframes
-        and ~6-month windows this bot uses (15Min for equities, 1Hour/4Hour
-        for BTC/GLD/USO) a single request with limit=10000 comfortably
-        covers the range. For much longer backtest windows, add pagination
-        here using the SDK's built-in page_token handling.
+        `limit` defaults to None, in which case it's computed from the
+        [start, end) span itself via _estimate_bar_count() rather than a
+        fixed constant. This matters because alpaca_trade_api's get_bars()/
+        get_crypto_bars() DO paginate internally (using the API's
+        next_page_token) up to whatever `limit` you pass -- but `limit`
+        itself is a hard cap on the *total* number of bars returned, not
+        just a per-request page size. A fixed limit that was sized for one
+        timeframe/window combination silently truncates a different one:
+        e.g. a 90-day window of 5Min bars is ~25,920 bars for a 24/7 crypto
+        symbol (BTC/USD) but only ~5,000 for a market-hours-only equity --
+        a single hardcoded limit=10000 would have silently returned only
+        the oldest ~34 days of BTC/USD's requested 90-day window (bars are
+        paginated in ascending order from `start`), with no error or
+        warning. Computing the limit from the actual date range means the
+        cap is never the thing that quietly shrinks the window, for any
+        instrument/timeframe/lookback combination, now or in the future.
         """
         tf = _timeframe_from_str(timeframe)
+        if limit is None:
+            limit = self._estimate_bar_count(timeframe, start, end)
 
         def _fetch():
             if asset_class == config.CRYPTO:
@@ -222,16 +249,32 @@ class AlpacaBroker:
 
     @staticmethod
     def _lookback_window(timeframe: str, limit: int) -> timedelta:
-        per_bar = {
-            "1Min": timedelta(minutes=1),
-            "15Min": timedelta(minutes=15),
-            "1Hour": timedelta(hours=1),
-            "4Hour": timedelta(hours=4),
-            "1Day": timedelta(days=1),
-        }[timeframe]
+        per_bar = _PER_BAR_DURATION[timeframe]
         # 3x padding covers weekends/holidays for equities; harmless extra
         # for 24/7 crypto.
         return per_bar * limit * 3 + timedelta(days=5)
+
+    @staticmethod
+    def _estimate_bar_count(timeframe: str, start: datetime, end: datetime) -> int:
+        """
+        Upper-bound estimate of how many bars a [start, end) range could
+        contain at `timeframe` granularity, used as the default `limit` for
+        get_historical_bars() so a fixed-range fetch is never silently
+        truncated below what the range could actually contain (see the
+        docstring there). Assumes the worst case of bars existing for the
+        entire span (true for 24/7 crypto); for market-hours-only equities
+        this overestimates, which is harmless -- pagination simply stops
+        once the real (smaller) set of bars is exhausted, since Alpaca has
+        no more to return. A generous +20% buffer plus a floor keeps this
+        safe even for very short ranges or if Alpaca's bar cadence is ever
+        slightly uneven.
+        """
+        per_bar = _PER_BAR_DURATION[timeframe]
+        span = end - start
+        if span.total_seconds() <= 0:
+            return 1000
+        estimated = int((span / per_bar) * 1.2)
+        return max(estimated, 1000)
 
     # ------------------------------------------------------------------
     # Orders
