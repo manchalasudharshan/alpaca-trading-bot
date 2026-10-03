@@ -29,6 +29,14 @@ APCA_API_BASE_URL = os.getenv("APCA_API_BASE_URL", "https://paper-api.alpaca.mar
 # Alpaca's market data base URL (v2 data API)
 APCA_DATA_URL = os.getenv("APCA_DATA_URL", "https://data.alpaca.markets")
 
+# Equity market data feed. Free Alpaca accounts (including paper accounts
+# on the free tier) only have access to the IEX feed; the SIP (consolidated
+# tape) feed requires a paid market-data subscription and raises
+# "subscription does not permit querying recent SIP data" otherwise. "iex"
+# is the safe default; override to "sip" in .env only if the account
+# actually has a SIP subscription.
+EQUITY_DATA_FEED = os.getenv("APCA_EQUITY_DATA_FEED", "iex")
+
 if not APCA_API_KEY_ID or not APCA_API_SECRET_KEY:
     raise EnvironmentError(
         "Missing Alpaca API credentials. Set APCA_API_KEY_ID and "

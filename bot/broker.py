@@ -160,7 +160,7 @@ class AlpacaBroker:
             else:
                 bars = self.api.get_bars(
                     symbol, tf, start.isoformat(), end.isoformat(), limit=limit,
-                    adjustment="raw",
+                    adjustment="raw", feed=config.EQUITY_DATA_FEED,
                 )
             return bars.df
 
@@ -203,7 +203,7 @@ class AlpacaBroker:
             else:
                 bars = self.api.get_bars(
                     symbol, tf, start.isoformat(), end.isoformat(), limit=limit,
-                    adjustment="raw",
+                    adjustment="raw", feed=config.EQUITY_DATA_FEED,
                 )
             return bars.df
 
