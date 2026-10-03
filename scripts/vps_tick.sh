@@ -14,6 +14,12 @@
 #
 # Usage: called by cron every few minutes (see README "VPS setup"). Not
 # meant to be run manually except for testing.
+#
+# Uses venv/bin/python3 explicitly (not a bare `python3`) because cron runs
+# this script in a minimal environment with no shell profile/venv activation
+# -- a bare `python3` would silently resolve to the system interpreter,
+# which doesn't have this project's dependencies (e.g. python-dotenv)
+# installed, causing a ModuleNotFoundError every tick.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -23,7 +29,7 @@ flock -n 200 || { echo "Another tick is still running; skipping this one."; exit
 
 git pull --rebase origin main --quiet || echo "git pull failed, continuing with local state"
 
-python3 -m bot.live_tick
+venv/bin/python3 -m bot.live_tick
 
 git add -f trades.csv daily_pnl.csv bot_state.json positions_snapshot.json 2>/dev/null || true
 if ! git diff --cached --quiet; then
