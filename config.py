@@ -89,19 +89,23 @@ MEAN_REVERSION_PARAMS = {
     # 33.2% win rate, Sharpe -7.06; QQQ: 305 trades, 36.4% win rate, Sharpe
     # -0.43). Wider bands select for more extreme, higher-conviction
     # dislocations and should cut trade frequency substantially.
+    # Widened again (2.2->2.5, 2.3->2.5) after the trend-filtered run still
+    # showed SPY Sharpe -2.71 / MaxDD -29.22% and QQQ Sharpe -0.79 / MaxDD
+    # -16.03% -- both still fail the Sharpe<0-or-MaxDD>15% bar. Fewer,
+    # higher-conviction entries only.
     "entry_std_dev": {
-        "SPY": 2.2,
-        "QQQ": 2.3,
+        "SPY": 2.5,
+        "QQQ": 2.5,
     },
     # Regime filter added after the widened-band backtest still showed SPY
     # Sharpe -4.89 / QQQ Sharpe -1.78 with ~30% win rates unchanged -- a
     # structural sign of fighting a persistent trend, not a band-width
-    # problem (see bot/strategies/mean_reversion.py docstring). A 100-period
-    # SMA on the 15Min chart (~25 trading hours) gates entries to only trade
-    # reversions *with* the prevailing direction: longs only above it,
-    # shorts only below it. Set to None to disable and restore pure
-    # unfiltered mean reversion.
-    "trend_filter_period": 100,
+    # problem (see bot/strategies/mean_reversion.py docstring). Lengthened
+    # 100->150 bars for a stronger regime read after 100 bars still let too
+    # many counter-trend entries through. Longs only above it, shorts only
+    # below it. Set to None to disable and restore pure unfiltered mean
+    # reversion.
+    "trend_filter_period": 150,
     # Exit when price crosses back through the mean -- no separate param
     # needed, handled in strategy logic.
 }
@@ -121,11 +125,10 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # is tightened further to admit only the most convincing breakouts.
     "volume_multiple": 2.2,
     "atr_period": 14,
-    # Tightened from 2.5x -- a 23.36% max drawdown with a positive Sharpe
-    # means winners were being given back by a stop that trailed too loosely
-    # on the way down; a tighter multiple locks in gains sooner at some cost
-    # to how much room winning trades get to run.
-    "trailing_stop_atr_multiple": 2.2,
+    # Tightened again (2.5->2.2->1.8) -- the 2.2x round only cut MaxDD from
+    # 23.36% to 20.03%, still over the 15% ceiling. Locks in gains sooner
+    # still, at further cost to how much room winning trades get to run.
+    "trailing_stop_atr_multiple": 1.8,
 }
 
 # ---------------------------------------------------------------------------
