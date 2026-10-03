@@ -111,30 +111,58 @@ Outputs:
 Starting capital, slippage %, and the trading-day convention used to
 annualize Sharpe are all in `config.BACKTEST_PARAMS`.
 
-## Live paper trading (GitHub Actions) + Telegram reports
+## Live paper trading + Telegram reports
 
-Since the bot needs to run continuously for days/weeks and this project is
-developed in a sandbox with no outbound internet access, live paper trading
-runs the same way the backtest does: as a scheduled GitHub Actions workflow
-with real internet access, not as a process kept alive locally.
+Every "tick" (one `bot/live_tick.py` run) loads `bot_state.json` (open
+positions, stop prices, the daily P&L accumulator, peak equity), runs one
+trading cycle, writes `positions_snapshot.json` (Alpaca's own current
+positions/equity), and saves state back. Without this persistence, a fresh
+process each tick would have no memory of positions it already opened.
+`trades.csv`, `daily_pnl.csv`, `bot_state.json`, and `positions_snapshot.json`
+get committed back to the repo after every tick, so the live record is
+durable and the Telegram reports (below) always see current state via
+`git pull`, regardless of where the trading loop itself runs.
 
-**`.github/workflows/live_trading.yml`** runs `python -m bot.live_tick`
-every 15 minutes (`workflow_dispatch` also lets you trigger a tick
-manually). Each run is a fresh process, so open positions, stop prices, and
-the daily P&L accumulator are persisted to `bot_state.json` and reloaded at
-the start of every tick (`Portfolio.to_state_dict`/`load_state_dict` in
-`bot/portfolio.py`, `TradingBot.save_state`/`load_state` in `bot/main.py`)
-— without this, a fresh process every 15 minutes would have no memory of
-positions it already opened. `trades.csv`, `daily_pnl.csv`, and
-`bot_state.json` are committed back to the repo after every tick (same
-pattern as `results/` for the backtest), so the live record is durable and
-`git pull` always gets you the latest state. `bot.log` is uploaded as a
-workflow run artifact (Actions tab → the run → Artifacts) instead of
-committed, to keep repo history small.
+**Pick exactly one of these two ways to run it -- never both at once**,
+since they'd both submit orders against the same paper account:
 
-Runs are serialized (`concurrency: group: live-trading,
-cancel-in-progress: false`) so two ticks can never race on the same state
-file or double-enter a position.
+### Option A: your own VPS, 24/7 (recommended for an extended run)
+
+`scripts/vps_tick.sh` runs one tick and pushes state back to GitHub; a
+cron job fires it every few minutes. See "VPS setup" below for the full
+walkthrough (Oracle Cloud, but any always-on Linux box works the same way).
+
+### Option B: GitHub Actions cron (no server to manage)
+
+`.github/workflows/live_trading.yml` runs the same `bot/live_tick.py` on a
+schedule instead -- no VM required, but GitHub's scheduler can run a few
+minutes late under load and a hosted runner has no local state between
+runs (handled the same way, via `bot_state.json`). Runs are serialized
+(`concurrency: group: live-trading, cancel-in-progress: false`) so two
+ticks can never race. **This workflow is currently disabled**
+(`gh workflow disable live_trading.yml`) because live trading moved to a
+VPS -- re-enable it (`gh workflow enable live_trading.yml`) only if you
+stop the VPS cron job first.
+
+### VPS setup (Oracle Cloud Always Free, or any Ubuntu VPS)
+
+1. Provision an Ubuntu 22.04+ VM (Oracle: an Ampere A1 Always Free shape is
+   plenty). Only inbound SSH (22) is needed -- the bot makes outbound calls
+   only.
+2. `git clone` this repo, create a venv, `pip install -r requirements.txt`.
+3. Copy `.env.example` to `.env` and fill in your real paper-trading keys.
+4. Give the VM push access: a GitHub fine-grained PAT scoped to just this
+   repo (Contents: read/write), set via
+   `git remote set-url origin https://<user>:<token>@github.com/<owner>/<repo>.git`.
+5. Test one tick by hand: `bash scripts/vps_tick.sh`.
+6. Automate it with cron, e.g. every 5 minutes:
+   ```
+   */5 * * * * cd /home/ubuntu/alpaca-trading-bot && bash scripts/vps_tick.sh >> bot_cron.log 2>&1
+   ```
+   `scripts/vps_tick.sh` already uses `flock` internally so an overrunning
+   tick never overlaps the next cron fire.
+7. Ubuntu's `cron` service starts on boot by default, so a VM reboot
+   resumes ticking on its own -- no systemd unit needed.
 
 Every closed trade in `trades.csv` now also logs `equity_at_entry` and
 `loss_pct_of_equity_at_entry` — the direct audit trail for "is the hard
