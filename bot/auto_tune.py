@@ -60,7 +60,6 @@ import csv
 import json
 import logging
 import os
-import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -69,7 +68,7 @@ from typing import Dict, List, Optional, Tuple
 import pandas as pd
 
 import config
-from bot import params_store
+from bot import params_store, tuner_agent
 from bot.backtest import (
     STRATEGY_CLASSES,
     BacktestMetrics,
@@ -78,6 +77,8 @@ from bot.backtest import (
     simulate_instrument,
 )
 from bot.broker import AlpacaBroker
+from bot.git_utils import commit_and_push_files, timestamped_commit_message
+from bot.state_utils import is_trading_halted
 
 logging.basicConfig(
     level=logging.INFO,
@@ -221,6 +222,17 @@ def _params_valid(strategy_name: str, params: dict) -> bool:
     return True
 
 
+def _clip(value, bounds: Tuple[float, float], is_int: bool):
+    """Clamp `value` into `bounds` (inclusive), rounding/typing the same way
+    _candidates_for() does. This is the single choke point every candidate
+    -- mechanically generated or agent-suggested -- passes through before
+    it can ever be evaluated, so nothing (including an LLM suggestion) can
+    land outside a slot's hardcoded [lo, hi] range."""
+    lo, hi = bounds
+    v = int(round(value)) if is_int else round(float(value), 4)
+    return max(lo, min(hi, v))
+
+
 def _candidates_for(value, bounds: Tuple[float, float], is_int: bool,
                      n_each_side: int = 2, rel_step: float = 0.15) -> List[float]:
     """A small, bounded grid of candidate values around `value`: up to
@@ -295,7 +307,25 @@ def _tune_strategy(strategy_name: str, baseline_params: dict,
 
     for slot in TUNE_SPECS.get(strategy_name, []):
         current_value = _get(best_params, slot.path)
-        for candidate_value in _candidates_for(current_value, slot.bounds, slot.is_int):
+        candidates = _candidates_for(current_value, slot.bounds, slot.is_int)
+
+        # Optional LLM-advisory layer (bot/tuner_agent.py, opt-in via
+        # config.TUNER_AGENT_ENABLED): if it suggested extra values to try
+        # for this exact strategy/parameter, merge them in -- but ALWAYS
+        # re-clipped to this slot's own hardcoded bounds, the same bounds
+        # every other candidate here is clipped to. This is the safety
+        # invariant: the agent can only ever widen the search within
+        # already-approved bounds, never choose a value outside them, and
+        # every merged-in candidate still has to survive the exact same
+        # MIN_TRADES / improvement-margin adoption gate below as any other
+        # candidate -- the agent proposes, it never adopts.
+        agent_values = tuner_agent.load_suggested_candidates(strategy_name, slot.path)
+        for raw_value in agent_values:
+            clipped = _clip(raw_value, slot.bounds, slot.is_int)
+            if clipped not in candidates:
+                candidates.append(clipped)
+
+        for candidate_value in candidates:
             if candidate_value == current_value:
                 continue
             trial = copy.deepcopy(best_params)
@@ -315,19 +345,6 @@ def _tune_strategy(strategy_name: str, baseline_params: dict,
 # ===========================================================================
 # Guards: circuit breaker + once-per-day
 # ===========================================================================
-
-def _circuit_breaker_tripped(state_file_path: Optional[str] = None) -> bool:
-    state_file_path = state_file_path or config.STATE_FILE_PATH
-    if not os.path.exists(state_file_path):
-        return False
-    try:
-        with open(state_file_path, "r") as f:
-            state = json.load(f)
-    except (json.JSONDecodeError, OSError) as e:
-        logger.warning("Could not read %s (%s); assuming NOT halted.", state_file_path, e)
-        return False
-    return bool(state.get("trading_halted", False))
-
 
 def _load_last_run_dates(history_file_path: str) -> Dict[str, "datetime.date"]:
     """Per-strategy UTC date of its most recent tuning-history row, however
@@ -391,41 +408,15 @@ def _write_raw_params_file(data: dict) -> None:
 
 
 # ===========================================================================
-# Git commit + push (same identity/pattern as scripts/vps_tick.sh)
+# Git commit + push (bot/git_utils.py -- same identity/pattern as
+# scripts/vps_tick.sh, shared with bot/tuner_agent.py)
 # ===========================================================================
 
 def _git_commit_and_push() -> None:
-    def run(cmd):
-        return subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True)
-
-    run(["git", "pull", "--rebase", "origin", "main", "--quiet"])
-    run(["git", "add", "-f", "strategy_params.json", "tuning_history.csv"])
-
-    staged_diff = run(["git", "diff", "--cached", "--quiet"])
-    if staged_diff.returncode == 0:
-        logger.info("No git changes to commit.")
-        return
-
-    commit_msg = (
-        f"Auto-tune strategy params {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')} "
-        f"[skip ci]"
+    commit_and_push_files(
+        ["strategy_params.json", "tuning_history.csv"],
+        timestamped_commit_message("Auto-tune strategy params"),
     )
-    commit = run(["git", "commit", "-m", commit_msg, "--quiet"])
-    if commit.returncode != 0:
-        logger.error("git commit failed: %s", commit.stderr.strip())
-        return
-
-    push = run(["git", "push", "origin", "HEAD:main", "--quiet"])
-    if push.returncode != 0:
-        logger.warning("git push failed, retrying once after pull --rebase: %s", push.stderr.strip())
-        run(["git", "pull", "--rebase", "origin", "main", "--quiet"])
-        push2 = run(["git", "push", "origin", "HEAD:main", "--quiet"])
-        if push2.returncode != 0:
-            logger.error("git push failed again, giving up: %s", push2.stderr.strip())
-        else:
-            logger.info("git push succeeded on retry.")
-    else:
-        logger.info("Committed and pushed strategy_params.json / tuning_history.csv.")
 
 
 # ===========================================================================
@@ -443,7 +434,7 @@ def run_auto_tune(bars_by_symbol: Optional[Dict[str, pd.DataFrame]] = None,
     """
     history_file_path = history_file_path or HISTORY_FILE_PATH
 
-    if _circuit_breaker_tripped():
+    if is_trading_halted():
         logger.warning(
             "Circuit breaker is tripped (bot_state.json trading_halted=true); "
             "refusing to re-tune while trading is halted. No-op."

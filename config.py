@@ -272,3 +272,23 @@ BACKTEST_PARAMS = {
     "results_png_path": os.path.join(LOG_DIR, "backtest_results.png"),
     "trades_csv_path": os.path.join(LOG_DIR, "backtest_trades.csv"),
 }
+
+# ---------------------------------------------------------------------------
+# Tuner agent (bot/tuner_agent.py) -- an OPT-IN, advisory-only LLM layer on
+# top of bot/auto_tune.py's existing deterministic backtest/grid-search
+# tuner. It never writes strategy_params.json itself and never bypasses any
+# existing adoption gate (MIN_TRADES, the improvement margin, or a
+# parameter's hardcoded [lo, hi] bounds in bot/auto_tune.py's TUNE_SPECS) --
+# it can only ever SUGGEST extra candidate values for auto_tune.py's
+# existing per-parameter search to try, which still have to beat the
+# current params by the same margin, on the same backtest, as any other
+# candidate. See README "Tuner agent (LLM advisory layer)".
+# ---------------------------------------------------------------------------
+TUNER_AGENT_ENABLED = os.getenv("TUNER_AGENT_ENABLED", "false").strip().lower() in ("1", "true", "yes")
+TUNER_AGENT_SUGGESTIONS_PATH = os.path.join(LOG_DIR, "tuner_agent_suggestions.json")
+TUNER_AGENT_LOG_PATH = os.path.join(LOG_DIR, "tuner_agent_log.csv")
+# How many days of tuning_history.csv the agent is shown as context.
+TUNER_AGENT_HISTORY_LOOKBACK_DAYS = 30
+# Model string passed to the Anthropic API. Overridable so a cheaper/newer
+# model can be swapped in without a code change.
+TUNER_AGENT_MODEL = os.getenv("TUNER_AGENT_MODEL", "claude-sonnet-4-5")

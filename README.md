@@ -380,6 +380,83 @@ Notes:
   exactly what changed and when, and `old_score`/`new_score`/`old_trades`/
   `new_trades` show why (or why not) a change was adopted.
 
+## Tuner agent (LLM advisory layer)
+
+`bot/tuner_agent.py` is an **opt-in** (`TUNER_AGENT_ENABLED=true`, default
+`false`) layer on top of the deterministic auto-tuner above. It exists to
+bring in context the mechanical 90-day backtest search structurally cannot
+see -- news, and a longer memory of past tuning runs -- without weakening
+any of the safety guarantees the deterministic tuner already has.
+
+**What it actually does, once a day:** reads `tuning_history.csv` (last 30
+days), the current `strategy_params.json`, a summary of live `trades.csv`,
+and (best-effort, if the `openbb` package is installed) recent news for
+each traded symbol. It hands all of that to an LLM and asks it to suggest
+extra candidate parameter values to try, and/or flag a strategy that looks
+structurally broken, as a single JSON response.
+
+**What it is never allowed to do, by construction, not by convention:**
+- **Never writes `strategy_params.json`.** Only `bot/auto_tune.py`'s
+  existing adoption logic (unchanged: `MIN_TRADES` + the improvement-margin
+  check) can do that. The agent can only add extra values to the list of
+  candidates `bot/auto_tune.py` was already going to backtest.
+- **Never picks a value outside a parameter's existing hardcoded bounds.**
+  `bot/auto_tune.py`'s `_clip()` re-clips every agent-suggested value into
+  the exact same `[lo, hi]` range (from `TUNE_SPECS`, see "Automated
+  parameter tuning" above) that every mechanically-generated candidate is
+  already clipped to. This is the single choke point every candidate
+  passes through regardless of where it came from --
+  `tests/test_tuner_agent.py`'s `TestAgentSuggestionsAlwaysClipped` proves
+  a wildly out-of-range suggestion (e.g. `999999.0`) still gets clipped to
+  the boundary before it's ever backtested.
+- **Never touches `bot/risk_manager.py`, the correlation filter, the
+  hard-stop logic, or the max-drawdown circuit breaker.** Same guarantee
+  `bot/auto_tune.py` already makes; this module doesn't import or write to
+  any of those files.
+- **Never runs while the circuit breaker is tripped** -- same guard as
+  `bot/auto_tune.py` (`bot/state_utils.py::is_trading_halted()`, shared by
+  both).
+- **A malformed, missing, or garbage LLM response is a safe no-op.** Every
+  value the LLM returns passes through `_sanitize_suggestions()`: unknown
+  strategy names, non-numeric values, and malformed flags are silently
+  dropped (logged, never raised). With the feature disabled (the default)
+  or the LLM call failing for any reason (no API key, network error,
+  invalid JSON back), `bot/auto_tune.py` behaves byte-for-byte identically
+  to a world where this module doesn't exist --
+  `tests/test_tuner_agent.py`'s `TestDisabledIsIdenticalToBeforeFeatureExisted`
+  proves this directly.
+
+**Setup (opt-in):**
+```
+pip install anthropic   # already in requirements.txt
+```
+Add to `.env` on the VPS (never paste a real API key into chat -- type it
+directly into `nano .env` on the machine):
+```
+TUNER_AGENT_ENABLED=true
+ANTHROPIC_API_KEY=sk-ant-...
+# Optional, defaults shown:
+# TUNER_AGENT_MODEL=claude-sonnet-4-5
+```
+Add one more crontab line, timed to run after `bot/auto_tune.py` usually
+finishes (it can take ~2 hours for a 90-day/3-strategy pass):
+```
+0 6 * * * cd /home/ubuntu/alpaca-trading-bot && venv/bin/python3 -m bot.tuner_agent >> tuner_agent.log 2>&1
+```
+Its suggestions land in `tuner_agent_suggestions.json` and get picked up by
+the *next* day's `bot/auto_tune.py` run -- so there's always at least one
+full day's lag between a suggestion appearing and it ever being backtested,
+let alone adopted. `tuner_agent_log.csv` (git-tracked, same pattern as
+`tuning_history.csv`) has one audit row per run: whether the LLM call
+succeeded, how many suggestions/flags were kept after sanitization, and the
+agent's own one-line summary.
+
+**Optional OpenBB enrichment:** if `pip install openbb` is also done and a
+data provider is configured, `bot/tuner_agent.py` will best-effort include
+recent news headlines per symbol in the context it gives the LLM. This is
+never required -- if `openbb` isn't installed, or a provider call fails,
+the agent just proceeds with empty market context and logs that it did so.
+
 ## How it works
 
 The bot trades 5 instruments, each with a strategy chosen for how that
