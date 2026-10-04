@@ -5,11 +5,5 @@ python-dotenv>=1.0.0
 matplotlib>=3.7.0
 requests>=2.31.0
 
-# Optional: only needed if TUNER_AGENT_ENABLED=true (see README "Tuner agent
-# (LLM advisory layer)"). bot/tuner_agent.py imports this lazily and
-# degrades to a no-op if it's missing, so it's listed here for convenience
-# but not force-installed by anything else in this repo.
-anthropic>=0.40.0
-
 # Test-only (tests/)
 pytest>=7.4.0

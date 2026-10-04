@@ -388,12 +388,34 @@ bring in context the mechanical 90-day backtest search structurally cannot
 see -- news, and a longer memory of past tuning runs -- without weakening
 any of the safety guarantees the deterministic tuner already has.
 
-**What it actually does, once a day:** reads `tuning_history.csv` (last 30
-days), the current `strategy_params.json`, a summary of live `trades.csv`,
-and (best-effort, if the `openbb` package is installed) recent news for
-each traded symbol. It hands all of that to an LLM and asks it to suggest
-extra candidate parameter values to try, and/or flag a strategy that looks
-structurally broken, as a single JSON response.
+**The reasoning is done by a scheduled Claude session, not an API call.**
+Same pattern as the [Telegram reports](#telegram-reports--written-by-scheduled-claude-cowork-sessions)
+above -- there is no `ANTHROPIC_API_KEY` anywhere in this feature. Once a
+day, a scheduled Claude session (set up with this project's scheduling
+tool, same as the report sessions):
+
+1. Pulls this repo (`add_repo`/clone, same as any other scheduled session
+   working on this project).
+2. Reads `tuning_history.csv` (last 30 days), the current
+   `strategy_params.json`, and a summary of live `trades.csv` directly out
+   of the repo -- and may do its own web research on the traded symbols
+   (SPY, QQQ, BTC/USD, GLD, USO) if that seems useful.
+3. Reasons about which extra parameter values might be worth trying, and/or
+   flags a strategy that looks structurally broken.
+4. Writes a small raw JSON object to a file (see `bot/tuner_agent.py`'s
+   module docstring for the exact schema: `strategy_suggestions`, `flags`,
+   `note`).
+5. Sets dummy Alpaca credentials for the step (`config.py` requires
+   `APCA_API_KEY_ID`/`APCA_API_SECRET_KEY` to import at all, even though
+   `--apply` never calls Alpaca's API -- same pattern `tests/conftest.py`
+   already uses: `export APCA_API_KEY_ID=test-key-id APCA_API_SECRET_KEY=test-secret-key`)
+   and runs `python3 -m bot.tuner_agent --apply <path-to-that-json>`.
+6. Reports back what it suggested and why.
+
+`bot/tuner_agent.py` itself never calls an LLM and never makes a network
+request -- it is purely the safety boundary that session's JSON output has
+to pass through (`apply_suggestions()`) before it can ever influence
+anything.
 
 **What it is never allowed to do, by construction, not by convention:**
 - **Never writes `strategy_params.json`.** Only `bot/auto_tune.py`'s
@@ -416,46 +438,33 @@ structurally broken, as a single JSON response.
 - **Never runs while the circuit breaker is tripped** -- same guard as
   `bot/auto_tune.py` (`bot/state_utils.py::is_trading_halted()`, shared by
   both).
-- **A malformed, missing, or garbage LLM response is a safe no-op.** Every
-  value the LLM returns passes through `_sanitize_suggestions()`: unknown
-  strategy names, non-numeric values, and malformed flags are silently
-  dropped (logged, never raised). With the feature disabled (the default)
-  or the LLM call failing for any reason (no API key, network error,
-  invalid JSON back), `bot/auto_tune.py` behaves byte-for-byte identically
-  to a world where this module doesn't exist --
+- **A malformed, missing, or garbage input is a safe no-op.** Whatever raw
+  JSON the scheduled session hands to `--apply` passes through
+  `_sanitize_suggestions()`: unknown strategy names, non-numeric values, and
+  malformed flags are silently dropped (logged, never raised). With the
+  feature disabled (the default), or if `--apply` is never run, or trading
+  is halted, `bot/auto_tune.py` behaves byte-for-byte identically to a world
+  where this module doesn't exist --
   `tests/test_tuner_agent.py`'s `TestDisabledIsIdenticalToBeforeFeatureExisted`
   proves this directly.
 
-**Setup (opt-in):**
-```
-pip install anthropic   # already in requirements.txt
-```
-Add to `.env` on the VPS (never paste a real API key into chat -- type it
-directly into `nano .env` on the machine):
+**Setup (opt-in):** no extra package, no API key. Add to `.env` on the VPS:
 ```
 TUNER_AGENT_ENABLED=true
-ANTHROPIC_API_KEY=sk-ant-...
-# Optional, defaults shown:
-# TUNER_AGENT_MODEL=claude-sonnet-4-5
 ```
-Add one more crontab line, timed to run after `bot/auto_tune.py` usually
-finishes (it can take ~2 hours for a 90-day/3-strategy pass):
-```
-0 6 * * * cd /home/ubuntu/alpaca-trading-bot && venv/bin/python3 -m bot.tuner_agent >> tuner_agent.log 2>&1
-```
+Set up one more scheduled Claude session (same mechanism as the Telegram
+report sessions above), timed to run after `bot/auto_tune.py` usually
+finishes (it can take ~2 hours for a 90-day/3-strategy pass) -- e.g. daily
+around 6 AM UTC -- with a standalone prompt instructing it to do the 6 steps
+above against this repo (`<owner>/<repo>`).
+
 Its suggestions land in `tuner_agent_suggestions.json` and get picked up by
 the *next* day's `bot/auto_tune.py` run -- so there's always at least one
 full day's lag between a suggestion appearing and it ever being backtested,
 let alone adopted. `tuner_agent_log.csv` (git-tracked, same pattern as
-`tuning_history.csv`) has one audit row per run: whether the LLM call
-succeeded, how many suggestions/flags were kept after sanitization, and the
-agent's own one-line summary.
-
-**Optional OpenBB enrichment:** if `pip install openbb` is also done and a
-data provider is configured, `bot/tuner_agent.py` will best-effort include
-recent news headlines per symbol in the context it gives the LLM. This is
-never required -- if `openbb` isn't installed, or a provider call fails,
-the agent just proceeds with empty market context and logs that it did so.
+`tuning_history.csv`) has one audit row per `--apply` run: how many
+suggestions/flags were kept after sanitization, and the session's own
+one-line summary of its reasoning.
 
 ## How it works
 

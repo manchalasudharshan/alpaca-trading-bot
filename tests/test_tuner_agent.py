@@ -1,9 +1,10 @@
 """
 tests/test_tuner_agent.py
 
-Covers bot/tuner_agent.py (the opt-in, advisory-only LLM layer on top of
-bot/auto_tune.py's deterministic tuner) and its one integration point with
-bot/auto_tune.py:
+Covers bot/tuner_agent.py (the opt-in, advisory-only layer on top of
+bot/auto_tune.py's deterministic tuner, fed by a scheduled Claude session's
+own reasoning rather than an API call from this process) and its one
+integration point with bot/auto_tune.py:
 
   1. load_suggested_candidates() returns [] (never raises) for every
      failure mode: disabled, missing file, malformed JSON, wrong shape,
@@ -12,24 +13,21 @@ bot/auto_tune.py:
   2. _sanitize_suggestions() drops anything untrusted: unknown strategy
      names, non-numeric values, malformed flags, non-dict/non-list shapes
      -- it never raises on garbage input.
-  3. _parse_llm_json() tolerates a markdown-fenced response and returns
-     None (not an exception) on invalid JSON.
-  4. generate_suggestions() end-to-end: no-ops when disabled or when the
-     circuit breaker is tripped; writes an empty-but-valid suggestions file
-     when the LLM call fails; writes sanitized suggestions when it
-     succeeds. Never touches git (skip_git=True) or the network (the LLM
-     call is injected).
-  5. THE critical safety integration test: bot.auto_tune._tune_strategy()
+  3. apply_suggestions() end-to-end: no-ops when disabled or when the
+     circuit breaker is tripped; sanitizes and writes a well-formed raw
+     dict; never touches git (skip_git=True) or the network.
+  4. THE critical safety integration test: bot.auto_tune._tune_strategy()
      merges in agent-suggested candidates, but ALWAYS re-clips them to the
-     same hardcoded bounds every other candidate uses -- an agent
-     suggestion wildly outside a parameter's safe range can never reach
-     the backtest evaluator unclipped.
-  6. Regression guarantee: with the feature disabled (the default), a
+     same hardcoded bounds every other candidate uses -- a suggestion
+     wildly outside a parameter's safe range can never reach the backtest
+     evaluator unclipped.
+  5. Regression guarantee: with the feature disabled (the default), a
      tuning run behaves identically to a world where bot/tuner_agent.py
      never existed.
 """
 
 import json
+import os
 
 import pytest
 
@@ -178,29 +176,7 @@ class TestSanitizeSuggestions:
 
 
 # ===========================================================================
-# 3. _parse_llm_json()
-# ===========================================================================
-
-class TestParseLlmJson:
-    def test_plain_json(self):
-        assert tuner_agent._parse_llm_json('{"a": 1}') == {"a": 1}
-
-    def test_markdown_fenced_json_is_tolerated(self):
-        text = '```json\n{"a": 1}\n```'
-        assert tuner_agent._parse_llm_json(text) == {"a": 1}
-
-    def test_invalid_json_returns_none_not_exception(self):
-        assert tuner_agent._parse_llm_json("not json at all {{{") is None
-
-    def test_none_input_returns_none(self):
-        assert tuner_agent._parse_llm_json(None) is None
-
-    def test_non_dict_json_returns_none(self):
-        assert tuner_agent._parse_llm_json("[1, 2, 3]") is None
-
-
-# ===========================================================================
-# 4. generate_suggestions() end-to-end
+# 3. apply_suggestions() end-to-end
 # ===========================================================================
 
 @pytest.fixture
@@ -208,18 +184,15 @@ def agent_paths(tmp_path):
     return {
         "suggestions_path": str(tmp_path / "tuner_agent_suggestions.json"),
         "log_path": str(tmp_path / "tuner_agent_log.csv"),
-        "history_path": str(tmp_path / "tuning_history.csv"),
-        "trades_csv_path": str(tmp_path / "trades.csv"),
-        "params_file_path": str(tmp_path / "strategy_params.json"),
     }
 
 
-class TestGenerateSuggestionsEndToEnd:
+class TestApplySuggestionsEndToEnd:
     def test_noop_when_disabled(self, agent_paths, monkeypatch):
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", False)
-        result = tuner_agent.generate_suggestions(skip_git=True, **agent_paths)
+        result = tuner_agent.apply_suggestions({"strategy_suggestions": {}}, skip_git=True, **agent_paths)
         assert result == {"ran": False, "reason": "disabled"}
-        assert not __import__("os").path.exists(agent_paths["suggestions_path"])
+        assert not os.path.exists(agent_paths["suggestions_path"])
 
     def test_noop_when_circuit_breaker_tripped(self, agent_paths, monkeypatch, tmp_path):
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
@@ -227,38 +200,34 @@ class TestGenerateSuggestionsEndToEnd:
         state_file.write_text(json.dumps({"trading_halted": True}))
         monkeypatch.setattr(config, "STATE_FILE_PATH", str(state_file))
 
-        result = tuner_agent.generate_suggestions(skip_git=True, **agent_paths)
+        result = tuner_agent.apply_suggestions({"strategy_suggestions": {}}, skip_git=True, **agent_paths)
         assert result == {"ran": False, "reason": "circuit_breaker_tripped"}
 
-    def test_llm_failure_writes_empty_valid_suggestions_file(self, agent_paths, monkeypatch, tmp_path):
+    def test_malformed_raw_writes_empty_valid_suggestions_file(self, agent_paths, monkeypatch, tmp_path):
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
         monkeypatch.setattr(config, "STATE_FILE_PATH", str(tmp_path / "bot_state.json"))
 
-        result = tuner_agent.generate_suggestions(
-            call_llm_fn=lambda prompt: None, skip_git=True, **agent_paths,
-        )
+        result = tuner_agent.apply_suggestions("not even a dict", skip_git=True, **agent_paths)
         assert result["ran"] is True
-        assert result["llm_call_succeeded"] is False
+        assert result["suggestions_kept"] == 0
 
         with open(agent_paths["suggestions_path"]) as f:
             data = json.load(f)
         assert data["strategy_suggestions"] == {}
         assert "generated_at" in data
 
-    def test_llm_success_writes_sanitized_suggestions(self, agent_paths, monkeypatch, tmp_path):
+    def test_well_formed_raw_writes_sanitized_suggestions(self, agent_paths, monkeypatch, tmp_path):
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
         monkeypatch.setattr(config, "STATE_FILE_PATH", str(tmp_path / "bot_state.json"))
 
-        fake_response = json.dumps({
+        raw = {
             "strategy_suggestions": {"momentum_breakout": {"volume_multiple": [1.5, 1.9]}},
             "flags": [{"strategy": "momentum_breakout", "concern": "thin volume feed"}],
             "note": "volume data looks unusually thin",
-        })
+        }
 
-        result = tuner_agent.generate_suggestions(
-            call_llm_fn=lambda prompt: fake_response, skip_git=True, **agent_paths,
-        )
-        assert result["llm_call_succeeded"] is True
+        result = tuner_agent.apply_suggestions(raw, skip_git=True, **agent_paths)
+        assert result["ran"] is True
         assert result["suggestions_kept"] == 2
         assert result["flags"] == [{"strategy": "momentum_breakout", "concern": "thin volume feed"}]
 
@@ -266,34 +235,36 @@ class TestGenerateSuggestionsEndToEnd:
             data = json.load(f)
         assert data["strategy_suggestions"]["momentum_breakout"]["volume_multiple"] == [1.5, 1.9]
 
-    def test_prompt_never_crashes_on_missing_context_files(self, agent_paths, monkeypatch, tmp_path):
-        """None of history/trades/params files exist -- must degrade to empty
-        context, not crash building the prompt."""
+        with open(agent_paths["log_path"]) as f:
+            log_lines = f.read().strip().splitlines()
+        assert len(log_lines) == 2  # header + one row
+
+    def test_apply_is_idempotent_safe_to_rerun(self, agent_paths, monkeypatch, tmp_path):
+        """Applying twice (e.g. a retried cron run) must not crash or
+        corrupt the suggestions file -- it should just overwrite it."""
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
         monkeypatch.setattr(config, "STATE_FILE_PATH", str(tmp_path / "bot_state.json"))
 
-        captured = {}
+        raw = {"strategy_suggestions": {"trend_following": {"fast_ema": [40]}}}
+        tuner_agent.apply_suggestions(raw, skip_git=True, **agent_paths)
+        tuner_agent.apply_suggestions(raw, skip_git=True, **agent_paths)
 
-        def fake_llm(prompt):
-            captured["prompt"] = prompt
-            return None
-
-        tuner_agent.generate_suggestions(call_llm_fn=fake_llm, skip_git=True, **agent_paths)
-        assert "prompt" in captured
-        assert "strategy_suggestions" in captured["prompt"]  # the instructed output shape
+        with open(agent_paths["suggestions_path"]) as f:
+            data = json.load(f)
+        assert data["strategy_suggestions"]["trend_following"]["fast_ema"] == [40]
 
 
 # ===========================================================================
-# 5. THE critical safety test: auto_tune always clips agent suggestions
+# 4. THE critical safety test: auto_tune always clips agent suggestions
 # ===========================================================================
 
 class TestAgentSuggestionsAlwaysClipped:
     def test_wildly_out_of_bounds_suggestion_is_clipped_before_evaluation(
         self, tmp_path, monkeypatch,
     ):
-        """An agent suggestion far outside volume_multiple's [1.2, 3.5]
-        bound must never reach _evaluate() unclipped -- bot.auto_tune._clip()
-        must catch it regardless of source."""
+        """A suggestion far outside volume_multiple's [1.2, 3.5] bound must
+        never reach _evaluate() unclipped -- bot.auto_tune._clip() must
+        catch it regardless of source."""
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
         suggestions_file = tmp_path / "suggestions.json"
         suggestions_file.write_text(json.dumps({
@@ -326,13 +297,13 @@ class TestAgentSuggestionsAlwaysClipped:
         # happens BEFORE evaluation, not just on the final pick.
         assert all(lo <= v <= hi for v in seen_values)
         # And the huge/negative raw suggestions must have actually been
-        # exercised (clipped to the boundary), proving the agent's values
-        # were used at all, just safely.
+        # exercised (clipped to the boundary), proving the suggestions were
+        # used at all, just safely.
         assert hi in seen_values or lo in seen_values
 
     def test_agent_candidate_still_subject_to_min_trades_gate(self, tmp_path, monkeypatch):
-        """An agent-suggested value that produces too few trades must still
-        be rejected, exactly like any mechanically-generated candidate."""
+        """A suggested value that produces too few trades must still be
+        rejected, exactly like any mechanically-generated candidate."""
         monkeypatch.setattr(config, "TUNER_AGENT_ENABLED", True)
         suggestions_file = tmp_path / "suggestions.json"
         suggestions_file.write_text(json.dumps({
@@ -356,7 +327,7 @@ class TestAgentSuggestionsAlwaysClipped:
 
 
 # ===========================================================================
-# 6. Regression: disabled-by-default behaves exactly like before this
+# 5. Regression: disabled-by-default behaves exactly like before this
 #    feature existed
 # ===========================================================================
 
