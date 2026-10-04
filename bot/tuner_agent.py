@@ -44,13 +44,28 @@ RAW_SCHEMA_EXAMPLE (what the scheduled session writes before calling
 tunable-parameter list):
 {
   "strategy_suggestions": {
-    "momentum_breakout": {"volume_multiple": [1.5, 1.8]}
+    "momentum_breakout": {"volume_multiple": [1.5, 1.8]},
+    "mean_reversion": {"entry_std_dev.SPY": [2.4, 3.0]}
   },
   "flags": [
     {"strategy": "momentum_breakout", "concern": "score stayed deeply negative across 3 cycles"}
   ],
   "note": "one short sentence summarizing the reasoning"
 }
+
+IMPORTANT for per-symbol parameters (currently just mean_reversion's
+entry_std_dev, which is stored per-symbol in strategy_params.json as
+{"entry_std_dev": {"SPY": ..., "QQQ": ...}}): the key here is NOT the bare
+parameter name. It's the dotted path auto_tune.py's TUNE_SPECS actually
+tunes -- "entry_std_dev.SPY" or "entry_std_dev.QQQ" -- because
+load_suggested_candidates() below looks up `".".join(param_path)` against
+whatever auto_tune.py passes it (e.g. `("entry_std_dev", "SPY")` ->
+"entry_std_dev.SPY"). A suggestion filed under the bare key
+"entry_std_dev" is not malformed -- it parses fine -- it just never
+matches any lookup auto_tune.py actually makes, so it silently never gets
+used. Every other tunable parameter in this codebase is single-valued
+(not per-symbol), so its key is just its own name, e.g. "volume_multiple"
+or "fast_ema".
 """
 
 import csv
