@@ -1,10 +1,10 @@
 {
   "_comment": "Auto-tunable SIGNAL/INDICATOR parameters only, per strategy. Seeded from config.py's hardcoded defaults. bot/auto_tune.py is the only writer of this file (see bot/auto_tune.py and README 'Automated parameter tuning'); each strategy class loads from here at __init__ and falls back to its config.py default on any missing/corrupt/missing-key condition. Risk sizing, the correlation filter, hard-stop-never-widens logic, and the max-drawdown circuit breaker are NEVER stored here and NEVER touched by the tuner -- those stay hardcoded in risk_manager.py / config.py (RISK_PARAMS, MAX_DRAWDOWN_PCT).",
   "mean_reversion": {
-    "lookback": 20,
+    "lookback": 26,
     "entry_std_dev": {
-      "SPY": 2.2,
-      "QQQ": 2.3
+      "SPY": 2.86,
+      "QQQ": 2.645
     },
     "trend_filter_period": 100
   },

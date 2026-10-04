@@ -1,0 +1,4 @@
+timestamp,strategy,applied,old_params,new_params,old_score,new_score,old_trades,new_trades
+2026-10-04T03:24:59.872785+00:00,mean_reversion,True,"{""entry_std_dev"": {""QQQ"": 2.3, ""SPY"": 2.2}, ""lookback"": 20, ""trend_filter_period"": 100}","{""entry_std_dev"": {""QQQ"": 2.645, ""SPY"": 2.86}, ""lookback"": 26, ""trend_filter_period"": 100}",-460.4781,-179.5513,70,17
+2026-10-04T04:58:31.888244+00:00,momentum_breakout,False,"{""lookback"": 30, ""trailing_stop_atr_multiple"": 1.8, ""volume_multiple"": 2.2}","{""lookback"": 30, ""trailing_stop_atr_multiple"": 1.8, ""volume_multiple"": 2.2}",-573.3101,-573.3101,261,261
+2026-10-04T05:21:46.270908+00:00,trend_following,False,"{""fast_ema"": 50, ""slow_ema"": 200, ""trailing_stop_atr_multiple"": 3.0}","{""fast_ema"": 50, ""slow_ema"": 200, ""trailing_stop_atr_multiple"": 3.0}",-5.3416,-5.3416,46,46
