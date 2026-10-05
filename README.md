@@ -473,19 +473,29 @@ market actually behaves — the parameters below are read from `config.py`,
 so if you retune them (see [Backtesting](#backtesting)) this section's
 numbers will drift from the file; the file is always the source of truth.
 
-### 5-minute timeframe (all instruments)
+### 5-minute timeframe (SPY/QQQ/GLD/USO) and 1-hour (BTC/USD)
 
-All 5 instruments now run on **5-minute candles** (`timeframe="5Min"` in
-`config.INSTRUMENTS`), previously 15Min (SPY/QQQ), 1Hour (BTC/USD), and
-4Hour (GLD/USO). The live bot's cron tick fires every 5 minutes, but
-`bot/main.py` only evaluates a symbol's strategy when a *new* bar has
-closed for that symbol's timeframe -- with the old timeframes, most ticks
-had no chance of producing a signal for most symbols (e.g. 11 of every 12
-ticks did nothing for an hourly/4-hourly instrument). Moving every
-instrument to 5Min aligns strategy evaluation with the tick cadence, so
-each tick has a genuine chance to see a freshly-closed bar and run real
-strategy logic. This changes *how often* a signal can fire, not *what*
-counts as a signal -- the SMA/EMA/breakout math is unchanged.
+SPY, QQQ, GLD, and USO run on **5-minute candles** (`timeframe="5Min"` in
+`config.INSTRUMENTS`), previously 15Min (SPY/QQQ) and 4Hour (GLD/USO). The
+live bot's cron tick fires every 5 minutes, but `bot/main.py` only
+evaluates a symbol's strategy when a *new* bar has closed for that
+symbol's timeframe -- with the old timeframes, most ticks had no chance of
+producing a signal for most symbols (e.g. 11 of every 12 ticks did nothing
+for an hourly/4-hourly instrument). Moving these 4 to 5Min aligns strategy
+evaluation with the tick cadence, so each tick has a genuine chance to see
+a freshly-closed bar and run real strategy logic. This changes *how often*
+a signal can fire, not *what* counts as a signal -- the SMA/EMA math is
+unchanged.
+
+BTC/USD runs on **1-hour candles** — its original design timeframe,
+reverted back on 2026-10-05 after a brief stint on 5Min; see the "Bitcoin"
+section below for why. The 5-minute cron tick still fires for BTC/USD just
+like every other instrument: `bot/main.py`'s last_seen_bar gate just means
+most of those ticks see "no new 1-hour bar yet" and skip it cheaply, while
+a genuinely new hourly close is still always picked up and evaluated
+within 5 minutes of happening (the next tick) -- there's no gap in
+coverage, just some skipped/no-op ticks for this one instrument, same as
+every instrument had under the old per-strategy timeframes.
 
 **Real bug this exposed (found and fixed 2026-10-03):** after this switch,
 BTC/USD (24/7 crypto) never once saw a new closed bar across 8+ days of
@@ -507,17 +517,22 @@ which is why this went unnoticed until BTC/USD's cadence was investigated
 directly. See `tests/test_broker.py` for a regression test that reproduces
 the exact failure mode.
 
-**This is not free, though:** every threshold below (entry std-dev bands,
-EMA periods, volume multiples, trailing-stop ATR multiples) was tuned
-against 15Min/1Hour/4Hour data. The same numeric values can behave very
-differently on 5Min bars (faster-moving indicators, more noise, more
-frequent entries), so **treat every parameter in this section as stale
-until `bot/auto_tune.py` has re-calibrated it against live 5Min data** (it
-runs at most once/day per strategy -- see "Automated parameter tuning"
-below) or you've re-run `bot/backtest.py` against a fresh 5Min historical
-window. Until then, the historical backtest numbers quoted in this section
-reflect the *old* timeframes and should be read as "how this strategy's
-logic performed in the past," not as a live expectation at 5Min.
+**This is not free, though, for the 4 instruments that did move to 5Min:**
+every SPY/QQQ/GLD/USO threshold below (entry std-dev bands, EMA periods)
+was tuned against 15Min/4Hour data. The same numeric values can behave
+very differently on 5Min bars (faster-moving indicators, more noise, more
+frequent entries), so **treat every SPY/QQQ/GLD/USO parameter in this
+section as stale until `bot/auto_tune.py` has re-calibrated it against
+live 5Min data** (it runs at most once/day per strategy -- see "Automated
+parameter tuning" below) or you've re-run `bot/backtest.py` against a
+fresh 5Min historical window. Until then, the historical backtest numbers
+quoted in those sections reflect the *old* timeframes and should be read
+as "how this strategy's logic performed in the past," not as a live
+expectation at 5Min. **BTC/USD is the exception**: its parameters below
+were originally tuned on 1Hour data, moved to 5Min, then moved back to
+1Hour on 2026-10-05 (see its section below) -- so its numbers are not
+stale in the same way, though they still predate live BTC/USD trading
+itself and should be read as backtest history, not a live guarantee.
 
 ### S&P 500 (SPY) — Mean Reversion, 5-minute candles
 Indices tend to overextend in one direction over a few hours and then
@@ -562,10 +577,10 @@ deviations** (originally 1.8σ).
 > historical window before trusting it, or treat SPY/QQQ as paper-trade-only
 > until a live range-bound period is observed.
 
-### Bitcoin (BTC/USD) — Momentum Breakout, 5-minute candles
+### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
 Crypto trends harder than indices, so instead of fading the move the bot
 rides it. When price closes above the prior **30-period** high on the
-5-minute chart with volume ≥ **2.2×** the 30-period average, it goes long;
+1-hour chart with volume ≥ **2.2×** the 30-period average, it goes long;
 a close below the prior 30-period low with the same volume confirmation
 exits the long or opens a short. A **1.8×ATR** trailing stop ratchets in
 the position's favor every bar.
@@ -577,18 +592,34 @@ the position's favor every bar.
 > ceiling). Tightened volume to 2.2× and tried trailing-stop multiples of
 > 2.2×, 1.8×, and 1.5× ATR to find the drawdown/Sharpe sweet spot — **1.8×
 > was best** (Sharpe **+1.05**, MaxDD **-15.82%**, +23.6% return); 2.2× and
-> 1.5× were both worse on both metrics.
+> 1.5× were both worse on both metrics. All of the above is on 1Hour data,
+> this strategy's original and current live timeframe.
 >
-> **Still just over the line:** -15.82% is ~0.8 points past the 15% MaxDD
-> ceiling despite four tuning rounds, with a materially positive Sharpe.
-> This is the closest of the three failing instruments to passing —
-> reasonable next steps if you want to keep pushing it (not yet done):
-> tightening `RISK_PARAMS["max_loss_per_trade_of_equity"]` specifically
-> for BTC (smaller per-trade risk budget shrinks cumulative drawdown
-> directly, at the cost of smaller position sizes), or re-testing the
-> 30-period/2.2×-volume combination against a different 6-month window.
-> **Recommendation: keep on paper trading until MaxDD is confirmed under
-> 15% on at least one more independent window.**
+> **2026-10-05 timeframe incident:** this strategy was swept into the
+> "move everything to 5Min" change along with the other 4 instruments
+> (same `volume_multiple`/`lookback`/`trailing_stop_atr_multiple` values,
+> just a different candle size). On 5Min candles the live bot went days
+> without a single trade, `tuning_history.csv` showed a 90-day backtest
+> score stuck at -573 across 261 trades with the auto-tuner unable to find
+> any improving parameter, and a direct same-params/same-code 1Hour-vs-5Min
+> 6-month comparison confirmed why: 1Hour scores Sharpe **+1.03**, profit
+> factor **1.40**, MaxDD **-8.6%**, total return **+11.6%** (66 trades);
+> 5Min scores Sharpe **-7.57**, profit factor **0.35**, MaxDD **-53.5%**,
+> total return **-53.3%** (568 trades) — same rules, 8.6x more trades,
+> mostly on volume noise rather than real moves (BTC/USD's 5Min volume per
+> bar is tiny and swings 0.15x-3x of its own average within minutes).
+> Reverted BTC/USD to `timeframe="1Hour"` in `config.INSTRUMENTS`; the
+> other 4 instruments were unaffected and stayed on 5Min.
+>
+> **Current read:** on its native 1Hour timeframe this is the
+> best-performing of the three non-trivial strategies in this doc — a
+> genuinely positive Sharpe and a MaxDD *under* the 15% ceiling (-8.6%,
+> vs. the -15.82% quoted above from an earlier tuning round on a different
+> window). Still only backtest evidence, not live performance.
+> **Recommendation: let it accumulate real 1Hour trades on paper before
+> treating the backtest numbers as a live guarantee**, and watch
+> `tuning_history.csv` over the next several auto-tune runs to confirm the
+> score stays positive now that the timeframe matches the design.
 
 ### Gold (GLD) — Trend Following, 5-minute candles
 Commodities move in cleaner waves, and intraday whipsaws just add noise,
@@ -700,17 +731,19 @@ parameter tried):
 |---|---|---|---|
 | SPY | -2.71 | -29.22% | ❌ No — fails both. Regime mismatch, not a tunable parameter (see note above). |
 | QQQ | -0.79 | -16.03% | ❌ No — close, but fails both. |
-| BTC/USD | +1.05 | -15.82% | ❌ No — Sharpe is good, MaxDD just over the line. |
+| BTC/USD | +1.03 | -8.6% | ✅ Yes — on its native 1Hour timeframe (see 2026-10-05 note in the Bitcoin section above); earlier rows on this instrument (+1.05/-15.82%, from an older tuning round/window) and the brief 5Min mismatch (-7.57/-53.5%) are both superseded by this result. |
 | GLD | +0.98 | -1.31% | ✅ Yes |
 | USO | +3.37 | -3.42% | ✅ Yes (only 1 trade in 6 months — weak sample, read loosely) |
 
-**Recommendation: do not go live on SPY, QQQ, or BTC/USD with these
-parameters.** GLD and USO pass but on very few trades each, so "passing"
-there is a weak signal rather than a strong one. If you want to keep
-iterating instead of leaving these on paper: see the specific next-step
-suggestions under each instrument above — this file documents exactly
-what was tried and why it didn't fully close the gap, so you're not
-starting from zero.
+**Recommendation: do not go live on SPY or QQQ with these parameters.**
+BTC/USD now passes the bar on its corrected (1Hour) timeframe, but is
+still backtest evidence only — give it real paper-trading time before
+treating that as a live guarantee. GLD and USO pass but on very few
+trades each, so "passing" there is a weak signal rather than a strong
+one. If you want to keep iterating on SPY/QQQ instead of leaving them on
+paper: see the specific next-step suggestions under each instrument
+above — this file documents exactly what was tried and why it didn't
+fully close the gap, so you're not starting from zero.
 
 ## Known limitations / things to review before going live
 

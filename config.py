@@ -62,27 +62,52 @@ class Instrument:
     timeframe: str               # Alpaca TimeFrame string, e.g. "15Min", "1Hour", "4Hour"
 
 
-# NOTE on timeframe="5Min" below: the live bot's cron tick fires every 5
-# minutes (see scripts/vps_tick.sh / .github/workflows/live_trading.yml),
-# but bot/main.py._process_instrument only evaluates a symbol's strategy
-# when a NEW bar has closed for that symbol's timeframe (the last_seen_bar
-# check). With the old 15Min/1Hour/4Hour timeframes, most ticks did nothing
-# for most symbols -- a tick could fire 11 times between two 1Hour closes
-# with zero chance of a signal. Setting every instrument to "5Min" aligns
-# the strategy evaluation cadence with the tick cadence, so (almost) every
-# tick has a genuine chance to see a freshly-closed bar and run real
-# strategy logic -- this does NOT change what counts as a signal (same
-# SMA/EMA/breakout rules), only how often a fresh bar is available to
-# evaluate them against. See bot/broker.py's _lookback_window /
-# _estimate_bar_count for how the bar-fetch window was re-checked against
-# this change, and the README's "How it works" section for the note that
-# all 5 strategies' tuned parameters need re-validation at this finer
-# granularity (the auto-tuner was previously tuned on 15Min/1Hour/4Hour
-# data and has not yet seen a 5Min regime).
+# NOTE on timeframe="5Min" below (SPY/QQQ/GLD/USO -- NOT BTC/USD, see next
+# note): the live bot's cron tick fires every 5 minutes (see
+# scripts/vps_tick.sh / .github/workflows/live_trading.yml), but
+# bot/main.py._process_instrument only evaluates a symbol's strategy when a
+# NEW bar has closed for that symbol's timeframe (the last_seen_bar check).
+# With the old 15Min/1Hour/4Hour timeframes, most ticks did nothing for
+# most symbols -- a tick could fire 11 times between two 1Hour closes with
+# zero chance of a signal. Setting these 4 instruments to "5Min" aligns the
+# strategy evaluation cadence with the tick cadence, so (almost) every tick
+# has a genuine chance to see a freshly-closed bar and run real strategy
+# logic -- this does NOT change what counts as a signal (same SMA/EMA
+# rules), only how often a fresh bar is available to evaluate them against.
+# See bot/broker.py's _lookback_window / _estimate_bar_count for how the
+# bar-fetch window was re-checked against this change.
+#
+# NOTE on BTC/USD's timeframe="1Hour" (reverted from "5Min" on 2026-10-05):
+# momentum_breakout was originally designed and tuned on 1Hour candles (see
+# MOMENTUM_BREAKOUT_PARAMS' history below), then swept into the "move
+# everything to 5Min" change above along with the other 4 instruments.
+# That was a mistake specific to this one strategy: a live run turned up a
+# persistently-negative 90-day backtest score the auto-tuner could never
+# improve, and a direct same-params/same-code 1Hour-vs-5Min comparison
+# (6-month backtest) showed why --
+#   1Hour: 66 trades, win rate 27.3%, profit factor 1.40, Sharpe +1.03,
+#          max drawdown -8.6%, total return +11.6%
+#   5Min:  568 trades, win rate 14.6%, profit factor 0.35, Sharpe -7.57,
+#          max drawdown -53.5%, total return -53.3%
+# Same strategy, same risk sizing, same slippage model -- squeezed onto
+# 5-minute crypt candles, the breakout+volume-spike signal fires 8.6x more
+# often on noise rather than real moves (BTC/USD's 5Min volume per bar is
+# tiny and swings 0.15x-3x of its own rolling average within minutes). The
+# fix is the candle size, not the strategy or its parameters, so BTC/USD
+# alone moved back to "1Hour" while SPY/QQQ/GLD/USO stay on "5Min".
+#
+# This does NOT reintroduce the "most ticks wasted" problem described
+# above in a way that matters: the live tick still fires every 5 minutes,
+# and bot/main.py's last_seen_bar gate just means most of those ticks see
+# "no new bar yet" for BTC/USD and skip it cheaply -- a new 1Hour close is
+# still always picked up and evaluated within 5 minutes of it happening
+# (the next tick), which is what "within the ticking cycle" means here.
+# The other 4 instruments are unaffected and keep evaluating on every tick
+# as before.
 INSTRUMENTS: List[Instrument] = [
     Instrument(symbol="SPY", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
     Instrument(symbol="QQQ", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
-    Instrument(symbol="BTC/USD", asset_class=CRYPTO, strategy="momentum_breakout", timeframe="5Min"),
+    Instrument(symbol="BTC/USD", asset_class=CRYPTO, strategy="momentum_breakout", timeframe="1Hour"),
     Instrument(symbol="GLD", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
     Instrument(symbol="USO", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
 ]
@@ -139,7 +164,11 @@ MOMENTUM_BREAKOUT_PARAMS = {
     # a sign of too many false/weak breakouts, not a bad edge. A longer
     # channel selects for more significant breakouts.
     "lookback": 30,
-    "timeframe": "5Min",
+    # Descriptive only -- the actual live/backtest fetch timeframe comes
+    # from config.INSTRUMENTS' BTC/USD entry, not this field (nothing reads
+    # params["timeframe"]). Kept in sync with it for clarity. Reverted to
+    # "1Hour" on 2026-10-05 -- see the long note above INSTRUMENTS for why.
+    "timeframe": "1Hour",
     # Raised again from 2.0x -- the Sharpe +0.50 run was still carrying a
     # 23.36% max drawdown, over the user's 15% ceiling, so the volume bar
     # is tightened further to admit only the most convincing breakouts.
