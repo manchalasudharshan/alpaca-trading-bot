@@ -3,10 +3,10 @@
   "mean_reversion": {
     "lookback": 26,
     "entry_std_dev": {
-      "SPY": 2.86,
+      "SPY": 3.5,
       "QQQ": 2.645
     },
-    "trend_filter_period": 100
+    "trend_filter_period": 130
   },
   "momentum_breakout": {
     "lookback": 30,
