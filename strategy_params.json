@@ -14,8 +14,8 @@
     "trailing_stop_atr_multiple": 1.8
   },
   "trend_following": {
-    "fast_ema": 50,
-    "slow_ema": 200,
-    "trailing_stop_atr_multiple": 3.0
+    "fast_ema": {"GLD": 50, "USO": 50},
+    "slow_ema": {"GLD": 200, "USO": 200},
+    "trailing_stop_atr_multiple": {"GLD": 3.0, "USO": 3.0}
   }
 }

@@ -165,16 +165,27 @@ class MomentumBreakoutStrategy:
             reason="no breakout / stop not hit",
         )
 
-    def initial_trailing_stop(self, side: str, entry_price: float, entry_atr: float) -> float:
-        """Stop level immediately after entry, before any ratcheting."""
+    def initial_trailing_stop(self, side: str, entry_price: float, entry_atr: float,
+                               symbol: str = None) -> float:
+        """Stop level immediately after entry, before any ratcheting.
+
+        `symbol` is accepted but unused -- this strategy only ever trades
+        one symbol (BTC/USD), so trailing_stop_atr_mult is a single scalar,
+        not a per-symbol dict. It exists purely so bot/main.py and
+        bot/backtest.py's shared call sites (which also call
+        TrendFollowingStrategy, where `symbol` does matter -- see that
+        module) don't need per-strategy branching.
+        """
         offset = self.trailing_stop_atr_mult * entry_atr
         return entry_price - offset if side == "long" else entry_price + offset
 
     def update_trailing_stop(self, side: str, current_stop: float,
-                              latest_close: float, latest_atr: float) -> float:
+                              latest_close: float, latest_atr: float,
+                              symbol: str = None) -> float:
         """
         Ratchet the trailing stop in the position's favor only. Never moves
-        against the position.
+        against the position. `symbol` is accepted but unused -- see
+        initial_trailing_stop() above.
         """
         offset = self.trailing_stop_atr_mult * latest_atr
         if side == "long":

@@ -436,6 +436,7 @@ class TradingBot:
         if position is not None and inst.strategy in ("momentum_breakout", "trend_following"):
             new_stop = strategy.update_trailing_stop(
                 position.side, position.stop_price, float(bars["close"].iloc[-1]), sig.atr,
+                symbol=inst.symbol,
             )
             if new_stop != position.stop_price:
                 self.portfolio.update_stop(inst.symbol, new_stop)
@@ -490,7 +491,7 @@ class TradingBot:
             # than the risk-manager's hard stop -- the tighter of the two
             # wins, enforcing the "max 1% loss, no exceptions" rule.
             if inst.strategy in ("momentum_breakout", "trend_following"):
-                strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr)
+                strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr, symbol=inst.symbol)
                 stop_price = self._tighter_stop(side, sizing.stop_price, strat_stop)
             else:
                 stop_price = sizing.stop_price

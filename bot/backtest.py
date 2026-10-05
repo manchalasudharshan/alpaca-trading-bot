@@ -220,6 +220,7 @@ def simulate_instrument(inst: "config.Instrument", bars: pd.DataFrame,
         if position is not None and inst.strategy in ("momentum_breakout", "trend_following"):
             position.stop_price = strategy.update_trailing_stop(
                 position.side, position.stop_price, last_close, sig.atr,
+                symbol=inst.symbol,
             )
 
         if sig.action in (SignalAction.EXIT_LONG, SignalAction.EXIT_SHORT) and position is not None:
@@ -243,7 +244,7 @@ def simulate_instrument(inst: "config.Instrument", bars: pd.DataFrame,
             if sizing.allowed:
                 entry_price = _apply_slippage(sig.price, side, False, slippage_pct)
                 if inst.strategy in ("momentum_breakout", "trend_following"):
-                    strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr)
+                    strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr, symbol=inst.symbol)
                     stop_price = (max(sizing.stop_price, strat_stop) if side == "long"
                                   else min(sizing.stop_price, strat_stop))
                 else:
@@ -375,6 +376,7 @@ def simulate_combined_portfolio(bars_by_symbol: Dict[str, pd.DataFrame],
         if position is not None and inst.strategy in ("momentum_breakout", "trend_following"):
             position.stop_price = strategy.update_trailing_stop(
                 position.side, position.stop_price, last_close, sig.atr,
+                symbol=symbol,
             )
 
         if sig.action in (SignalAction.EXIT_LONG, SignalAction.EXIT_SHORT) and position is not None:
@@ -404,7 +406,7 @@ def simulate_combined_portfolio(bars_by_symbol: Dict[str, pd.DataFrame],
                 if sizing.allowed:
                     entry_price = _apply_slippage(sig.price, side, False, slippage_pct)
                     if inst.strategy in ("momentum_breakout", "trend_following"):
-                        strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr)
+                        strat_stop = strategy.initial_trailing_stop(side, sig.price, sig.atr, symbol=symbol)
                         stop_price = (max(sizing.stop_price, strat_stop) if side == "long"
                                       else min(sizing.stop_price, strat_stop))
                     else:

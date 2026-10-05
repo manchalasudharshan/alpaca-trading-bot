@@ -154,9 +154,19 @@ MIN_IMPROVEMENT_REL = 0.10
 #     stop); the ceiling keeps it from drifting so wide it stops behaving
 #     like a stop.
 #   - trend_following.fast_ema [10,120] / slow_ema [120,300], with fast
-#     always kept strictly below slow (_params_valid below): keeps "fast"
-#     meaningfully faster than "slow"; at 5Min granularity even slow_ema=300
-#     warms up well within the 90-day tuning window (see NOTE above).
+#     always kept strictly below slow for EACH symbol independently
+#     (_params_valid below): keeps "fast" meaningfully faster than "slow";
+#     at 5Min granularity even slow_ema=300 warms up well within the 90-day
+#     tuning window (see NOTE above).
+#   - trend_following params are per-symbol (GLD, USO) as of 2026-10-05: a
+#     same-params/same-code timeframe comparison showed GLD losing money at
+#     BOTH its original 4Hour design and the current 5Min live timeframe,
+#     while USO on the exact same shared params was profitable at 5Min --
+#     a params-fit problem specific to gold, not a timeframe one. With a
+#     single shared scalar per parameter, this coordinate search could only
+#     ever find one compromise value across both symbols, so fixing GLD's
+#     negative expectancy risked dragging USO's good one down with it. See
+#     config.TREND_FOLLOWING_PARAMS for the full writeup.
 
 
 @dataclass(frozen=True)
@@ -179,9 +189,12 @@ TUNE_SPECS: Dict[str, List[ParamSlot]] = {
         ParamSlot(("trailing_stop_atr_multiple",), (1.0, 4.0), False),
     ],
     "trend_following": [
-        ParamSlot(("fast_ema",), (10, 120), True),
-        ParamSlot(("slow_ema",), (120, 300), True),
-        ParamSlot(("trailing_stop_atr_multiple",), (1.5, 5.0), False),
+        ParamSlot(("fast_ema", "GLD"), (10, 120), True),
+        ParamSlot(("fast_ema", "USO"), (10, 120), True),
+        ParamSlot(("slow_ema", "GLD"), (120, 300), True),
+        ParamSlot(("slow_ema", "USO"), (120, 300), True),
+        ParamSlot(("trailing_stop_atr_multiple", "GLD"), (1.5, 5.0), False),
+        ParamSlot(("trailing_stop_atr_multiple", "USO"), (1.5, 5.0), False),
     ],
 }
 
@@ -215,10 +228,19 @@ def _set(d: dict, path: Tuple[str, ...], value) -> None:
 
 def _params_valid(strategy_name: str, params: dict) -> bool:
     """Rejects structurally-degenerate candidates the per-slot bounds alone
-    don't catch (e.g. fast EMA >= slow EMA)."""
+    don't catch (e.g. fast EMA >= slow EMA). trend_following's fast_ema/
+    slow_ema are per-symbol dicts (GLD, USO independently tunable -- see
+    config.TREND_FOLLOWING_PARAMS), so this constraint is checked per
+    symbol: each symbol's own fast EMA must stay strictly below its own
+    slow EMA, independent of the other symbol's values."""
     if strategy_name == "trend_following":
-        if params.get("fast_ema", 0) >= params.get("slow_ema", 1):
-            return False
+        fast = params.get("fast_ema", {})
+        slow = params.get("slow_ema", {})
+        if not isinstance(fast, dict) or not isinstance(slow, dict):
+            return fast < slow if isinstance(fast, (int, float)) and isinstance(slow, (int, float)) else True
+        for symbol in set(fast) | set(slow):
+            if fast.get(symbol, 0) >= slow.get(symbol, 1):
+                return False
     return True
 
 

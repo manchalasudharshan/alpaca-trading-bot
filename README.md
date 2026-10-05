@@ -288,7 +288,7 @@ adapting to changing market conditions on its own. It is deliberately
 |---|---|
 | `mean_reversion` (SPY, QQQ) | `lookback` (SMA/stddev period), `entry_std_dev` (per symbol), `trend_filter_period` |
 | `momentum_breakout` (BTC/USD) | `lookback`, `volume_multiple`, `trailing_stop_atr_multiple` |
-| `trend_following` (GLD, USO) | `fast_ema`, `slow_ema`, `trailing_stop_atr_multiple` |
+| `trend_following` (GLD, USO) | `fast_ema`, `slow_ema`, `trailing_stop_atr_multiple` — **per symbol** as of 2026-10-05 (see below), so GLD and USO are tuned independently |
 
 **It never touches the user's non-negotiable risk rules.** The auto-tuner
 has no code path that can modify `bot/risk_manager.py` (the 1%-of-equity
@@ -629,19 +629,51 @@ crosses below, it exits or goes short. A 3×ATR trailing stop ratchets
 every bar.
 
 ### Oil (USO) — Trend Following, 5-minute candles
-Same approach and parameters as gold. Commodities tend to respond well to
-trend following — moves are more sustained and less choppy than indices.
+Same approach as gold, but — as of 2026-10-05 — **independently tunable
+parameters** rather than a value shared with GLD (see the incident below).
+Commodities tend to respond well to trend following — moves are more
+sustained and less choppy than indices — and that has held up for USO
+specifically; it hasn't for GLD.
 
-> GLD and USO parameters are unchanged from the original spec — both were
-> profitable in the 6-month backtest *on the old 4-hour candles*, though on
-> very few trades (2 and 1 respectively), since 50/200 EMA crosses on 4h
-> candles are rare. That low sample size means "profitable" here was a weak
-> signal either way even before the timeframe change. On 5-minute candles
-> the 50/200 EMA crossover will fire far more often (200 bars is ~16.7
-> hours of 5Min data vs. ~33 days of 4Hour data) -- this is exactly the kind
-> of parameter that needs fresh backtesting/auto-tuning at the new
-> granularity before being trusted, per the "5-minute timeframe" note
-> above.
+> **2026-10-05 GLD/USO timeframe & params investigation.** Following the
+> BTC/USD timeframe incident above, the same same-params/same-code
+> methodology was run for `trend_following`: GLD and USO's current live
+> (5Min) parameters backtested against their original 4Hour design, 6
+> months of data each.
+>
+> | | GLD 4Hour (orig) | GLD 5Min (live) | USO 4Hour (orig) | USO 5Min (live) |
+> |---|---|---|---|---|
+> | Trades | 2 | 53 | 0 | 31 |
+> | Profit factor | 0.00 | 0.51 | 0.00 | 1.79 |
+> | Sharpe | -3.30 | -2.14 | 0.00 | **+1.30** |
+> | Total return | -2.15% | -4.58% | 0.00% | **+8.21%** |
+>
+> Unlike BTC/USD, this is **not** a timeframe mismatch: GLD loses money at
+> *both* timeframes (ruling out "wrong candle size" as the explanation),
+> and 4Hour's tiny sample (259-269 bars over 6 months -- a 50/200 EMA
+> crossover on GLD/USO is too rare at that granularity to even evaluate;
+> USO got literally 0 trades) makes the "original design" comparison
+> point mostly moot here. The real finding: on the **exact same shared
+> params**, GLD has a structurally negative edge while USO has a
+> genuinely good one (PF 1.79, Sharpe +1.30, +8.21% return, the single
+> best result anywhere in this doc). Because `fast_ema`/`slow_ema`/
+> `trailing_stop_atr_multiple` used to be single scalars shared by both
+> symbols, `bot/auto_tune.py`'s coordinate search could only ever find one
+> compromise value across both -- any attempt to fix GLD's negative
+> expectancy risked dragging USO's profitable params down with it.
+>
+> **Fix:** converted `trend_following`'s three tunable params to
+> per-symbol dicts (`{"GLD": ..., "USO": ...}`, same convention as
+> `mean_reversion`'s `entry_std_dev`) in `config.py`,
+> `bot/strategies/trend_following.py`, `bot/auto_tune.py`'s `TUNE_SPECS`,
+> and `strategy_params.json` -- both symbols start from the prior shared
+> values, so this is a mechanical enabler, not a parameter change, and
+> doesn't by itself alter live behavior. It lets the auto-tuner (and the
+> LLM tuner agent, via dotted keys like `fast_ema.GLD`) search GLD and USO
+> independently going forward. GLD's negative expectancy is **not yet
+> fixed** -- that requires an actual retune now that it's possible without
+> collateral damage to USO -- so treat GLD as still under investigation,
+> not resolved.
 
 ### Risk management (`bot/risk_manager.py`)
 - **Sizing**: `qty = (account_equity × 1%) / ATR`, so a 1-ATR adverse move
@@ -732,18 +764,21 @@ parameter tried):
 | SPY | -2.71 | -29.22% | ❌ No — fails both. Regime mismatch, not a tunable parameter (see note above). |
 | QQQ | -0.79 | -16.03% | ❌ No — close, but fails both. |
 | BTC/USD | +1.03 | -8.6% | ✅ Yes — on its native 1Hour timeframe (see 2026-10-05 note in the Bitcoin section above); earlier rows on this instrument (+1.05/-15.82%, from an older tuning round/window) and the brief 5Min mismatch (-7.57/-53.5%) are both superseded by this result. |
-| GLD | +0.98 | -1.31% | ✅ Yes |
-| USO | +3.37 | -3.42% | ✅ Yes (only 1 trade in 6 months — weak sample, read loosely) |
+| GLD | -2.14 | -5.99% | ❌ No — fails Sharpe. Not a timeframe issue (loses on 4Hour too, see 2026-10-05 note above); a params-fit problem now unblocked for independent retuning. Supersedes the older +0.98/-1.31% row (different window/params, pre-dates the per-symbol split). |
+| USO | +1.30 | -3.68% | ✅ Yes — on the current live (5Min) params, 31 trades/6 months (see 2026-10-05 note above). Supersedes the older +3.37/-3.42% row (that one had only 1 trade — too thin to trust either way). |
 
-**Recommendation: do not go live on SPY or QQQ with these parameters.**
-BTC/USD now passes the bar on its corrected (1Hour) timeframe, but is
-still backtest evidence only — give it real paper-trading time before
-treating that as a live guarantee. GLD and USO pass but on very few
-trades each, so "passing" there is a weak signal rather than a strong
-one. If you want to keep iterating on SPY/QQQ instead of leaving them on
-paper: see the specific next-step suggestions under each instrument
-above — this file documents exactly what was tried and why it didn't
-fully close the gap, so you're not starting from zero.
+**Recommendation: do not go live on SPY, QQQ, or GLD with current
+parameters.** BTC/USD passes the bar on its corrected (1Hour) timeframe
+and USO passes on its current (5Min) params, but both are still backtest
+evidence only — give them real paper-trading time before treating that
+as a live guarantee. GLD is a confirmed negative-expectancy strategy as
+currently parameterized and is the next thing to retune (now that its
+params are independently tunable from USO's, see above) or consider
+pausing from live trading until it is. If you want to keep iterating on
+SPY/QQQ instead of leaving them on paper: see the specific next-step
+suggestions under each instrument above — this file documents exactly
+what was tried and why it didn't fully close the gap, so you're not
+starting from zero.
 
 ## Known limitations / things to review before going live
 

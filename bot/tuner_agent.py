@@ -45,7 +45,8 @@ tunable-parameter list):
 {
   "strategy_suggestions": {
     "momentum_breakout": {"volume_multiple": [1.5, 1.8]},
-    "mean_reversion": {"entry_std_dev.SPY": [2.4, 3.0]}
+    "mean_reversion": {"entry_std_dev.SPY": [2.4, 3.0]},
+    "trend_following": {"fast_ema.GLD": [30, 40], "trailing_stop_atr_multiple.GLD": [2.0, 2.5]}
   },
   "flags": [
     {"strategy": "momentum_breakout", "concern": "score stayed deeply negative across 3 cycles"}
@@ -53,19 +54,26 @@ tunable-parameter list):
   "note": "one short sentence summarizing the reasoning"
 }
 
-IMPORTANT for per-symbol parameters (currently just mean_reversion's
-entry_std_dev, which is stored per-symbol in strategy_params.json as
-{"entry_std_dev": {"SPY": ..., "QQQ": ...}}): the key here is NOT the bare
-parameter name. It's the dotted path auto_tune.py's TUNE_SPECS actually
-tunes -- "entry_std_dev.SPY" or "entry_std_dev.QQQ" -- because
-load_suggested_candidates() below looks up `".".join(param_path)` against
-whatever auto_tune.py passes it (e.g. `("entry_std_dev", "SPY")` ->
-"entry_std_dev.SPY"). A suggestion filed under the bare key
-"entry_std_dev" is not malformed -- it parses fine -- it just never
-matches any lookup auto_tune.py actually makes, so it silently never gets
-used. Every other tunable parameter in this codebase is single-valued
-(not per-symbol), so its key is just its own name, e.g. "volume_multiple"
-or "fast_ema".
+IMPORTANT for per-symbol parameters -- mean_reversion's entry_std_dev
+({"entry_std_dev": {"SPY": ..., "QQQ": ...}}) AND, as of 2026-10-05,
+trend_following's fast_ema/slow_ema/trailing_stop_atr_multiple
+({"fast_ema": {"GLD": ..., "USO": ...}}, etc. -- split because GLD and USO
+had opposite-sign expectancy on the same shared params; see
+config.TREND_FOLLOWING_PARAMS for the full writeup): the key here is NOT
+the bare parameter name. It's the dotted path auto_tune.py's TUNE_SPECS
+actually tunes -- "entry_std_dev.SPY", "fast_ema.GLD", "fast_ema.USO",
+"slow_ema.GLD", "slow_ema.USO", "trailing_stop_atr_multiple.GLD",
+"trailing_stop_atr_multiple.USO" -- because load_suggested_candidates()
+below looks up `".".join(param_path)` against whatever auto_tune.py
+passes it (e.g. `("entry_std_dev", "SPY")` -> "entry_std_dev.SPY",
+`("fast_ema", "GLD")` -> "fast_ema.GLD"). A suggestion filed under a bare
+key like "fast_ema" (no symbol suffix) is not malformed -- it parses fine
+-- it just never matches any lookup auto_tune.py actually makes for these
+per-symbol parameters, so it silently never gets used. momentum_breakout's
+params (lookback, volume_multiple, trailing_stop_atr_multiple) remain the
+only single-valued (not per-symbol) ones in this codebase, since it trades
+just one symbol (BTC/USD) -- their key is just the bare name, e.g.
+"volume_multiple".
 """
 
 import csv

@@ -186,12 +186,28 @@ MOMENTUM_BREAKOUT_PARAMS = {
 # ---------------------------------------------------------------------------
 # Strategy 3 -- Trend Following (GLD, USO)
 # ---------------------------------------------------------------------------
+# 2026-10-05 per-symbol split: a same-params/same-code timeframe comparison
+# (4Hour original design vs. 5Min current live) showed GLD losing money at
+# BOTH timeframes (PF 0.00/-2.15% at 4Hour, PF 0.51/-4.58% at 5Min) while USO
+# on the exact same shared params was profitable at 5Min (PF 1.79/+8.21%,
+# Sharpe +1.30) and never even traded at 4Hour (0 trades in 6 months -- a
+# 50/200 EMA crossover is too rare on 259 bars to evaluate). That rules out
+# "wrong timeframe" as GLD's problem (unlike BTC/momentum_breakout's 2026-
+# 10-05 incident, see Instrument comment below) -- it's a params/strategy-fit
+# problem specific to gold. fast_ema/slow_ema/trailing_stop_atr_multiple were
+# previously single shared scalars, so bot/auto_tune.py's coordinate search
+# could only ever find one compromise value across both symbols -- any fix
+# for GLD's negative expectancy would also perturb USO's already-profitable
+# params. Converted to per-symbol dicts (same pattern as mean_reversion's
+# entry_std_dev) so GLD and USO can be tuned independently; both start from
+# the prior shared values, so this change by itself doesn't alter live
+# behavior until the tuner (or a manual retune) actually diverges them.
 TREND_FOLLOWING_PARAMS = {
-    "fast_ema": 50,
-    "slow_ema": 200,
+    "fast_ema": {"GLD": 50, "USO": 50},
+    "slow_ema": {"GLD": 200, "USO": 200},
     "timeframe": "5Min",
     "atr_period": 14,
-    "trailing_stop_atr_multiple": 3.0,
+    "trailing_stop_atr_multiple": {"GLD": 3.0, "USO": 3.0},
 }
 
 # ---------------------------------------------------------------------------

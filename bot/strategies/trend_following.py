@@ -15,6 +15,20 @@ Logic
 - Trailing stop: 3x ATR(14), ratcheted in the position's favor each bar,
   same mechanics as the breakout strategy but with a wider multiple
   reflecting the longer 4h holding period.
+
+Per-symbol params
+-----------------
+fast_ema/slow_ema/trailing_stop_atr_multiple are per-symbol dicts (e.g.
+{"GLD": 50, "USO": 50}), same convention as MeanReversionStrategy's
+entry_std_dev -- see config.TREND_FOLLOWING_PARAMS for the 2026-10-05
+rationale (GLD and USO had opposite-sign expectancy on the same shared
+params, so they need to be independently tunable). atr_period stays a
+single shared scalar (not split) since it's a measurement window, not an
+entry/exit threshold. initial_trailing_stop()/update_trailing_stop() take
+an optional `symbol` so the shared strategy instance (one per strategy,
+not one per instrument -- see bot/backtest.py's STRATEGY_CLASSES) can
+resolve the right multiple; omitting it falls back to a hardcoded default,
+which only matters for callers that predate this change.
 """
 
 import logging
@@ -38,17 +52,32 @@ class TrendFollowingStrategy:
         self.params = params if params is not None else load_strategy_params(
             "trend_following", config.TREND_FOLLOWING_PARAMS
         )
-        self.fast_period = self.params["fast_ema"]
-        self.slow_period = self.params["slow_ema"]
+        # These may be per-symbol dicts (e.g. {"GLD": 50, "USO": 50}) or,
+        # defensively, a bare scalar (legacy data / a test passing a flat
+        # dict) -- _resolve() below handles both.
+        self.fast_ema = self.params["fast_ema"]
+        self.slow_ema = self.params["slow_ema"]
         self.atr_period = self.params["atr_period"]
-        self.trailing_stop_atr_mult = self.params["trailing_stop_atr_multiple"]
+        self.trailing_stop_atr_multiple = self.params["trailing_stop_atr_multiple"]
+
+    @staticmethod
+    def _resolve(value, symbol: str, default: float):
+        """Per-symbol dict -> value for `symbol` (falling back to `default`
+        if this symbol has no entry); bare scalar -> itself, unchanged."""
+        if isinstance(value, dict):
+            return value.get(symbol, default)
+        return value
 
     def required_bars(self) -> int:
         # 200-period EMA needs real warmup to be meaningful; pandas' ewm
         # with min_periods=slow_period handles the NaN-until-warm part, but
         # we want a bit of history past that so the cross detection itself
-        # is on fully-warmed values.
-        return self.slow_period + 10
+        # is on fully-warmed values. slow_ema may be per-symbol and this is
+        # called with no symbol context (see bot/backtest.py), so use the
+        # largest configured value -- conservative (more warmup than some
+        # symbols strictly need), never insufficient.
+        slow_values = self.slow_ema.values() if isinstance(self.slow_ema, dict) else [self.slow_ema]
+        return max(slow_values) + 10
 
     def generate_signal(self, symbol: str, bars: pd.DataFrame,
                          currently_long: bool, currently_short: bool,
@@ -59,9 +88,12 @@ class TrendFollowingStrategy:
                 atr=float("nan"), reason="insufficient history for EMA warmup (need 200+ bars)",
             )
 
+        fast_period = self._resolve(self.fast_ema, symbol, 50)
+        slow_period = self._resolve(self.slow_ema, symbol, 200)
+
         close = bars["close"]
-        fast = ema(close, self.fast_period)
-        slow = ema(close, self.slow_period)
+        fast = ema(close, fast_period)
+        slow = ema(close, slow_period)
         crosses = ema_cross(fast, slow)
         atr_series = atr(bars, self.atr_period)
 
@@ -84,7 +116,7 @@ class TrendFollowingStrategy:
             trace_verdict = "no signal: no new cross"
         logger.debug(
             "%s trend_following: close=%.2f EMA%d=%.2f EMA%d=%.2f (spread=%.2f) -> %s",
-            symbol, last_close, self.fast_period, fast_val, self.slow_period, slow_val,
+            symbol, last_close, fast_period, fast_val, slow_period, slow_val,
             fast_val - slow_val, trace_verdict,
         )
 
@@ -110,15 +142,15 @@ class TrendFollowingStrategy:
                 return Signal(
                     symbol=symbol, action=SignalAction.EXIT_LONG, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
-                    reason=(f"{self.fast_period} EMA ({fast_val:.2f}) crossed below "
-                            f"{self.slow_period} EMA ({slow_val:.2f}); exit long"),
+                    reason=(f"{fast_period} EMA ({fast_val:.2f}) crossed below "
+                            f"{slow_period} EMA ({slow_val:.2f}); exit long"),
                 )
             if not currently_short:
                 return Signal(
                     symbol=symbol, action=SignalAction.SHORT_ENTRY, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
-                    reason=(f"{self.fast_period} EMA ({fast_val:.2f}) crossed below "
-                            f"{self.slow_period} EMA ({slow_val:.2f}); enter short"),
+                    reason=(f"{fast_period} EMA ({fast_val:.2f}) crossed below "
+                            f"{slow_period} EMA ({slow_val:.2f}); enter short"),
                 )
 
         # --- Golden cross: exit short if open, then open long if flat ---
@@ -127,15 +159,15 @@ class TrendFollowingStrategy:
                 return Signal(
                     symbol=symbol, action=SignalAction.EXIT_SHORT, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
-                    reason=(f"{self.fast_period} EMA ({fast_val:.2f}) crossed above "
-                            f"{self.slow_period} EMA ({slow_val:.2f}); exit short"),
+                    reason=(f"{fast_period} EMA ({fast_val:.2f}) crossed above "
+                            f"{slow_period} EMA ({slow_val:.2f}); exit short"),
                 )
             if not currently_long:
                 return Signal(
                     symbol=symbol, action=SignalAction.LONG_ENTRY, price=last_close,
                     atr=last_atr, bar_timestamp=last_ts,
-                    reason=(f"{self.fast_period} EMA ({fast_val:.2f}) crossed above "
-                            f"{self.slow_period} EMA ({slow_val:.2f}); enter long"),
+                    reason=(f"{fast_period} EMA ({fast_val:.2f}) crossed above "
+                            f"{slow_period} EMA ({slow_val:.2f}); enter long"),
                 )
 
         return Signal(
@@ -144,13 +176,17 @@ class TrendFollowingStrategy:
             reason="no new cross / stop not hit",
         )
 
-    def initial_trailing_stop(self, side: str, entry_price: float, entry_atr: float) -> float:
-        offset = self.trailing_stop_atr_mult * entry_atr
+    def initial_trailing_stop(self, side: str, entry_price: float, entry_atr: float,
+                               symbol: str = None) -> float:
+        mult = self._resolve(self.trailing_stop_atr_multiple, symbol, 3.0)
+        offset = mult * entry_atr
         return entry_price - offset if side == "long" else entry_price + offset
 
     def update_trailing_stop(self, side: str, current_stop: float,
-                              latest_close: float, latest_atr: float) -> float:
-        offset = self.trailing_stop_atr_mult * latest_atr
+                              latest_close: float, latest_atr: float,
+                              symbol: str = None) -> float:
+        mult = self._resolve(self.trailing_stop_atr_multiple, symbol, 3.0)
+        offset = mult * latest_atr
         if side == "long":
             candidate = latest_close - offset
             return max(current_stop, candidate)

@@ -85,10 +85,14 @@ def test_candidates_respect_bounds(value, bounds, is_int):
 def test_tune_strategy_output_never_exceeds_bounds(isolated_files, monkeypatch):
     """End-to-end through _tune_strategy: even a scoring function that
     always rewards a larger trailing-stop multiple can't push the chosen
-    value past its hardcoded upper bound."""
+    value past its hardcoded upper bound. trend_following's params are
+    per-symbol dicts (GLD, USO independently tunable -- see
+    config.TREND_FOLLOWING_PARAMS), so this sums both symbols' multiples
+    to keep the reward monotonic across every per-symbol slot."""
     def fake_evaluate(strategy_name, params, bars_by_symbol, starting_equity, slippage_pct):
-        # Monotonically reward a larger trailing_stop_atr_multiple.
-        return params["trailing_stop_atr_multiple"], 50, []
+        # Monotonically reward larger trailing_stop_atr_multiple values,
+        # summed across both symbols.
+        return sum(params["trailing_stop_atr_multiple"].values()), 50, []
 
     monkeypatch.setattr(auto_tune, "_evaluate", fake_evaluate)
 
@@ -97,9 +101,12 @@ def test_tune_strategy_output_never_exceeds_bounds(isolated_files, monkeypatch):
         "trend_following", baseline, bars_by_symbol={}, starting_equity=100_000.0, slippage_pct=0.0005,
     )
 
-    lo, hi = dict((s.path, s.bounds) for s in auto_tune.TUNE_SPECS["trend_following"])[("trailing_stop_atr_multiple",)]
-    assert lo <= best_params["trailing_stop_atr_multiple"] <= hi
-    assert best_params["fast_ema"] < best_params["slow_ema"]  # structural constraint also held
+    bounds_by_path = dict((s.path, s.bounds) for s in auto_tune.TUNE_SPECS["trend_following"])
+    for symbol in ("GLD", "USO"):
+        lo, hi = bounds_by_path[("trailing_stop_atr_multiple", symbol)]
+        assert lo <= best_params["trailing_stop_atr_multiple"][symbol] <= hi
+        # structural constraint also held, independently per symbol
+        assert best_params["fast_ema"][symbol] < best_params["slow_ema"][symbol]
 
 
 # ===========================================================================
