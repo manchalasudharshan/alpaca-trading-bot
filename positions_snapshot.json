@@ -1,7 +1,7 @@
 {
-  "snapshot_at": "2026-10-05T13:25:09.504304+00:00",
+  "snapshot_at": "2026-10-05T13:30:14.357674+00:00",
   "equity": 100000.0,
   "peak_equity": 100000.0,
-  "equity_market_open": false,
+  "equity_market_open": true,
   "positions": []
 }
