@@ -9,13 +9,22 @@
     "trend_filter_period": 130
   },
   "momentum_breakout": {
-    "lookback": 30,
-    "volume_multiple": 2.2,
-    "trailing_stop_atr_multiple": 1.8
+    "lookback": 34,
+    "volume_multiple": 2.86,
+    "trailing_stop_atr_multiple": 1.53
   },
   "trend_following": {
-    "fast_ema": {"GLD": 50, "USO": 50},
-    "slow_ema": {"GLD": 200, "USO": 200},
-    "trailing_stop_atr_multiple": {"GLD": 3.0, "USO": 3.0}
+    "fast_ema": {
+      "GLD": 50,
+      "USO": 58
+    },
+    "slow_ema": {
+      "GLD": 200,
+      "USO": 140
+    },
+    "trailing_stop_atr_multiple": {
+      "GLD": 2.1,
+      "USO": 3.0
+    }
   }
 }
