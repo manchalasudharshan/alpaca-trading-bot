@@ -241,6 +241,30 @@ RISK_PARAMS = {
     # account_equity * max_position_notional_pct_of_equity, even if that
     # means realized risk at the hard stop comes in under the 1% ATR target.
     "max_position_notional_pct_of_equity": 1.0,
+    # Safety buffer subtracted from the notional cap above before it's used
+    # to size a position, as a fraction of equity (0.03 == the cap actually
+    # used is 97% of max_position_notional_pct_of_equity's value, not 100%
+    # of it). Why this exists: size_position() sizes off the SIGNAL price
+    # (the last closed bar's close), but the market order that actually
+    # executes can fill at a later, different price -- and with zero
+    # buffer, any adverse drift between signal and fill makes the order's
+    # real notional exceed available cash, which Alpaca rejects outright
+    # (it doesn't partially fill a market order short on buying power).
+    # This was a real bug discovered 2026-10-06: every BTC/USD long entry
+    # since the 1Hour timeframe revert failed with "insufficient balance
+    # for USD" -- e.g. sizing computed exactly $100,000 (100% of a
+    # $100,000 account, zero margin for error), but BTC drifted ~2% between
+    # the 1Hour bar's close (the signal price) and the order actually
+    # reaching Alpaca, consistently pushing the real fill cost to
+    # ~$101,900-$102,025 -- rejected every time, 5 retries, for days,
+    # entirely silently (see bot.log ERROR lines, never a trade). Drift
+    # risk scales with how stale the signal price can get (longer
+    # timeframe = more room to drift) and how volatile the instrument is,
+    # so this buffer matters most for BTC/USD on 1Hour bars, but is kept
+    # as one global setting for simplicity -- it costs equities and GLD/USO
+    # negligible headroom since their sizing rarely gets anywhere near the
+    # notional cap in the first place.
+    "notional_safety_buffer_pct": 0.03,
     # Correlation filter: block new BTC/USD longs when both of these
     # symbols are already long (risk-on exposure doubling).
     "correlation_block": {

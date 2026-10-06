@@ -235,7 +235,15 @@ def simulate_instrument(inst: "config.Instrument", bars: pd.DataFrame,
             ))
             position = None
 
-        elif sig.action in (SignalAction.LONG_ENTRY, SignalAction.SHORT_ENTRY):
+        elif (sig.action in (SignalAction.LONG_ENTRY, SignalAction.SHORT_ENTRY)
+              and not (sig.action == SignalAction.SHORT_ENTRY and inst.asset_class == config.CRYPTO)):
+            # Crypto cannot be shorted on Alpaca (cash/spot-only -- see
+            # bot/main.py's _handle_signal for the full rationale and the
+            # 2026-10-06 incident this guard fixes). Skipping it here too
+            # keeps backtest results achievable: without this, a crypto
+            # short entry would be simulated as a profitable/lossy trade
+            # that could never actually execute live, silently inflating
+            # or deflating momentum_breakout's reported BTC/USD numbers.
             side = "long" if sig.action == SignalAction.LONG_ENTRY else "short"
             sizing = risk_manager.size_position(
                 symbol=inst.symbol, side=side, entry_price=sig.price, atr=sig.atr,
@@ -391,7 +399,10 @@ def simulate_combined_portfolio(bars_by_symbol: Dict[str, pd.DataFrame],
             ))
             del positions[symbol]
 
-        elif sig.action in (SignalAction.LONG_ENTRY, SignalAction.SHORT_ENTRY):
+        elif (sig.action in (SignalAction.LONG_ENTRY, SignalAction.SHORT_ENTRY)
+              and not (sig.action == SignalAction.SHORT_ENTRY and inst.asset_class == config.CRYPTO)):
+            # See the single-instrument loop above for why crypto shorts
+            # are skipped here.
             side = "long" if sig.action == SignalAction.LONG_ENTRY else "short"
             open_snapshot = {s: {"side": p.side} for s, p in positions.items()}
             if risk_manager.correlation_filter_blocks(symbol, side, open_snapshot):

@@ -464,6 +464,25 @@ class TradingBot:
         if sig.action in (SignalAction.LONG_ENTRY, SignalAction.SHORT_ENTRY):
             side = "long" if sig.action == SignalAction.LONG_ENTRY else "short"
 
+            # --- Crypto cannot be shorted on Alpaca (cash/spot-only; no
+            # margin, no short selling -- see
+            # https://docs.alpaca.markets/us/docs/crypto-trading). A
+            # flip-style strategy like momentum_breakout will still emit
+            # SHORT_ENTRY signals for BTC/USD on a breakdown (it has no
+            # concept of asset class), so this is the one place that knows
+            # both the signal and inst.asset_class together. Without this
+            # guard the order below was submitted anyway, every time,
+            # and failed at the broker with "insufficient balance for
+            # BTC (requested X, available 0)" -- a guaranteed, not
+            # occasional, failure discovered 2026-10-06 after every real
+            # BTC short signal since launch silently died this way.
+            if side == "short" and inst.asset_class == config.CRYPTO:
+                logger.info(
+                    "Skipping %s short entry: crypto cannot be sold short on Alpaca "
+                    "(cash/spot-only). Signal reason: %s", inst.symbol, sig.reason,
+                )
+                return
+
             # --- Correlation filter ---
             open_positions = self.portfolio.open_positions_snapshot()
             if self.risk_manager.correlation_filter_blocks(inst.symbol, side, open_positions):

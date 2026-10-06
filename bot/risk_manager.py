@@ -52,6 +52,12 @@ class RiskManager:
         # keeps old callers/tests that construct RiskManager with a partial
         # params dict safe rather than raising a KeyError.
         self.max_notional_fraction = self.params.get("max_position_notional_pct_of_equity", 1.0)
+        # See config.RISK_PARAMS's comment for the 2026-10-06 incident this
+        # fixes: without it, a position sized at exactly the notional cap
+        # has zero room to absorb price drift between the signal price and
+        # the market order's actual fill, and the order is rejected
+        # outright for insufficient balance.
+        self.notional_safety_buffer = self.params.get("notional_safety_buffer_pct", 0.03)
         self.corr_cfg = self.params["correlation_block"]
 
     # ------------------------------------------------------------------
@@ -114,15 +120,22 @@ class RiskManager:
         # Cap qty so total notional never exceeds this fraction of equity,
         # even if that means realized risk at the hard stop comes in under
         # the ATR-based target.
-        max_notional_dollars = account_equity * self.max_notional_fraction
+        # The buffer shrinks the cap actually used (not the documented
+        # max_position_notional_pct_of_equity figure itself), leaving
+        # headroom to absorb price drift between the signal price and the
+        # market order's real fill price -- see notional_safety_buffer_pct's
+        # comment in config.py.
+        max_notional_dollars = account_equity * self.max_notional_fraction * (1 - self.notional_safety_buffer)
         notional = qty * entry_price
         notional_capped = notional > max_notional_dollars
         if notional_capped:
             logger.warning(
                 "%s %s: ATR-based sizing wanted $%.2f notional (ATR %.4f is only %.3f%% "
-                "of price %.4f) -- capping to %.0f%% of equity ($%.2f) instead.",
+                "of price %.4f) -- capping to $%.2f (%.0f%% of equity, less a %.0f%% drift "
+                "safety buffer) instead.",
                 symbol, side, notional, atr, (atr / entry_price) * 100, entry_price,
-                self.max_notional_fraction * 100, max_notional_dollars,
+                max_notional_dollars, self.max_notional_fraction * 100,
+                self.notional_safety_buffer * 100,
             )
             qty = max_notional_dollars / entry_price
             implied_loss_at_1atr = qty * atr
