@@ -174,15 +174,37 @@ class Portfolio:
                 f"{loss_pct:.3f}" if loss_pct is not None else "",
             ])
 
-    def _accumulate_daily_pnl(self, pnl: float):
+    def _maybe_roll_date(self):
+        """
+        Advance _pnl_date to today if a calendar day has passed, flushing
+        the prior day's row as final first.
+
+        BUG FIX (2026-10-06): this rollover used to live only inside
+        _accumulate_daily_pnl(), which is only reached when a trade
+        actually CLOSES. Each GitHub Actions tick is a fresh process that
+        reloads _pnl_date from bot_state.json (see load_state_dict), so on
+        a day with zero closed trades, _pnl_date never advanced -- it
+        stayed frozen at whatever date the last close happened on. Every
+        subsequent tick's end_of_day_flush() then kept re-upserting THAT
+        stale date's row instead of creating one for the current day,
+        silently losing days with no closed trades. Observed: daily_pnl.csv
+        was stuck on 2026-10-03 (0.00, 0 trades) through 2026-10-06 despite
+        the bot running continuously, because no trade had closed since
+        then. Calling this from both _accumulate_daily_pnl() AND
+        end_of_day_flush() means the date rolls forward every tick
+        regardless of whether a trade closed, so a quiet day still gets
+        its own (0.00, 0) row instead of none at all.
+        """
         today = datetime.now(timezone.utc).date()
         if today != self._pnl_date:
-            # date rolled over since last trade; flush and reset
+            # date rolled over since the last write; flush prior day final
             self._flush_daily_pnl_row()
             self._pnl_date = today
             self._daily_realized_pnl = 0.0
             self._trades_closed_today = 0
 
+    def _accumulate_daily_pnl(self, pnl: float):
+        self._maybe_roll_date()
         self._daily_realized_pnl += pnl
         self._trades_closed_today = getattr(self, "_trades_closed_today", 0) + 1
         self._flush_daily_pnl_row(upsert=True)
@@ -224,8 +246,15 @@ class Portfolio:
 
     def end_of_day_flush(self):
         """Call once near market close / once a day from main.py's scheduler
-        to guarantee a row exists even on days with zero trades."""
-        self._flush_daily_pnl_row(upsert=True)
+        to guarantee a row exists even on days with zero trades.
+
+        Must roll the date forward itself (see _maybe_roll_date's docstring
+        for the 2026-10-06 incident this fixes) -- it cannot rely on a
+        trade having closed today to have already advanced _pnl_date.
+        """
+        with self._lock:
+            self._maybe_roll_date()
+            self._flush_daily_pnl_row(upsert=True)
 
     # ------------------------------------------------------------------
     # State persistence (for process restarts, e.g. each GitHub Actions
