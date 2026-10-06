@@ -611,15 +611,52 @@ the position's favor every bar.
 > Reverted BTC/USD to `timeframe="1Hour"` in `config.INSTRUMENTS`; the
 > other 4 instruments were unaffected and stayed on 5Min.
 >
-> **Current read:** on its native 1Hour timeframe this is the
-> best-performing of the three non-trivial strategies in this doc — a
-> genuinely positive Sharpe and a MaxDD *under* the 15% ceiling (-8.6%,
-> vs. the -15.82% quoted above from an earlier tuning round on a different
-> window). Still only backtest evidence, not live performance.
-> **Recommendation: let it accumulate real 1Hour trades on paper before
-> treating the backtest numbers as a live guarantee**, and watch
-> `tuning_history.csv` over the next several auto-tune runs to confirm the
-> score stays positive now that the timeframe matches the design.
+> **2026-10-06 incident: every BTC/USD trade was silently failing, for two
+> separate reasons** — discovered after a full trading day produced zero
+> trades despite real signals firing. (1) Alpaca's crypto trading is
+> cash/spot-only — [shorting crypto is categorically disallowed](https://docs.alpaca.markets/us/docs/crypto-trading)
+> — but `momentum_breakout` is a flip-style strategy that opens a short on
+> every breakdown signal regardless of asset class. Every BTC short entry
+> was submitted anyway and failed with "insufficient balance for BTC
+> (requested X, available 0)". (2) Separately, `risk_manager.py` capped
+> position notional at *exactly* 100% of equity with zero safety margin;
+> sizing uses the signal price (the last closed 1Hour bar's close), but
+> BTC can drift ~2% by the time the market order actually fills, and with
+> no buffer that drift alone pushed every long entry's real cost just over
+> available cash — "insufficient balance for USD", 5 retries, silently,
+> for days (`bot.log`, 2026-10-03 through 2026-10-05).
+>
+> **Fix:** (1) crypto short entries are now skipped rather than attempted,
+> in both live trading (`bot/main.py`) and backtesting (`bot/backtest.py`
+> — this matters because it means the 66-trade/Sharpe-+1.03 number quoted
+> above *included shorts that could never have executed live* and was not
+> an achievable result); (2) added `notional_safety_buffer_pct` (default
+> 3%) so the cap used for sizing leaves headroom below the documented
+> 100%-of-equity figure instead of leaving zero room for price drift.
+>
+> **Corrected (long-only, achievable) 1Hour backtest, same live params:**
+>
+> | | Old (included impossible shorts) | Corrected (long-only) |
+> |---|---|---|
+> | Trades | 66 (32 long + 34 short) | 32 (all long) |
+> | Profit factor | 1.40 | **1.53** |
+> | Sharpe | 1.03 | **0.85** |
+> | Max drawdown | -8.6% | -7.87% |
+> | Total return | +11.6% | +7.39% |
+>
+> Sharpe and total return came down (expected — the short side that
+> inflated the old number never could have fired), but this is a real,
+> achievable result: Sharpe stays positive, drawdown stays well under the
+> 15% ceiling, and profit factor actually improved. **Current read:** on
+> its native 1Hour timeframe, long-only, this is still a passing strategy
+> — just a more modest one than first reported. Still only backtest
+> evidence, not live performance. **Recommendation: let it accumulate real
+> 1Hour trades on paper now that both bugs are fixed** before treating
+> these numbers as a live guarantee, and watch `tuning_history.csv` over
+> the next several auto-tune runs (which, with shorts now correctly
+> excluded from its own backtesting, will no longer be implicitly
+> rewarding a parameter set for short-side performance BTC/USD can't
+> actually realize).
 
 ### Gold (GLD) — Trend Following, 5-minute candles
 Commodities move in cleaner waves, and intraday whipsaws just add noise,
@@ -763,7 +800,7 @@ parameter tried):
 |---|---|---|---|
 | SPY | -2.71 | -29.22% | ❌ No — fails both. Regime mismatch, not a tunable parameter (see note above). |
 | QQQ | -0.79 | -16.03% | ❌ No — close, but fails both. |
-| BTC/USD | +1.03 | -8.6% | ✅ Yes — on its native 1Hour timeframe (see 2026-10-05 note in the Bitcoin section above); earlier rows on this instrument (+1.05/-15.82%, from an older tuning round/window) and the brief 5Min mismatch (-7.57/-53.5%) are both superseded by this result. |
+| BTC/USD | +0.85 | -7.87% | ✅ Yes — corrected, long-only figure (see 2026-10-06 note in the Bitcoin section above): the prior +1.03/-8.6% row included short trades that could never have executed on Alpaca (crypto can't be shorted) and wasn't an achievable result. This row and the one before it (+1.05/-15.82%) and the brief 5Min mismatch (-7.57/-53.5%) are all superseded. |
 | GLD | -2.14 | -5.99% | ❌ No — fails Sharpe. Not a timeframe issue (loses on 4Hour too, see 2026-10-05 note above); a params-fit problem now unblocked for independent retuning. Supersedes the older +0.98/-1.31% row (different window/params, pre-dates the per-symbol split). |
 | USO | +1.30 | -3.68% | ✅ Yes — on the current live (5Min) params, 31 trades/6 months (see 2026-10-05 note above). Supersedes the older +3.37/-3.42% row (that one had only 1 trade — too thin to trust either way). |
 
@@ -798,6 +835,20 @@ starting from zero.
 - Crypto bar/volume semantics can differ by exchange on Alpaca's crypto
   data feed; verify `BTC/USD` volume figures match your expectations
   before relying on the volume-confirmation filter.
+- Crypto cannot be shorted on Alpaca (cash/spot-only); `bot/main.py` and
+  `bot/backtest.py` skip crypto short entries rather than attempt them
+  (see the 2026-10-06 incident in the Bitcoin section above). A strategy
+  that trades crypto in the future should keep this in mind at the design
+  level, not just rely on the guard catching it at execution time.
+- Position sizing's notional cap (`max_position_notional_pct_of_equity`)
+  and its `notional_safety_buffer_pct` are both sized off account
+  **equity**, not actual **cash**/non-marginable buying power. Today these
+  are identical (the account holds no other positions when BTC sizing
+  runs), but once equities and crypto can be open simultaneously, equity
+  can exceed actual spendable cash (unrealized gains on other positions
+  inflate it) — worth revisiting if "insufficient balance" errors
+  resurface after the 2026-10-06 fix once the account is holding multiple
+  positions at once.
 - Backtest results are naturally sensitive to the specific 6-month window
   tested (regime-dependent) and to Alpaca's historical data quality/gaps;
   treat them as a sanity check and parameter-tuning aid, not as a
