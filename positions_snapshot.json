@@ -1,7 +1,18 @@
 {
-  "snapshot_at": "2026-10-06T15:10:14.680329+00:00",
-  "equity": 100000.0,
+  "snapshot_at": "2026-10-06T15:15:14.722306+00:00",
+  "equity": 99999.52,
   "peak_equity": 100000.0,
   "equity_market_open": true,
-  "positions": []
+  "positions": [
+    {
+      "symbol": "GLD",
+      "qty": 16.0,
+      "side": "long",
+      "avg_entry_price": 381.69,
+      "current_price": 381.66,
+      "unrealized_pl": -0.48,
+      "unrealized_plpc": -8e-05,
+      "market_value": 6106.56
+    }
+  ]
 }
