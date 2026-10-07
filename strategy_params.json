@@ -20,11 +20,11 @@
     },
     "slow_ema": {
       "GLD": 200,
-      "USO": 140
+      "USO": 182
     },
     "trailing_stop_atr_multiple": {
       "GLD": 2.1,
-      "USO": 3.0
+      "USO": 3.9
     }
   }
 }
