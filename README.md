@@ -33,9 +33,9 @@ of loss. Test thoroughly on the Alpaca **paper** endpoint first.
     ├── indicators.py                # SMA, std-dev, EMA, ATR, rolling high/low
     └── strategies/
         ├── base.py                  # shared Signal / SignalAction types
-        ├── mean_reversion.py        # Strategy 1: SPY, QQQ (15m)
+        ├── mean_reversion.py        # Strategy 1: dormant as of 2026-10-08 (was SPY, QQQ)
         ├── momentum_breakout.py     # Strategy 2: BTC/USD (1h)
-        └── trend_following.py       # Strategy 3: GLD, USO (4h)
+        └── trend_following.py       # Strategy 3: SPY, QQQ, GLD, USO (5m)
 ```
 
 ## Setup
@@ -286,9 +286,9 @@ adapting to changing market conditions on its own. It is deliberately
 
 | Strategy | Tunable params |
 |---|---|
-| `mean_reversion` (SPY, QQQ) | `lookback` (SMA/stddev period), `entry_std_dev` (per symbol), `trend_filter_period` |
+| `mean_reversion` (dormant as of 2026-10-08 -- zero symbols assigned, see Go-live readiness) | `lookback` (SMA/stddev period), `entry_std_dev` (per symbol), `trend_filter_period` |
 | `momentum_breakout` (BTC/USD) | `lookback`, `volume_multiple`, `trailing_stop_atr_multiple` |
-| `trend_following` (GLD, USO) | `fast_ema`, `slow_ema`, `trailing_stop_atr_multiple` — **per symbol** as of 2026-10-05 (see below), so GLD and USO are tuned independently |
+| `trend_following` (SPY, QQQ, GLD, USO) | `fast_ema`, `slow_ema`, `trailing_stop_atr_multiple` — **per symbol** as of 2026-10-05 (see below), so each symbol is tuned independently; SPY/QQQ added 2026-10-08 |
 
 **It never touches the user's non-negotiable risk rules.** The auto-tuner
 has no code path that can modify `bot/risk_manager.py` (the 1%-of-equity
@@ -577,6 +577,24 @@ deviations** (originally 1.8σ).
 > historical window before trusting it, or treat SPY/QQQ as paper-trade-only
 > until a live range-bound period is observed.
 
+> **2026-10-08 update: SPY/QQQ switched from `mean_reversion` to
+> `trend_following`.** The live auto-tuner independently confirmed the
+> diagnosis above: it pushed SPY's `entry_std_dev` all the way to its own
+> hard ceiling (3.5σ) and the backtest score still got worse 3 days running
+> (-102.7 → -126.0 → -137.8) — a trending regime that no amount of
+> band-width tuning fixes, exactly as predicted. Rather than inventing new
+> mean-reversion logic (e.g. an ADX-style trend-strength filter, a time
+> stop, or spread-trading the SPY/QQQ pair against each other — all
+> considered and set aside as bigger changes than the evidence called for),
+> SPY and QQQ are now routed through `trend_following` — the strategy this
+> bot already runs for GLD/USO, and the one actually built for a persistent
+> trend instead of fighting it. See `TREND_FOLLOWING_PARAMS` in `config.py`
+> for their starting (untuned) params: the same 50/200 EMA golden-cross /
+> 3.0x ATR trailing stop GLD/USO themselves started from. `mean_reversion.py`
+> and its tuning history above are left in place, now dormant (zero live
+> instruments assigned), in case a future range-bound regime makes it worth
+> revisiting.
+
 ### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
 Crypto trends harder than indices, so instead of fading the move the bot
 rides it. When price closes above the prior **30-period** high on the
@@ -798,24 +816,27 @@ parameter tried):
 
 | Instrument | Sharpe | MaxDD | Passes bar? |
 |---|---|---|---|
-| SPY | -2.71 | -29.22% | ❌ No — fails both. Regime mismatch, not a tunable parameter (see note above). |
-| QQQ | -0.79 | -16.03% | ❌ No — close, but fails both. |
+| SPY | -2.71 | -29.22% | ⚠️ Historical only — this is the `mean_reversion` result that justified the 2026-10-08 switch to `trend_following` (see note above); SPY no longer runs these parameters live. Not yet re-backtested under `trend_following` with its untuned starting params. |
+| QQQ | -0.79 | -16.03% | ⚠️ Historical only — same as SPY: this was `mean_reversion`'s number before the 2026-10-08 switch to `trend_following`. Not yet re-backtested under `trend_following` with its untuned starting params. |
 | BTC/USD | +0.85 | -7.87% | ✅ Yes — corrected, long-only figure (see 2026-10-06 note in the Bitcoin section above): the prior +1.03/-8.6% row included short trades that could never have executed on Alpaca (crypto can't be shorted) and wasn't an achievable result. This row and the one before it (+1.05/-15.82%) and the brief 5Min mismatch (-7.57/-53.5%) are all superseded. |
 | GLD | -2.14 | -5.99% | ❌ No — fails Sharpe. Not a timeframe issue (loses on 4Hour too, see 2026-10-05 note above); a params-fit problem now unblocked for independent retuning. Supersedes the older +0.98/-1.31% row (different window/params, pre-dates the per-symbol split). |
 | USO | +1.30 | -3.68% | ✅ Yes — on the current live (5Min) params, 31 trades/6 months (see 2026-10-05 note above). Supersedes the older +3.37/-3.42% row (that one had only 1 trade — too thin to trust either way). |
 
-**Recommendation: do not go live on SPY, QQQ, or GLD with current
-parameters.** BTC/USD passes the bar on its corrected (1Hour) timeframe
-and USO passes on its current (5Min) params, but both are still backtest
-evidence only — give them real paper-trading time before treating that
-as a live guarantee. GLD is a confirmed negative-expectancy strategy as
-currently parameterized and is the next thing to retune (now that its
-params are independently tunable from USO's, see above) or consider
-pausing from live trading until it is. If you want to keep iterating on
-SPY/QQQ instead of leaving them on paper: see the specific next-step
-suggestions under each instrument above — this file documents exactly
-what was tried and why it didn't fully close the gap, so you're not
-starting from zero.
+**Recommendation: do not go live on GLD with current parameters**, and
+treat **SPY/QQQ as unproven, not yet confirmed good, under their new
+`trend_following` assignment** — the rows above are the old `mean_reversion`
+backtest that justified moving off of it, not a result for the strategy
+they're actually running now. Before trusting SPY/QQQ live under
+`trend_following`, re-run `bot/backtest.py` against their new (currently
+untuned, 50/200/3.0x starting) params and let the live auto-tuner run for a
+while — the same two-part check (backtest + live auto-tuner trend) that
+caught `mean_reversion`'s problem is the right bar to clear here too.
+BTC/USD passes the bar on its corrected (1Hour) timeframe and USO passes on
+its current (5Min) params, but both are still backtest evidence only — give
+them real paper-trading time before treating that as a live guarantee. GLD
+is a confirmed negative-expectancy strategy as currently parameterized and
+is the next thing to retune (now that its params are independently tunable
+from USO's, see above) or consider pausing from live trading until it is.
 
 ## Known limitations / things to review before going live
 

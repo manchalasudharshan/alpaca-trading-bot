@@ -104,9 +104,27 @@ class Instrument:
 # (the next tick), which is what "within the ticking cycle" means here.
 # The other 4 instruments are unaffected and keep evaluating on every tick
 # as before.
+# 2026-10-08 SPY/QQQ strategy switch: mean_reversion was confirmed
+# negative-expectancy on both symbols by two independent pieces of
+# evidence -- the original 6-month backtest (SPY Sharpe -2.71/MaxDD
+# -29.22%, QQQ Sharpe -0.79/MaxDD -16.03%, see MEAN_REVERSION_PARAMS'
+# history below) AND the live auto-tuner, which pushed entry_std_dev.SPY
+# to its own hard ceiling (3.5) and still watched the score get worse 3
+# days running (-102.7 -> -126.0 -> -137.8). That's not a tuning problem:
+# SPY/QQQ have been in a persistent multi-month uptrend, and pure mean
+# reversion structurally fights that (a "-3.5 std-dev dip" in a strong
+# trend is often a continuation, not a reversion, so the position gets
+# stopped out before price ever comes back to the mean -- no threshold
+# fixes that). Rather than inventing new strategy logic, SPY/QQQ are
+# switched onto trend_following -- the strategy this bot already has that
+# is built for exactly this regime, and which is working on GLD/USO. See
+# TREND_FOLLOWING_PARAMS below for their starting (untuned) params.
+# mean_reversion.py itself is left in place and still auto-tuned daily
+# (harmlessly, since SYMBOLS_BY_STRATEGY["mean_reversion"] is now empty)
+# in case a less-trending regime later makes it worth reviving.
 INSTRUMENTS: List[Instrument] = [
-    Instrument(symbol="SPY", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
-    Instrument(symbol="QQQ", asset_class=EQUITY, strategy="mean_reversion", timeframe="5Min"),
+    Instrument(symbol="SPY", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
+    Instrument(symbol="QQQ", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
     Instrument(symbol="BTC/USD", asset_class=CRYPTO, strategy="momentum_breakout", timeframe="1Hour"),
     Instrument(symbol="GLD", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
     Instrument(symbol="USO", asset_class=EQUITY, strategy="trend_following", timeframe="5Min"),
@@ -121,7 +139,18 @@ SYMBOLS_BY_STRATEGY: Dict[str, List[str]] = {
 INSTRUMENT_BY_SYMBOL: Dict[str, Instrument] = {i.symbol: i for i in INSTRUMENTS}
 
 # ---------------------------------------------------------------------------
-# Strategy 1 -- Mean Reversion (SPY, QQQ)
+# Strategy 1 -- Mean Reversion (DORMANT as of 2026-10-08 -- see the note
+# above INSTRUMENTS: SPY and QQQ, the only two symbols ever assigned to this
+# strategy, were both switched to trend_following after their persistent
+# negative expectancy was confirmed by the original 6-month backtest AND the
+# live auto-tuner. SYMBOLS_BY_STRATEGY["mean_reversion"] is now [], so
+# bot/auto_tune.py's _evaluate() skips it (0 trades, never adopted) and
+# nothing in config.INSTRUMENTS routes any symbol through
+# mean_reversion.py's generate_signal() anymore. Left in place, params and
+# all, rather than deleted: the code and its tuning history stay available
+# in case a future, less persistently-trending regime makes mean reversion
+# worth re-evaluating on SPY/QQQ or a new symbol -- see mean_reversion.py's
+# own module docstring for why it structurally struggles in a strong trend.)
 # ---------------------------------------------------------------------------
 MEAN_REVERSION_PARAMS = {
     "lookback": 20,                 # SMA / stddev period
@@ -202,12 +231,20 @@ MOMENTUM_BREAKOUT_PARAMS = {
 # entry_std_dev) so GLD and USO can be tuned independently; both start from
 # the prior shared values, so this change by itself doesn't alter live
 # behavior until the tuner (or a manual retune) actually diverges them.
+#
+# 2026-10-08: SPY/QQQ added here as part of the mean_reversion ->
+# trend_following switch (see the long note above INSTRUMENTS). Starting
+# values are the same untuned classic 50/200 EMA golden-cross / 3.0x ATR
+# trailing stop that GLD/USO themselves started from before they diverged --
+# bot/auto_tune.py's daily grid search (once SPY/QQQ's ParamSlots are added
+# to TUNE_SPECS) will adapt these independently per symbol from here, same
+# as it already does for GLD/USO.
 TREND_FOLLOWING_PARAMS = {
-    "fast_ema": {"GLD": 50, "USO": 50},
-    "slow_ema": {"GLD": 200, "USO": 200},
+    "fast_ema": {"GLD": 50, "USO": 50, "SPY": 50, "QQQ": 50},
+    "slow_ema": {"GLD": 200, "USO": 200, "SPY": 200, "QQQ": 200},
     "timeframe": "5Min",
     "atr_period": 14,
-    "trailing_stop_atr_multiple": {"GLD": 3.0, "USO": 3.0},
+    "trailing_stop_atr_multiple": {"GLD": 3.0, "USO": 3.0, "SPY": 3.0, "QQQ": 3.0},
 }
 
 # ---------------------------------------------------------------------------

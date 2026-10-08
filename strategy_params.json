@@ -16,15 +16,21 @@
   "trend_following": {
     "fast_ema": {
       "GLD": 50,
-      "USO": 67
+      "USO": 67,
+      "SPY": 50,
+      "QQQ": 50
     },
     "slow_ema": {
       "GLD": 200,
-      "USO": 182
+      "USO": 182,
+      "SPY": 200,
+      "QQQ": 200
     },
     "trailing_stop_atr_multiple": {
       "GLD": 2.1,
-      "USO": 5.0
+      "USO": 5.0,
+      "SPY": 3.0,
+      "QQQ": 3.0
     }
   }
 }

@@ -191,10 +191,20 @@ TUNE_SPECS: Dict[str, List[ParamSlot]] = {
     "trend_following": [
         ParamSlot(("fast_ema", "GLD"), (10, 120), True),
         ParamSlot(("fast_ema", "USO"), (10, 120), True),
+        # 2026-10-08: SPY/QQQ added after their switch from mean_reversion
+        # (see config.py's INSTRUMENTS note). Same bounds as GLD/USO -- no
+        # reason yet to believe equity index ETFs need a different search
+        # range than the commodity ETFs this strategy was already tuned on.
+        ParamSlot(("fast_ema", "SPY"), (10, 120), True),
+        ParamSlot(("fast_ema", "QQQ"), (10, 120), True),
         ParamSlot(("slow_ema", "GLD"), (120, 300), True),
         ParamSlot(("slow_ema", "USO"), (120, 300), True),
+        ParamSlot(("slow_ema", "SPY"), (120, 300), True),
+        ParamSlot(("slow_ema", "QQQ"), (120, 300), True),
         ParamSlot(("trailing_stop_atr_multiple", "GLD"), (1.5, 5.0), False),
         ParamSlot(("trailing_stop_atr_multiple", "USO"), (1.5, 5.0), False),
+        ParamSlot(("trailing_stop_atr_multiple", "SPY"), (1.5, 5.0), False),
+        ParamSlot(("trailing_stop_atr_multiple", "QQQ"), (1.5, 5.0), False),
     ],
 }
 
