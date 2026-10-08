@@ -1,7 +1,7 @@
 {
-  "snapshot_at": "2026-10-08T13:25:10.613111+00:00",
+  "snapshot_at": "2026-10-08T13:30:14.577086+00:00",
   "equity": 99257.36,
   "peak_equity": 100112.01,
-  "equity_market_open": false,
+  "equity_market_open": true,
   "positions": []
 }
