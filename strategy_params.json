@@ -16,7 +16,7 @@
   "trend_following": {
     "fast_ema": {
       "GLD": 50,
-      "USO": 58
+      "USO": 67
     },
     "slow_ema": {
       "GLD": 200,
@@ -24,7 +24,7 @@
     },
     "trailing_stop_atr_multiple": {
       "GLD": 2.1,
-      "USO": 3.9
+      "USO": 5.0
     }
   }
 }
