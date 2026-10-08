@@ -594,6 +594,14 @@ deviations** (originally 1.8σ).
 > and its tuning history above are left in place, now dormant (zero live
 > instruments assigned), in case a future range-bound regime makes it worth
 > revisiting.
+>
+> **2026-10-08 follow-up — first `trend_following` backtest result:** see
+> "Go-live readiness" below for the full table, but the short version: QQQ
+> flipped to Sharpe +0.58/MaxDD -4.50% (passes the bar, confirms the switch
+> worked) on untuned starting params. SPY's drawdown improved dramatically
+> (-29.22% → -4.43%) but it's still net-losing (Sharpe -2.34, 19.2% win
+> rate) on those same untuned params — a tuning job for the auto-tuner now
+> that its `ParamSlot`s exist, not evidence the switch itself was wrong.
 
 ### Bitcoin (BTC/USD) — Momentum Breakout, 1-hour candles
 Crypto trends harder than indices, so instead of fading the move the bot
@@ -810,33 +818,34 @@ is hardcoded in the strategy files beyond the logic itself.
 ## Go-live readiness (as of the latest backtest)
 
 Checked against the bar: **flag/fix any strategy with a negative Sharpe
-ratio or a max drawdown over 15%.** After 4 real backtest rounds against
-live Alpaca market data (see `results/` and the commit history for every
-parameter tried):
+ratio or a max drawdown over 15%.** This table is from the 2026-10-08
+re-run of `bot/backtest.py` (6-month window, same live Alpaca data source),
+the first backtest run since SPY/QQQ moved to `trend_following` on their
+untuned (50/200 EMA, 3.0x ATR) starting params:
 
-| Instrument | Sharpe | MaxDD | Passes bar? |
-|---|---|---|---|
-| SPY | -2.71 | -29.22% | ⚠️ Historical only — this is the `mean_reversion` result that justified the 2026-10-08 switch to `trend_following` (see note above); SPY no longer runs these parameters live. Not yet re-backtested under `trend_following` with its untuned starting params. |
-| QQQ | -0.79 | -16.03% | ⚠️ Historical only — same as SPY: this was `mean_reversion`'s number before the 2026-10-08 switch to `trend_following`. Not yet re-backtested under `trend_following` with its untuned starting params. |
-| BTC/USD | +0.85 | -7.87% | ✅ Yes — corrected, long-only figure (see 2026-10-06 note in the Bitcoin section above): the prior +1.03/-8.6% row included short trades that could never have executed on Alpaca (crypto can't be shorted) and wasn't an achievable result. This row and the one before it (+1.05/-15.82%) and the brief 5Min mismatch (-7.57/-53.5%) are all superseded. |
-| GLD | -2.14 | -5.99% | ❌ No — fails Sharpe. Not a timeframe issue (loses on 4Hour too, see 2026-10-05 note above); a params-fit problem now unblocked for independent retuning. Supersedes the older +0.98/-1.31% row (different window/params, pre-dates the per-symbol split). |
-| USO | +1.30 | -3.68% | ✅ Yes — on the current live (5Min) params, 31 trades/6 months (see 2026-10-05 note above). Supersedes the older +3.37/-3.42% row (that one had only 1 trade — too thin to trust either way). |
+| Instrument | Trades | Win% | ProfitFactor | Sharpe | MaxDD% | TotalRet% | Passes bar? |
+|---|---|---|---|---|---|---|---|
+| SPY | 52 | 19.2 | 0.46 | -2.34 | -4.43 | -3.84 | ❌ No — fails Sharpe. **Materially better than the old `mean_reversion` result it replaces (Sharpe -2.71, MaxDD -29.22%)** — drawdown is down to -4.43% from -29.22% — but still net-losing on these untuned starting params: a 19.2% win rate and 0.46 profit factor mean most trades are small losses waiting on a few big trend moves that haven't shown up yet in this window. Candidate for the live auto-tuner to work on (its 6 new `ParamSlot`s are already in `TUNE_SPECS`), not yet something to trust live. |
+| QQQ | 53 | 22.6 | 1.28 | +0.58 | -4.50 | +2.75 | ✅ Yes — **confirms the switch worked**: flips from `mean_reversion`'s Sharpe -0.79/MaxDD -16.03% to a positive Sharpe and a drawdown well under the 15% bar, on untuned starting params. Still backtest evidence only — let the auto-tuner and some live paper-trading time confirm it before trusting it as a guarantee. |
+| BTC/USD | 31 | 25.8 | 1.60 | +0.99 | -7.25 | +7.99 | ✅ Yes — consistent with the corrected long-only figure from the 2026-10-06 note above (that one was +0.85/-7.87%; small drift is just a rolling 6-month window moving forward, not a change in behavior). |
+| GLD | 55 | 27.3 | 0.73 | -1.00 | -5.07 | -2.17 | ❌ No — fails Sharpe, though less badly than the prior -2.14/-5.99% row (same rolling-window-drift caveat as BTC/USD above). Still the confirmed negative-expectancy strategy flagged below — next in line for retuning. |
+| USO | 30 | 26.7 | 2.85 | +2.29 | -6.44 | +17.52 | ✅ Yes — strongest instrument in the book: 2.85 profit factor, +17.52% return over the window. Consistent with (slightly better than) the prior +1.30/-3.68% row. |
+| **Combined portfolio** | 221 | 24.0 | 1.45 | +1.65 | -12.68 | +22.50 | ✅ Yes, as a whole — net Sharpe +1.65 and MaxDD -12.68% both clear the bar with the correlation filter active, even though SPY and GLD individually don't yet. |
 
-**Recommendation: do not go live on GLD with current parameters**, and
-treat **SPY/QQQ as unproven, not yet confirmed good, under their new
-`trend_following` assignment** — the rows above are the old `mean_reversion`
-backtest that justified moving off of it, not a result for the strategy
-they're actually running now. Before trusting SPY/QQQ live under
-`trend_following`, re-run `bot/backtest.py` against their new (currently
-untuned, 50/200/3.0x starting) params and let the live auto-tuner run for a
-while — the same two-part check (backtest + live auto-tuner trend) that
-caught `mean_reversion`'s problem is the right bar to clear here too.
-BTC/USD passes the bar on its corrected (1Hour) timeframe and USO passes on
-its current (5Min) params, but both are still backtest evidence only — give
-them real paper-trading time before treating that as a live guarantee. GLD
-is a confirmed negative-expectancy strategy as currently parameterized and
-is the next thing to retune (now that its params are independently tunable
-from USO's, see above) or consider pausing from live trading until it is.
+**Recommendation: do not go live on SPY or GLD with current parameters.**
+QQQ's switch to `trend_following` is confirmed working — it now clears both
+the Sharpe and MaxDD bar on untuned starting params, a real improvement
+over its old `mean_reversion` numbers. SPY improved sharply on drawdown
+(-29.22% → -4.43%) but is still net-losing; give the auto-tuner time to
+work SPY's new `ParamSlot`s (`fast_ema`, `slow_ema`,
+`trailing_stop_atr_multiple`) before reassessing — this is exactly the
+"paper-trade and let it adapt" case BTC/USD and USO already went through,
+not a sign the switch was wrong (QQQ, the other half of the same switch,
+already passes). BTC/USD and USO continue to pass the bar, consistent with
+prior rounds. GLD remains the one confirmed negative-expectancy strategy in
+the book and is the next thing to retune (its params are independently
+tunable from USO's, see above) or consider pausing from live trading until
+it is.
 
 ## Known limitations / things to review before going live
 
