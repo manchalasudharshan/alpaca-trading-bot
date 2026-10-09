@@ -1,32 +1,20 @@
 {
   "portfolio": {
-    "positions": {
-      "GLD": {
-        "symbol": "GLD",
-        "side": "long",
-        "qty": 248.551,
-        "entry_price": 383.735,
-        "entry_atr": 0.6301570481469645,
-        "stop_price": 383.73941325342787,
-        "strategy": "trend_following",
-        "entry_time": "2026-10-09T13:35:17.348862+00:00",
-        "equity_at_entry": 98327.61
-      }
-    },
+    "positions": {},
     "pnl_date": "2026-10-09",
-    "daily_realized_pnl": -72.65523214797072,
-    "trades_closed_today": 1
+    "daily_realized_pnl": -71.55831359522368,
+    "trades_closed_today": 2
   },
   "last_seen_bar": {
-    "SPY": "2026-10-09T16:25:00+00:00",
-    "QQQ": "2026-10-09T16:25:00+00:00",
+    "SPY": "2026-10-09T16:30:00+00:00",
+    "QQQ": "2026-10-09T16:30:00+00:00",
     "BTC/USD": "2026-10-09T16:00:00+00:00",
-    "GLD": "2026-10-09T16:25:00+00:00",
-    "USO": "2026-10-09T16:25:00+00:00"
+    "GLD": "2026-10-09T16:30:00+00:00",
+    "USO": "2026-10-09T16:30:00+00:00"
   },
   "peak_equity": 100342.15,
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-10-09T16:30:16.660150+00:00"
+  "saved_at": "2026-10-09T16:35:13.668836+00:00"
 }
