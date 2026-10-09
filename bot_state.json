@@ -1,9 +1,9 @@
 {
   "portfolio": {
     "positions": {},
-    "pnl_date": "2026-10-08",
-    "daily_realized_pnl": -129.12151492301865,
-    "trades_closed_today": 1
+    "pnl_date": "2026-10-09",
+    "daily_realized_pnl": 0.0,
+    "trades_closed_today": 0
   },
   "last_seen_bar": {
     "SPY": "2026-10-08T19:50:00+00:00",
@@ -16,5 +16,5 @@
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-10-08T23:55:09.301910+00:00"
+  "saved_at": "2026-10-09T00:00:11.822892+00:00"
 }
