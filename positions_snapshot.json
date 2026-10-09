@@ -1,6 +1,6 @@
 {
-  "snapshot_at": "2026-10-09T15:15:20.952949+00:00",
-  "equity": 98268.32,
+  "snapshot_at": "2026-10-09T15:20:20.980947+00:00",
+  "equity": 98326.07,
   "peak_equity": 100342.15,
   "equity_market_open": true,
   "positions": [
@@ -9,10 +9,20 @@
       "qty": 248.551,
       "side": "long",
       "avg_entry_price": 383.828545,
-      "current_price": 383.59,
-      "unrealized_pl": -59.290598,
-      "unrealized_plpc": -0.00062,
-      "market_value": 95341.67809
+      "current_price": 383.87,
+      "unrealized_pl": 10.303682,
+      "unrealized_plpc": 0.00011,
+      "market_value": 95411.27237
+    },
+    {
+      "symbol": "SPY",
+      "qty": 122.675,
+      "side": "long",
+      "avg_entry_price": 777.556006,
+      "current_price": 777.5,
+      "unrealized_pl": -6.870536,
+      "unrealized_plpc": -7e-05,
+      "market_value": 95379.8125
     }
   ]
 }
