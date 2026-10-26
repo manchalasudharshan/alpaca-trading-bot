@@ -1,32 +1,20 @@
 {
   "portfolio": {
-    "positions": {
-      "SPY": {
-        "symbol": "SPY",
-        "side": "long",
-        "qty": 124.646,
-        "entry_price": 766.83,
-        "entry_atr": 0.7002679470122901,
-        "stop_price": 766.1297320529877,
-        "strategy": "trend_following",
-        "entry_time": "2026-10-26T15:30:07.420564+00:00",
-        "equity_at_entry": 98538.55
-      }
-    },
+    "positions": {},
     "pnl_date": "2026-10-26",
-    "daily_realized_pnl": 0.0,
-    "trades_closed_today": 0
+    "daily_realized_pnl": -87.28559852329779,
+    "trades_closed_today": 1
   },
   "last_seen_bar": {
-    "SPY": "2026-10-26T15:40:00+00:00",
-    "QQQ": "2026-10-26T15:40:00+00:00",
+    "SPY": "2026-10-26T15:45:00+00:00",
+    "QQQ": "2026-10-26T15:45:00+00:00",
     "BTC/USD": "2026-10-26T15:00:00+00:00",
-    "GLD": "2026-10-26T15:40:00+00:00",
-    "USO": "2026-10-26T15:40:00+00:00"
+    "GLD": "2026-10-26T15:45:00+00:00",
+    "USO": "2026-10-26T15:45:00+00:00"
   },
   "peak_equity": 100342.15,
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-10-26T15:45:11.935858+00:00"
+  "saved_at": "2026-10-26T15:50:34.883165+00:00"
 }
