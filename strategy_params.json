@@ -24,13 +24,13 @@
       "GLD": 200,
       "USO": 155,
       "SPY": 178,
-      "QQQ": 196
+      "QQQ": 225
     },
     "trailing_stop_atr_multiple": {
       "GLD": 2.1,
       "USO": 5.0,
       "SPY": 4.6137,
-      "QQQ": 3.45
+      "QQQ": 2.9325
     }
   }
 }
