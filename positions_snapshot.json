@@ -1,6 +1,6 @@
 {
-  "snapshot_at": "2026-10-27T16:20:17.312837+00:00",
-  "equity": 98284.65,
+  "snapshot_at": "2026-10-27T16:25:15.959875+00:00",
+  "equity": 98261.58,
   "peak_equity": 100342.15,
   "equity_market_open": true,
   "positions": [
@@ -9,10 +9,10 @@
       "qty": 256.37,
       "side": "long",
       "avg_entry_price": 371.888089,
-      "current_price": 372.0,
-      "unrealized_pl": 28.690623,
-      "unrealized_plpc": 0.0003,
-      "market_value": 95369.64
+      "current_price": 371.91,
+      "unrealized_pl": 5.617323,
+      "unrealized_plpc": 6e-05,
+      "market_value": 95346.5667
     }
   ]
 }
