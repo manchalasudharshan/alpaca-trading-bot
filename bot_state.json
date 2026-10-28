@@ -1,20 +1,32 @@
 {
   "portfolio": {
-    "positions": {},
+    "positions": {
+      "USO": {
+        "symbol": "USO",
+        "side": "long",
+        "qty": 567.528,
+        "entry_price": 167.99,
+        "entry_atr": 0.32036082736646276,
+        "stop_price": 167.66963917263354,
+        "strategy": "trend_following",
+        "entry_time": "2026-10-28T15:10:19.454152+00:00",
+        "equity_at_entry": 98287.8
+      }
+    },
     "pnl_date": "2026-10-28",
     "daily_realized_pnl": 0.0,
     "trades_closed_today": 0
   },
   "last_seen_bar": {
-    "SPY": "2026-10-28T15:00:00+00:00",
-    "QQQ": "2026-10-28T15:00:00+00:00",
+    "SPY": "2026-10-28T15:05:00+00:00",
+    "QQQ": "2026-10-28T15:05:00+00:00",
     "BTC/USD": "2026-10-28T15:00:00+00:00",
-    "GLD": "2026-10-28T15:00:00+00:00",
-    "USO": "2026-10-28T15:00:00+00:00"
+    "GLD": "2026-10-28T15:05:00+00:00",
+    "USO": "2026-10-28T15:05:00+00:00"
   },
   "peak_equity": 100342.15,
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-10-28T15:05:26.242729+00:00"
+  "saved_at": "2026-10-28T15:10:19.454875+00:00"
 }
