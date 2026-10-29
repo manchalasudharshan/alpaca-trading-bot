@@ -13,3 +13,4 @@ timestamp,instrument,direction,entry_price,exit_price,profit_loss,position_size,
 2026-10-27T17:50:12.102651+00:00,GLD,long,371.760000,372.112918,90.48,256.37,trend_following,hard stop hit: bar breached 372.1129,98255.96,
 2026-10-28T15:15:17.985440+00:00,USO,long,167.990000,167.669639,-181.81,567.528,trend_following,hard stop hit: bar breached 167.6696,98287.80,-0.185
 2026-10-28T18:50:19.900751+00:00,GLD,long,371.630000,370.990413,-163.97,256.364,trend_following,hard stop hit: bar breached 370.9904,98219.21,-0.167
+2026-10-29T18:15:17.726903+00:00,USO,long,166.765000,166.433635,-189.54,572.006,trend_following,hard stop hit: bar breached 166.4336,98340.89,-0.193
