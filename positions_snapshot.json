@@ -1,7 +1,18 @@
 {
-  "snapshot_at": "2026-11-04T19:00:19.388762+00:00",
-  "equity": 97846.11,
+  "snapshot_at": "2026-11-04T19:05:16.491555+00:00",
+  "equity": 97850.28,
   "peak_equity": 100342.15,
   "equity_market_open": true,
-  "positions": []
+  "positions": [
+    {
+      "symbol": "QQQ",
+      "qty": 136.745,
+      "side": "long",
+      "avg_entry_price": 694.079524,
+      "current_price": 694.11,
+      "unrealized_pl": 4.167441,
+      "unrealized_plpc": 4e-05,
+      "market_value": 94916.07195
+    }
+  ]
 }
