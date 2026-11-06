@@ -1,7 +1,7 @@
 {
   "portfolio": {
     "positions": {},
-    "pnl_date": "2026-11-05",
+    "pnl_date": "2026-11-06",
     "daily_realized_pnl": 0.0,
     "trades_closed_today": 0
   },
@@ -16,5 +16,5 @@
   "trading_halted": false,
   "halt_reason": null,
   "halt_at": null,
-  "saved_at": "2026-11-05T23:55:08.722391+00:00"
+  "saved_at": "2026-11-06T00:00:14.704217+00:00"
 }
