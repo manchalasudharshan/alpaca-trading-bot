@@ -18,3 +18,4 @@ timestamp,instrument,direction,entry_price,exit_price,profit_loss,position_size,
 2026-11-04T18:50:07.360043+00:00,QQQ,long,694.260000,693.148720,-152.09,136.859,trend_following,hard stop hit: bar breached 693.1487,97954.98,-0.155
 2026-11-04T19:35:06.764001+00:00,QQQ,long,694.070000,693.031956,-141.95,136.745,trend_following,hard stop hit: bar breached 693.0320,97846.11,-0.145
 2026-11-09T16:30:05.888628+00:00,SPY,long,750.770000,749.799139,-122.55,126.226,trend_following,hard stop hit: bar breached 749.7991,97698.08,-0.125
+2026-11-09T18:10:06.235561+00:00,QQQ,long,677.560000,676.709689,-118.73,139.634,trend_following,hard stop hit: bar breached 676.7097,97536.83,-0.122
