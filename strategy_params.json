@@ -9,9 +9,9 @@
     "trend_filter_period": 130
   },
   "momentum_breakout": {
-    "lookback": 34,
-    "volume_multiple": 2.86,
-    "trailing_stop_atr_multiple": 1.53
+    "lookback": 24,
+    "volume_multiple": 3.289,
+    "trailing_stop_atr_multiple": 1.071
   },
   "trend_following": {
     "fast_ema": {
@@ -28,7 +28,7 @@
     },
     "trailing_stop_atr_multiple": {
       "GLD": 2.1,
-      "USO": 3.5,
+      "USO": 2.45,
       "SPY": 3.9216,
       "QQQ": 2.9325
     }
