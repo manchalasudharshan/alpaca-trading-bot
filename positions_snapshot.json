@@ -1,18 +1,7 @@
 {
-  "snapshot_at": "2026-11-23T16:35:10.792098+00:00",
-  "equity": 97005.14,
+  "snapshot_at": "2026-11-23T16:40:11.090019+00:00",
+  "equity": 96650.57,
   "peak_equity": 100342.15,
   "equity_market_open": true,
-  "positions": [
-    {
-      "symbol": "SPY",
-      "qty": 130.063,
-      "side": "long",
-      "avg_entry_price": 724.77,
-      "current_price": 723.69,
-      "unrealized_pl": -140.46804,
-      "unrealized_plpc": -0.00149,
-      "market_value": 94125.29247
-    }
-  ]
+  "positions": []
 }
