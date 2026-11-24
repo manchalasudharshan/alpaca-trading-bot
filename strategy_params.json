@@ -10,8 +10,8 @@
   },
   "momentum_breakout": {
     "lookback": 24,
-    "volume_multiple": 3.289,
-    "trailing_stop_atr_multiple": 1.071
+    "volume_multiple": 2.7957,
+    "trailing_stop_atr_multiple": 1.0
   },
   "trend_following": {
     "fast_ema": {
