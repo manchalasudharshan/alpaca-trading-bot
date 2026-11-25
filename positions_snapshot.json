@@ -1,7 +1,18 @@
 {
-  "snapshot_at": "2026-11-25T15:05:11.353291+00:00",
-  "equity": 96318.91,
+  "snapshot_at": "2026-11-25T15:10:11.398420+00:00",
+  "equity": 96092.69,
   "peak_equity": 100342.15,
   "equity_market_open": true,
-  "positions": []
+  "positions": [
+    {
+      "symbol": "USO",
+      "qty": 670.705,
+      "side": "long",
+      "avg_entry_price": 139.007791,
+      "current_price": 138.6705,
+      "unrealized_pl": -226.22276,
+      "unrealized_plpc": -0.00243,
+      "market_value": 93006.997703
+    }
+  ]
 }
