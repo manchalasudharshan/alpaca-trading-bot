@@ -17,7 +17,7 @@
     "fast_ema": {
       "GLD": 50,
       "USO": 85,
-      "SPY": 59,
+      "SPY": 50,
       "QQQ": 75
     },
     "slow_ema": {
@@ -27,8 +27,8 @@
       "QQQ": 292
     },
     "trailing_stop_atr_multiple": {
-      "GLD": 2.1,
-      "USO": 2.45,
+      "GLD": 2.415,
+      "USO": 2.0825,
       "SPY": 3.9216,
       "QQQ": 2.9325
     }
