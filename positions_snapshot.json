@@ -1,6 +1,6 @@
 {
-  "snapshot_at": "2026-11-27T16:30:11.932094+00:00",
-  "equity": 95524.07,
+  "snapshot_at": "2026-11-27T16:35:09.992185+00:00",
+  "equity": 95754.31,
   "peak_equity": 100342.15,
   "equity_market_open": true,
   "positions": [
@@ -9,20 +9,20 @@
       "qty": 279.508,
       "side": "long",
       "avg_entry_price": 333.103113,
-      "current_price": 332.02,
-      "unrealized_pl": -302.738748,
-      "unrealized_plpc": -0.00325,
-      "market_value": 92802.24616
+      "current_price": 332.15,
+      "unrealized_pl": -266.402708,
+      "unrealized_plpc": -0.00286,
+      "market_value": 92838.5822
     },
     {
       "symbol": "QQQ",
       "qty": 143.627,
       "side": "long",
       "avg_entry_price": 645.4,
-      "current_price": 645.37,
-      "unrealized_pl": -4.30881,
-      "unrealized_plpc": -5e-05,
-      "market_value": 92692.55699
+      "current_price": 646.78,
+      "unrealized_pl": 198.20526,
+      "unrealized_plpc": 0.00214,
+      "market_value": 92895.07106
     }
   ]
 }
